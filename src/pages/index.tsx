@@ -1,5 +1,7 @@
+import React from "react";
 import dynamic from "next/dynamic";
 import { GraphData } from "react-force-graph-3d";
+import SpriteText from "three-spritetext";
 
 /**
  * Import dynamically to avoid server calls to window, self, etc.
@@ -15,5 +17,15 @@ const data: GraphData = {
 };
 
 export default function Home() {
-  return <ForceGraph3D graphData={data} />;
+  return (
+    <ForceGraph3D
+      graphData={data}
+      nodeThreeObject={(node) => {
+        const sprite = new SpriteText(`${node.id}`);
+        sprite.color = "white";
+        sprite.textHeight = 8;
+        return sprite;
+      }}
+    />
+  );
 }
