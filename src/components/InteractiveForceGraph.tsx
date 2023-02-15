@@ -75,6 +75,7 @@ export default function InteractiveForceGraph({
         return sprite;
       }}
       enableNodeDrag={false}
+      backgroundColor="black"
       onNodeClick={handleClick}
     />
   );
