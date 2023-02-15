@@ -1,4 +1,4 @@
-import React, { ForwardedRef, forwardRef, useCallback } from "react";
+import React, { ForwardedRef, forwardRef, useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import SpriteText from "three-spritetext";
 import { genRandomTree } from "@/utils";
@@ -16,27 +16,32 @@ const ForceGraph3DHandleRef = (
 const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
 
 export default function Home() {
+  const [data, setData] = useState(genRandomTree(100));
+
   let graphRef: ForceGraphMethods | null = null;
   const graphRefCallback = useCallback((current: ForceGraphMethods | null) => {
     if (current === null) {
     } else {
       current.scene().fog = new THREE.FogExp2(0x000000, 0.001);
       graphRef = current;
-      return current;
     }
   }, []);
 
   const handleClick = useCallback(
     (node: any) => {
-      console.log("Click: ", { node, graphRef });
+      const newId = data.nodes.length + 1;
+      setData({
+        nodes: [...data.nodes, { id: newId }],
+        links: [...data.links, { target: newId, source: node.id }],
+      });
     },
-    [graphRef]
+    [data]
   );
 
   return (
     <ForceGraph3DForwardRef
       ref={graphRefCallback}
-      graphData={genRandomTree(100)}
+      graphData={data}
       nodeThreeObject={(node) => {
         const sprite = new SpriteText(`${node.id}`);
         sprite.color = "white";
