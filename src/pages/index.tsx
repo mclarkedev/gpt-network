@@ -16,16 +16,26 @@ const ForceGraph3DHandleRef = (
 const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
 
 export default function Home() {
-  const graphRef = useCallback((current: ForceGraphMethods | null) => {
+  let graphRef: ForceGraphMethods | null = null;
+  const graphRefCallback = useCallback((current: ForceGraphMethods | null) => {
     if (current === null) {
     } else {
       current.scene().fog = new THREE.FogExp2(0x000000, 0.001);
+      graphRef = current;
+      return current;
     }
   }, []);
 
+  const handleClick = useCallback(
+    (node: any) => {
+      console.log("Click: ", { node, graphRef });
+    },
+    [graphRef]
+  );
+
   return (
     <ForceGraph3DForwardRef
-      ref={graphRef}
+      ref={graphRefCallback}
       graphData={genRandomTree(100)}
       nodeThreeObject={(node) => {
         const sprite = new SpriteText(`${node.id}`);
@@ -33,6 +43,8 @@ export default function Home() {
         sprite.textHeight = 8;
         return sprite;
       }}
+      enableNodeDrag={false}
+      onNodeClick={handleClick}
     />
   );
 }
