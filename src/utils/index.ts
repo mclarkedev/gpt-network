@@ -9,3 +9,6 @@ export function genRandomTree(N = 300, reverse = false) {
       })),
   };
 }
+
+// A constant string key a user would never type
+export const separator = "__SEPARATOR:226d94d9-e58d-4eae-80de-da9c0b254a57_";

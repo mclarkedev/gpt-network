@@ -9,15 +9,15 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import React, { useState } from "react";
 
 import suggestion from "./suggestion";
+import { separator } from "@/utils";
 
 const makeMentionChip = (id: string) => {
   return `<span data-type="mention" data-id="${id}" class=${styles.mention} contenteditable="false">@${id}</span>`;
 };
 
-const separator = "__SEPARATOR__:45#$__NO_ONE_WOULD_TYPE";
 const defaultContent = ["Who is similar to ", separator, "?"];
 
-const stitchContent = (contentArray = defaultContent, id: string) => {
+const stitchContentToHTML = (contentArray = defaultContent, id: string) => {
   return contentArray
     .map((content) => {
       if (content === separator) {
@@ -32,10 +32,13 @@ const stitchContent = (contentArray = defaultContent, id: string) => {
 /**
  * Editor displays a Tip Tap editor with ability to update an activeMention
  */
-export default function Editor({ activeMention = "Start node" }) {
-  const defaultHTML = stitchContent(defaultContent, activeMention);
+export default function Editor({
+  activeMention = "Start node",
+  defaultContent = ["Who is similar to ", separator, "?"],
+}) {
+  const defaultHTML = stitchContentToHTML(defaultContent, activeMention);
   const [virtualContent, setVirtualContent] = useState<string[]>();
-  const virtualHTML = stitchContent(virtualContent, activeMention);
+  const virtualHTML = stitchContentToHTML(virtualContent, activeMention);
   const limit = 2000;
 
   const editor = useEditor(
@@ -57,8 +60,6 @@ export default function Editor({ activeMention = "Start node" }) {
           },
         }),
       ],
-      // Swap out content after its been edited
-      onDestroy: () => console.log("destroy"),
       content: virtualHTML ? virtualHTML : defaultHTML,
       onUpdate: ({ editor }) => {
         const { content } = editor.getJSON();
