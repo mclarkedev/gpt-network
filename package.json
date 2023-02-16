@@ -24,6 +24,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-force-graph-3d": "^1.22.0",
+    "recoil": "^0.7.6",
     "three-spritetext": "^1.7.1",
     "typescript": "4.9.5"
   },

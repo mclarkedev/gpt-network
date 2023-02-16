@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRecoilState } from "recoil";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
-import SearchQueryModal from "@/components/SearchQueryModal";
+import SearchQueryList from "@/components/SearchQueryList";
+import { searchInputState, searchSubmittedState } from "@/state";
 
 export default function Home() {
-  const [submit, setSubmit] = useState();
-  return submit ? (
-    <InteractiveForceGraph startId={submit} />
+  const [searchInput] = useRecoilState(searchInputState);
+  const [searchSubmitted] = useRecoilState(searchSubmittedState); // prettier-ignore
+
+  return searchSubmitted ? (
+    <InteractiveForceGraph startId={searchInput} />
   ) : (
-    <SearchQueryModal onSubmit={setSubmit} />
+    <SearchQueryList />
   );
 }
