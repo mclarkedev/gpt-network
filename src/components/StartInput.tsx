@@ -7,7 +7,7 @@ export default function StartInput({
   onSubmit: (value: any) => void;
 }) {
   return (
-    <div className="inset-center w-1/2 center">
+    <div className="inset-center w-1/2 center z-50">
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
