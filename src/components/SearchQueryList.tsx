@@ -11,7 +11,7 @@ import {
 import SearchInput from "./SearchInput";
 import { searchQueryListState } from "@/state";
 import { separator } from "@/utils";
-import SearchQueryCard from "./SearchQueryCard";
+import SearchQueryItem from "./SearchQueryItem";
 
 export default function SearchQueryListEditor() {
   const [searchQueryList, setSearchQueryList] = useRecoilState(searchQueryListState); // prettier-ignore
@@ -34,7 +34,7 @@ export default function SearchQueryListEditor() {
     >
       <SearchInputCard />
       {searchQueryList.map((item, index) => (
-        <SearchQueryCard key={index} item={item} index={index} />
+        <SearchQueryItem key={index} item={item} />
       ))}
       <AddButton onClick={addSearchQuery} />
       <Space />

@@ -1,13 +1,7 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Inter } from "@next/font/google";
-import {
-  RecoilRoot,
-  // atom,
-  // selector,
-  // useRecoilState,
-  // useRecoilValue,
-} from "recoil";
+import { RecoilRoot } from "recoil";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -35,6 +35,7 @@ const stitchContentToHTML = (contentArray = defaultContent, id: string) => {
 export default function Editor({
   activeMention = "Start node",
   defaultContent = ["Who is similar to ", separator, "?"],
+  onChange = (content: string[]) => {},
 }) {
   const defaultHTML = stitchContentToHTML(defaultContent, activeMention);
   const [virtualContent, setVirtualContent] = useState<string[]>();
@@ -71,6 +72,7 @@ export default function Editor({
             return separator;
           } else return "";
         });
+        contentArr && onChange(contentArr);
         // Save editor content so we can display it to the user on flash updates
         setVirtualContent(contentArr);
       },
@@ -89,7 +91,7 @@ export default function Editor({
       <EditorContent editor={editor} />
       {/* HACK: Display virtualHtml so text always appears to user, even when EditorContent is blank */}
       <div
-        className="absolute top-0 whitespace-normal z-0 pointer-events-none fon"
+        className="absolute top-0 whitespace-normal z-0 pointer-events-none"
         style={{ fontVariant: "none" }}
         dangerouslySetInnerHTML={{ __html: virtualHTML }}
       ></div>
