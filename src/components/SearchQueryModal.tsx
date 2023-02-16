@@ -6,15 +6,17 @@ import {
   PlusIcon,
   Row,
   SearchIcon,
+  Space,
 } from "./StyledComponents";
 import { useState } from "react";
 import Editor from "./Editor";
 
-const AddPromptButton = () => (
+const AddPromptButton = ({ onClick }: { onClick: () => void }) => (
   <div
     className={
       "ease-in duration-75 opacity-50 hover:opacity-100 animate cursor-pointer"
     }
+    onClick={onClick}
   >
     <Card>
       <PlusIcon className="m-auto" />
@@ -35,15 +37,30 @@ interface SearchQueryState {
 
 export default function SearchQueryModal({ onSubmit }: any) {
   const [state, setState] = useState<SearchQueryState>({
-    blocks: [{ label: null, value: "" }],
+    blocks: [],
     startNode: null,
   });
 
   function handleStartNodeChange(value: string) {
     setState({ ...state, startNode: value.trim() });
   }
+
+  function handleAddPromptClick() {
+    setState({
+      ...state,
+      blocks: [...state.blocks, { label: null, value: "" }],
+    });
+  }
+
   return (
-    <div className="inset-center center z-50" style={{ width: 600 }}>
+    <div
+      className="inset-center center z-50"
+      style={{
+        width: 600,
+        paddingTop: "20%",
+        maxHeight: "100vh",
+      }}
+    >
       <Card>
         <Chip>
           <Row>
@@ -56,17 +73,22 @@ export default function SearchQueryModal({ onSubmit }: any) {
           </Row>
         </Chip>
       </Card>
-      <Card>
-        <LabelChip />
-        <div className="bg-neutral-800 rounded-lg px-5 py-2 text-md w-full min-h-[40px]">
-          <Editor
-            activeMention={
-              state.startNode ? state.startNode : "artists or designers"
-            }
-          />
-        </div>
-      </Card>
-      <AddPromptButton />
+      {state.blocks.map((block, idx) => {
+        return (
+          <Card key={block.value + idx}>
+            <LabelChip />
+            <div className="bg-neutral-800 rounded-lg px-5 py-2 text-md w-full min-h-[40px]">
+              <Editor
+                activeMention={
+                  state.startNode ? state.startNode : "artists or designers"
+                }
+              />
+            </div>
+          </Card>
+        );
+      })}
+      <AddPromptButton onClick={handleAddPromptClick} />
+      <Space />
     </div>
   );
 }
