@@ -16,18 +16,15 @@ export default function SearchQueryItem({ item }: { item: any }) {
     });
 
     setSearchQueryList(newList);
-    console.log("edited");
-    console.log(newList);
   };
 
   function handlePromptChange(promptContent: string[]) {
-    console.log(promptContent);
     editSearchQueryItem(promptContent);
   }
 
   return (
-    <Card key={item.label + index}>
-      <LabelChip>Add label +</LabelChip>
+    <Card>
+      <LabelChip>{item.label ? item.label : "Add label +"}</LabelChip>
       <div className="bg-neutral-800 rounded-lg px-5 py-2 text-md w-full min-h-[40px]">
         <Editor
           activeMention={

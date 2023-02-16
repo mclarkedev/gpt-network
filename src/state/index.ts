@@ -27,7 +27,7 @@ export const searchQueryListState = atom({
   key: "searchQueryList",
   default: [
     {
-      label: "Is similar to",
+      label: "Similar",
       prompt: ["Who is similar to ", separator, "?"],
     },
   ],
