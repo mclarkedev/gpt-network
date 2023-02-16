@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
-import StartInput from "@/components/StartInput";
+import SearchQueryModal from "@/components/SearchQueryModal";
 
 export default function Home() {
   const [submit, setSubmit] = useState();
   return submit ? (
     <InteractiveForceGraph startId={submit} />
   ) : (
-    <StartInput onSubmit={setSubmit} />
+    <SearchQueryModal onSubmit={setSubmit} />
   );
 }

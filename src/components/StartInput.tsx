@@ -1,13 +1,18 @@
+import { useState } from "react";
+
 /**
  * StartInput
  */
 export default function StartInput({
+  value,
   onSubmit,
 }: {
+  value?: string;
   onSubmit: (value: any) => void;
 }) {
+  const [state, setState] = useState(value);
   return (
-    <div className="inset-center w-1/2 center z-50">
+    <div>
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
@@ -17,7 +22,11 @@ export default function StartInput({
         <input
           type={"text"}
           placeholder="Search artists or designers..."
-          className="bg-zinc-800 outline-none rounded-md p-8 text-4xl w-full"
+          className="outline-none bg-transparent w-full"
+          value={state}
+          onChange={(e: any) => {
+            setState(e.nativeEvent.target.value);
+          }}
         />
       </form>
     </div>
