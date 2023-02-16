@@ -1,0 +1,23 @@
+.mention {
+  border: 1px solid #000;
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.3rem;
+  box-decoration-break: clone;
+  margin-right: 2px;
+  font-variant: none;
+}
+.character-count {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  color: #68cef8;
+}
+.character-count--warning {
+  color: #fb5151;
+}
+.character-count__graph {
+  margin-right: 0.5rem;
+}
+.character-count__text {
+  color: #868e96;
+}

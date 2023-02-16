@@ -10,6 +10,11 @@
   },
   "dependencies": {
     "@next/font": "^13.1.6",
+    "@tiptap/extension-character-count": "^2.0.0-beta.217",
+    "@tiptap/extension-mention": "^2.0.0-beta.217",
+    "@tiptap/pm": "^2.0.0-beta.217",
+    "@tiptap/react": "^2.0.0-beta.217",
+    "@tiptap/starter-kit": "^2.0.0-beta.217",
     "@types/node": "18.13.0",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.10",

@@ -6,18 +6,21 @@ import { useState } from "react";
 export default function StartInput({
   value,
   onSubmit,
+  onChange,
 }: {
   value?: string;
   onSubmit: (value: any) => void;
+  onChange: (value: any) => void;
 }) {
   const [state, setState] = useState(value);
   return (
-    <div>
+    <div className="w-full">
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
-          onSubmit(e.nativeEvent.target?.[0].value);
+          onSubmit && onSubmit(e.nativeEvent.target?.[0].value);
         }}
+        className="w-full"
       >
         <input
           type={"text"}
@@ -26,6 +29,7 @@ export default function StartInput({
           value={state}
           onChange={(e: any) => {
             setState(e.nativeEvent.target.value);
+            onChange && onChange(e.nativeEvent.target.value);
           }}
         />
       </form>

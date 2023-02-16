@@ -7,19 +7,8 @@ import {
   Row,
   SearchIcon,
 } from "./StyledComponents";
-import reactStringReplace from "react-string-replace";
-import { ReactNode, ReactNodeArray, useState } from "react";
-
-const RenderNodeArray = ({ data }: { data: ReactNodeArray }) => {
-  console.log(data);
-  data.map((node: any) => {
-    const isMatch = typeof node === "object";
-    const rawText = isMatch && node.props.children;
-    console.log(isMatch && node.props.children);
-  });
-
-  return <>{data}</>;
-};
+import { useState } from "react";
+import Editor from "./Editor";
 
 const AddPromptButton = () => (
   <div
@@ -33,32 +22,49 @@ const AddPromptButton = () => (
   </div>
 );
 
+const LabelChip = () => (
+  <div className="mb-3 pr-4 w-fit rounded-full">
+    <Label>Add Label +</Label>
+  </div>
+);
+
+interface SearchQueryState {
+  blocks: { label: string | null; value: string }[];
+  startNode: string | null;
+}
+
 export default function SearchQueryModal({ onSubmit }: any) {
-  const [state, setState] = useState({
-    blocks: [{ label: undefined, value: "" }],
-    searchInput: "",
+  const [state, setState] = useState<SearchQueryState>({
+    blocks: [{ label: null, value: "" }],
+    startNode: null,
   });
 
+  function handleStartNodeChange(value: string) {
+    setState({ ...state, startNode: value.trim() });
+  }
   return (
     <div className="inset-center center z-50" style={{ width: 600 }}>
       <Card>
         <Chip>
           <Row>
             <SearchIcon className="mr-2" />
-            <StartInput onSubmit={onSubmit} value={state.searchInput} />
+            <StartInput
+              onSubmit={onSubmit}
+              value={state.startNode ? state.startNode : ""}
+              onChange={handleStartNodeChange}
+            />
           </Row>
         </Chip>
       </Card>
       <Card>
-        <div className="mb-3 pr-4 w-fit rounded-full">
-          <Label>Add Label +</Label>
-        </div>
-        <Chip>
-          <StartInput
-            onSubmit={onSubmit}
-            value={"Who are, or were, @Wade Guyton's contemporaries?"}
+        <LabelChip />
+        <div className="bg-neutral-800 rounded-lg px-5 py-2 text-md w-full min-h-[40px]">
+          <Editor
+            activeMention={
+              state.startNode ? state.startNode : "artists or designers"
+            }
           />
-        </Chip>
+        </div>
       </Card>
       <AddPromptButton />
     </div>
