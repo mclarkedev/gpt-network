@@ -12,8 +12,8 @@ export const Chip = (props: any) => (
   />
 );
 
-export const Label = (props: any) => (
-  <div {...props} className="text-sm font-mono text-gray-400" />
+export const LabelText = (props: any) => (
+  <div {...props} className="text-xs font-mono text-gray-400" />
 );
 
 export const Row = (props: any) => <div {...props} className="flex" />;

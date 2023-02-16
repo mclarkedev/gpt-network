@@ -1,15 +1,18 @@
 import { searchInputState, searchQueryListState } from "@/state";
 import { replaceItemAtIndex } from "@/utils";
+import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
 import Editor from "./Editor";
-import { Card, Label } from "./StyledComponents";
+import { Card, LabelText } from "./StyledComponents";
 
 export default function SearchQueryItem({ item }: { item: any }) {
   const [searchInput] = useRecoilState(searchInputState);
   const [searchQueryList, setSearchQueryList] = useRecoilState(searchQueryListState); // prettier-ignore
+  const [editLabel, setEditLabel] = useState();
   const index = searchQueryList.findIndex((listItem) => listItem === item);
+  const labelRef = useRef(null);
 
-  const editSearchQueryItem = (promptContent: string[]) => {
+  const editSearchQueryPrompt = (promptContent: string[]) => {
     const newList = replaceItemAtIndex(searchQueryList, index, {
       ...item,
       prompt: promptContent,
@@ -18,27 +21,43 @@ export default function SearchQueryItem({ item }: { item: any }) {
     setSearchQueryList(newList);
   };
 
-  function handlePromptChange(promptContent: string[]) {
-    editSearchQueryItem(promptContent);
-  }
+  const editSearchQueryLabel = (label: string) => {
+    const newList = replaceItemAtIndex(searchQueryList, index, {
+      ...item,
+      label: label,
+    });
+
+    setSearchQueryList(newList);
+  };
 
   return (
     <Card>
-      <LabelChip>{item.label ? item.label : "Add label +"}</LabelChip>
+      <Label>
+        <input
+          ref={labelRef}
+          type={"text"}
+          placeholder="Add label +"
+          className="outline-none bg-transparent w-full"
+          value={item.label}
+          onChange={(e: any) => {
+            editSearchQueryLabel(e.nativeEvent.target.value);
+          }}
+        />
+      </Label>
       <div className="bg-neutral-800 rounded-lg px-5 py-2 text-md w-full min-h-[40px]">
         <Editor
           activeMention={
             searchInput ? searchInput.trim() : "artists or designers"
           }
-          onChange={handlePromptChange}
+          onChange={editSearchQueryPrompt}
         />
       </div>
     </Card>
   );
 }
 
-const LabelChip = ({ children }: { children: string }) => (
-  <div className="mb-3 pr-4 w-fit rounded-full">
-    <Label>{children}</Label>
+const Label = (props: any) => (
+  <div {...props} className="mb-3 pr-4 w-fit rounded-full">
+    <LabelText>{props.children}</LabelText>
   </div>
 );
