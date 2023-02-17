@@ -15,7 +15,6 @@ import SearchQueryItem from "./SearchQueryItem";
 
 export default function SearchQueryListEditor() {
   const [searchQueryList, setSearchQueryList] = useRecoilState(searchQueryListState); // prettier-ignore
-  console.log(searchQueryList);
   const addSearchQuery = () => {
     setSearchQueryList((prevState) => [
       ...prevState,

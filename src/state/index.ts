@@ -1,5 +1,5 @@
 import { separator } from "@/utils";
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 /**
  * Search Input State
@@ -21,14 +21,39 @@ export const searchSubmittedState = atom({
 
 /**
  * Search Query
- * - User edits a search query using the SearchQueryEditor
+ * - User edits a search query using the SearchQueryList
  */
 export const searchQueryListState = atom({
   key: "searchQueryList",
   default: [
     {
       label: "Similar",
-      prompt: ["Who is similar to ", separator, "?"],
+      content: ["Who is similar to ", separator, "?"],
     },
   ],
+});
+
+/**
+ * Search Query Prompts
+ * - User sees human-friendly prompts
+ */
+export const searchQueryPromptsState = selector({
+  key: "searchQueryPrompts",
+  get: ({ get }) => {
+    const input = get(searchInputState);
+    const searchQueryList = get(searchQueryListState);
+    return input
+      ? searchQueryList
+          .flatMap((item) => {
+            return item.content?.map((value) => {
+              if (value === separator) {
+                return input;
+              } else {
+                return value;
+              }
+            });
+          })
+          .join("")
+      : null;
+  },
 });

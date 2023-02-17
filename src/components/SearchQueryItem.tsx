@@ -1,6 +1,6 @@
 import { searchInputState, searchQueryListState } from "@/state";
 import { replaceItemAtIndex } from "@/utils";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useRecoilState } from "recoil";
 import Editor from "./Editor";
 import { Card, LabelText } from "./StyledComponents";
@@ -8,14 +8,13 @@ import { Card, LabelText } from "./StyledComponents";
 export default function SearchQueryItem({ item }: { item: any }) {
   const [searchInput] = useRecoilState(searchInputState);
   const [searchQueryList, setSearchQueryList] = useRecoilState(searchQueryListState); // prettier-ignore
-  const [editLabel, setEditLabel] = useState();
   const index = searchQueryList.findIndex((listItem) => listItem === item);
   const labelRef = useRef(null);
 
-  const editSearchQueryPrompt = (promptContent: string[]) => {
+  const editSearchQueryContent = (content: string[]) => {
     const newList = replaceItemAtIndex(searchQueryList, index, {
       ...item,
-      prompt: promptContent,
+      content: content,
     });
 
     setSearchQueryList(newList);
@@ -49,7 +48,7 @@ export default function SearchQueryItem({ item }: { item: any }) {
           activeMention={
             searchInput ? searchInput.trim() : "artists or designers"
           }
-          onChange={editSearchQueryPrompt}
+          onChange={editSearchQueryContent}
         />
       </div>
     </Card>
