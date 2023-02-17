@@ -23,3 +23,48 @@ export function replaceItemAtIndex(arr: any[], index: number, newValue: any) {
 export function removeItemAtIndex(arr: any[], index: number) {
   return [...arr.slice(0, index), ...arr.slice(index + 1)];
 }
+
+/**
+ * OpenAI SSE helper
+ * - https://github.com/beskar-co/parse-json-sse/
+ */
+const parseJsonSSE = async <T>({
+  data,
+  onParse,
+  onFinish,
+}: {
+  data: ReadableStream;
+  onParse: (object: T) => void;
+  onFinish: () => void;
+}) => {
+  const reader = data.getReader();
+  const decoder = new TextDecoder();
+
+  let done = false;
+  let tempState = "";
+
+  while (!done) {
+    const { value, done: doneReading } = await reader.read();
+    done = doneReading;
+    const newValue = decoder.decode(value).split("\n\n").filter(Boolean);
+
+    if (tempState) {
+      newValue[0] = tempState + newValue[0];
+      tempState = "";
+    }
+
+    newValue.forEach((newVal) => {
+      try {
+        const json = JSON.parse(newVal.replace("data: ", "")) as T;
+
+        onParse(json);
+      } catch (error) {
+        tempState = newVal;
+      }
+    });
+  }
+
+  onFinish();
+};
+
+export default parseJsonSSE;
