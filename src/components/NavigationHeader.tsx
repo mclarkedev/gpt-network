@@ -1,10 +1,13 @@
+import Link from "next/link";
 import { Chip, Row } from "./StyledComponents";
 
 export default function NavigationHeader() {
   return (
     <div className="absolute top-0 left-0 right-0 z-50 p-5">
       <div className="flex justify-between">
-        <div className={styles.card}>{"<-"}</div>
+        <Link href="/">
+          <div className={styles.card}>{"<-"}</div>
+        </Link>
         <div className={styles.card}>Drafts / Untitled</div>
         <div className={styles.card}>{""}</div>
       </div>

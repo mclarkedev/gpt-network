@@ -1,19 +1,20 @@
-import { searchInputState, searchSubmittedState } from "@/state";
 import { useRecoilState } from "recoil";
+import { searchInputState } from "@/state";
+import { useRouter } from "next/router";
 
 /**
  * SearchInput
  */
 export default function SearchInput({}: {}) {
   const [searchInput, setSearchInput] = useRecoilState(searchInputState);
-  const [_, setSearchSubmitted] = useRecoilState(searchSubmittedState); // prettier-ignore
+  const router = useRouter();
 
   return (
     <div className="w-full">
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
-          setSearchSubmitted(true);
+          router.push("/graph");
         }}
         className="w-full"
       >
