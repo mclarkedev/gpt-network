@@ -8,6 +8,7 @@ import {
   searchQueryPromptsState,
   searchSubmittedState,
 } from "@/state";
+import NavigationHeader from "@/components/NavigationHeader";
 
 export default function Home() {
   const [searchInput] = useRecoilState(searchInputState);
@@ -16,7 +17,10 @@ export default function Home() {
   const [searchQueryPrompts] = useRecoilState(searchQueryPromptsState);
 
   return searchSubmitted ? (
-    <InteractiveForceGraph startId={searchInput} />
+    <div>
+      <NavigationHeader />
+      <InteractiveForceGraph startId={searchInput} />
+    </div>
   ) : (
     <SearchQueryList />
   );
