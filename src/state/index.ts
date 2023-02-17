@@ -11,15 +11,6 @@ export const searchInputState = atom({
 });
 
 /**
- * Search Submitted State
- * - User submits SearchInput
- */
-export const searchSubmittedState = atom({
-  key: "searchSubmitted",
-  default: false,
-});
-
-/**
  * Search Query
  * - User edits a search query using the SearchQueryList
  */
