@@ -34,17 +34,17 @@ export const searchQueryPromptsState = selector({
     const input = get(searchInputState);
     const searchQueryList = get(searchQueryListState);
     return input
-      ? searchQueryList
-          .flatMap((item) => {
-            return item.content?.map((value) => {
+      ? searchQueryList.map((item) => {
+          return item.content
+            ?.map((value) => {
               if (value === separator) {
                 return input;
               } else {
                 return value;
               }
-            });
-          })
-          .join("")
+            })
+            .join("");
+        })
       : null;
   },
 });
