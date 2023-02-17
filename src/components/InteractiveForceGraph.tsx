@@ -36,44 +36,45 @@ function onLoad(current: ForceGraphMethods) {
 
 type InteractiveForceGraphProps = {
   // The first node to render to the screen
-  startId: string;
+  // startId: string;
+  data: GraphData;
 };
 
 /**
  * ForceGraph renders graph networks from a startID
  */
 export default function InteractiveForceGraph({
-  startId,
+  data,
 }: InteractiveForceGraphProps) {
   const [runningCount, setRunningCount] = useState(1);
-  const [data, setData] = useState<GraphData>({
-    nodes: [{ id: startId }],
-    links: [],
-  });
+  // const [data, setData] = useState<GraphData>({
+  //   nodes: [{ id: startId }],
+  //   links: [],
+  // });
 
   // Mock new node creation
-  const makeMockNode = useCallback(
-    (sourceNode: any) => {
-      if (data.nodes && data.links) {
-        const newId = `${data.nodes.length + 1}`;
-        setData({
-          nodes: [...data.nodes, { id: newId }],
-          links: [...data.links, { target: newId, source: sourceNode.id }],
-        });
-      }
-    },
-    [data]
-  );
+  // const makeMockNode = useCallback(
+  //   (sourceNode: any) => {
+  //     if (data.nodes && data.links) {
+  //       const newId = `${data.nodes.length + 1}`;
+  //       setData({
+  //         nodes: [...data.nodes, { id: newId }],
+  //         links: [...data.links, { target: newId, source: sourceNode.id }],
+  //       });
+  //     }
+  //   },
+  //   [data]
+  // );
 
   // Mock openai backend data animated entrances
-  useLayoutEffect(() => {
-    if (runningCount <= 5) {
-      setTimeout(() => {
-        makeMockNode({ id: startId });
-        setRunningCount(runningCount + 1);
-      }, 600);
-    }
-  }, [data, makeMockNode, setRunningCount, runningCount, startId]);
+  // useLayoutEffect(() => {
+  //   if (runningCount <= 5) {
+  //     setTimeout(() => {
+  //       makeMockNode({ id: startId });
+  //       setRunningCount(runningCount + 1);
+  //     }, 600);
+  //   }
+  // }, [data, makeMockNode, setRunningCount, runningCount, startId]);
 
   const graphRefCallback = useCallback((current: ForceGraphMethods | null) => {
     if (current === null) {
@@ -82,10 +83,10 @@ export default function InteractiveForceGraph({
     }
   }, []);
 
-  const handleClick = useCallback(
-    (node: any) => makeMockNode(node),
-    [makeMockNode]
-  );
+  // const handleClick = useCallback(
+  //   (node: any) => makeMockNode(node),
+  //   [makeMockNode]
+  // );
 
   return (
     <ForceGraph3DForwardRef
@@ -99,7 +100,7 @@ export default function InteractiveForceGraph({
       }}
       enableNodeDrag={false}
       backgroundColor="black"
-      onNodeClick={handleClick}
+      // onNodeClick={handleClick}
     />
   );
 }
