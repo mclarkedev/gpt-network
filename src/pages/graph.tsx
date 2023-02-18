@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import React, { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
-import { activeNodeIdState, searchQueryListState } from "@/state";
+import {
+  activeNodeIdState,
+  graphDataState,
+  searchQueryListState,
+} from "@/state";
 import { fetchCompletionData } from "@/network";
 import { separator, uniqueObjectsById } from "@/utils";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
@@ -10,10 +14,7 @@ import NavigationHeader from "@/components/NavigationHeader";
 export default function Graph() {
   const activeNodeId = useRecoilValue(activeNodeIdState);
   const searchQueryList = useRecoilValue(searchQueryListState);
-  const [newGraph, setNewGraph] = useState<GraphData>({
-    nodes: [{ id: activeNodeId }],
-    links: [],
-  });
+  const [graphData, setGraphData] = useRecoilState(graphDataState);
 
   // Init nodes on mount
   useEffect(() => {
@@ -44,7 +45,7 @@ export default function Graph() {
       onFinish: console.log,
     });
 
-    // Handle response types
+    // Handle response types, parce csv
     const response = parseResponseType(rawRes);
     const { type, text } = response;
     console.log({ type, text });
@@ -56,16 +57,16 @@ export default function Graph() {
     const csv = text.split(", ").map((string) => string.trim()); // Sanitize name whitespace
 
     // Make graph data from csv
-    const graphData = makeGraphDataFromList(sourceId, csv);
+    const _newData = makeGraphDataFromList(sourceId, csv);
     // Merge graph into active state
-    const mergedGraph = mergeGraphs(newGraph, graphData);
-    setNewGraph(mergedGraph);
+    const mergedGraph = mergeGraphs(graphData, _newData);
+    setGraphData(mergedGraph);
   };
 
   return (
     <div>
       <NavigationHeader />
-      <InteractiveForceGraph data={newGraph} onNodeClick={makeNewNodes} />
+      <InteractiveForceGraph data={graphData} onNodeClick={makeNewNodes} />
     </div>
   );
 }

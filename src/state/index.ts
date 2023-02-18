@@ -1,3 +1,4 @@
+import { GraphData } from "react-force-graph-3d";
 import { separator } from "@/utils";
 import { atom } from "recoil";
 
@@ -31,4 +32,16 @@ export const searchQueryListState = atom({
 export const activeNodeIdState = atom<string>({
   key: "activeNodeId",
   default: "",
+});
+
+/**
+ * Graph Data
+ * - User and API write to graph state
+ */
+export const graphDataState = atom<GraphData>({
+  key: "graphData",
+  default: {
+    nodes: [],
+    links: [],
+  },
 });
