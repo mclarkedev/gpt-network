@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
-import { currentActiveEntityState, searchQueryListState } from "@/state";
+import { activeNodeIdState, searchQueryListState } from "@/state";
 import { fetchCompletionData } from "@/network";
 import { separator, uniqueObjectsById } from "@/utils";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
 import NavigationHeader from "@/components/NavigationHeader";
 
 export default function Graph() {
-  const activeEntity = useRecoilValue(currentActiveEntityState);
+  const activeNodeId = useRecoilValue(activeNodeIdState);
   const searchQueryList = useRecoilValue(searchQueryListState);
   const [newGraph, setNewGraph] = useState<GraphData>({
-    nodes: [{ id: activeEntity }],
+    nodes: [{ id: activeNodeId }],
     links: [],
   });
 
   // Init nodes on mount
   useEffect(() => {
-    makeNewNodes({ id: activeEntity });
+    makeNewNodes({ id: activeNodeId });
   }, []);
 
   const makeNewNodes = async (node: any) => {

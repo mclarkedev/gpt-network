@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { currentActiveEntityState, searchInputState } from "@/state";
+import { activeNodeIdState, searchInputState } from "@/state";
 import { useRouter } from "next/router";
 
 /**
@@ -7,13 +7,13 @@ import { useRouter } from "next/router";
  */
 export default function SearchInput({}: {}) {
   const [searchInput, setSearchInput] = useRecoilState(searchInputState);
-  const [_, setCurrentActiveEntity] = useRecoilState(currentActiveEntityState);
+  const [_, setActiveNodeId] = useRecoilState(activeNodeIdState);
   const router = useRouter();
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    // Set active entity
-    setCurrentActiveEntity(searchInput);
+    // Set active node
+    setActiveNodeId(searchInput);
     router.push("/graph");
   };
 

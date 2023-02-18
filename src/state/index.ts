@@ -1,6 +1,5 @@
-import { fetchCompletionData } from "@/network";
 import { separator } from "@/utils";
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 
 /**
  * Search Input State
@@ -26,10 +25,10 @@ export const searchQueryListState = atom({
 });
 
 /**
- * Current Active Entity
- * - User submits an entity string to be researched
+ * Active Node Id
+ * - User submits a string to be researched
  */
-export const currentActiveEntityState = atom<string>({
-  key: "currentActiveEntity",
+export const activeNodeIdState = atom<string>({
+  key: "activeNodeId",
   default: "",
 });
