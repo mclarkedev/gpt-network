@@ -1,4 +1,4 @@
-import parseJsonSSE from "@/utils";
+import { parseJsonSSE } from "@/utils";
 
 const basePrompt = `I am an encyclopedia API.
 I will be given a list of requests about a subject.

@@ -28,7 +28,7 @@ export function removeItemAtIndex(arr: any[], index: number) {
  * OpenAI SSE helper
  * - https://github.com/beskar-co/parse-json-sse/
  */
-const parseJsonSSE = async <T>({
+export const parseJsonSSE = async <T>({
   data,
   onParse,
   onFinish,
@@ -67,4 +67,19 @@ const parseJsonSSE = async <T>({
   onFinish();
 };
 
-export default parseJsonSSE;
+/**
+ * uniqueObjects
+ */
+export function uniqueObjectsById(arr: any[]) {
+  let uniqueArr = [];
+  let ids: any[] = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (!ids.includes(arr[i].id)) {
+      uniqueArr.push(arr[i]);
+      ids.push(arr[i].id);
+    }
+  }
+
+  return uniqueArr;
+}
