@@ -16,7 +16,8 @@ I will respond in the following format:
 
 I can only return the following types:
 type null = I cannot answer the question about the subject
-type csv = A list of comma separated strings, when the question is asking for a list of stuff
+type csv = A list of comma separated strings, when the question is asking for a list of stuff, never returning more than 3
+
 `;
 
 /**
