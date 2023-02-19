@@ -51,7 +51,7 @@ export default function Graph() {
 
   return (
     <div>
-      <NavigationHeader />
+      <NavigationH eader />
       <InteractiveForceGraph data={graphData} onNodeClick={search} />
     </div>
   );
@@ -117,9 +117,8 @@ const mergeGraphs = (graph1: GraphData, graph2: GraphData) => {
 
 const parseResponseType = (response: string) => {
   const string = response.trim();
-  const matcher = string.toLowerCase();
-  const isNull = matcher.startsWith("null:");
-  const isCSV = matcher.startsWith("csv:");
+  const isNull = string.startsWith("null:");
+  const isCSV = string.startsWith("csv:");
 
   if (isNull) {
     return {
