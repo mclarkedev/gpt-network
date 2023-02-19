@@ -15,7 +15,7 @@ const makeMentionChip = (id: string) => {
   return `<span data-type="mention" data-id="${id}" class=${styles.mention} contenteditable="false">@${id}</span>`;
 };
 
-const defaultContent = ["Who is similar to ", separator, "?"];
+const defaultContent = ["Who are", separator, "'s influences?"];
 
 const stitchContentToHTML = (contentArray = defaultContent, id: string) => {
   return contentArray
