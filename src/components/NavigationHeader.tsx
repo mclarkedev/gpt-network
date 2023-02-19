@@ -8,8 +8,8 @@ export default function NavigationHeader() {
         <Link href="/">
           <div className={styles.card}>{"<-"}</div>
         </Link>
-        <div className={styles.card}>Drafts / Untitled</div>
-        <div className={styles.card}>{""}</div>
+        <div></div>
+        <div></div>
       </div>
     </div>
   );

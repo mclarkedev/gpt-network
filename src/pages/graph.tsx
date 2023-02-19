@@ -51,7 +51,7 @@ export default function Graph() {
 
   return (
     <div>
-      <NavigationH eader />
+      <NavigationHeader />
       <InteractiveForceGraph data={graphData} onNodeClick={search} />
     </div>
   );
