@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil";
+import { atom, useRecoilState } from "recoil";
 
 import {
   Card,
@@ -9,9 +9,22 @@ import {
   Space,
 } from "./StyledComponents";
 import SearchInput from "./SearchInput";
-import { searchQueryListState } from "@/state";
 import { separator } from "@/utils";
 import SearchQueryItem from "./SearchQueryItem";
+
+/**
+ * Search Query List
+ * - User edits a search query using the SearchQueryList
+ */
+export const searchQueryListState = atom({
+  key: "searchQueryList",
+  default: [
+    {
+      label: "Similar",
+      content: ["Who is similar to ", separator, "?"],
+    },
+  ],
+});
 
 export default function SearchQueryListEditor() {
   const [searchQueryList, setSearchQueryList] = useRecoilState(searchQueryListState); // prettier-ignore

@@ -1,63 +1,49 @@
 import React, { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
-import {
-  activeNodeIdState,
-  graphDataState,
-  searchQueryListState,
-} from "@/state";
+import { activeNodeIdState, graphDataState } from "@/state";
 import { fetchCompletionData } from "@/network";
-import { separator, uniqueObjectsById } from "@/utils";
+import { uniqueObjectsById } from "@/utils";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
 import NavigationHeader from "@/components/NavigationHeader";
 
 export default function Graph() {
   const activeNodeId = useRecoilValue(activeNodeIdState);
-  const searchQueryList = useRecoilValue(searchQueryListState);
   const [graphData, setGraphData] = useRecoilState(graphDataState);
 
   // Init nodes on mount
   useEffect(() => {
-    makeNewNodes({ id: activeNodeId });
+    search({ id: activeNodeId });
   }, []);
 
-  const makeNewNodes = async (node: any) => {
+  const search = async (node: any) => {
     // Stateful input
     const sourceId = node.id;
-    const label = searchQueryList?.[0].label;
-    const prompt = searchQueryList?.[0].content
-      .map((value) => {
-        if (value === separator) {
-          return sourceId;
-        } else {
-          return value;
-        }
-      })
-      .join("");
 
     // Get data
     let rawRes = "";
     await fetchCompletionData({
-      prompt,
+      prompt: `Who are ${sourceId}'s influences?`,
       onUpdate: (res: string) => {
         rawRes = res;
       },
       onFinish: console.log,
     });
 
-    // Handle response types, parce csv
+    // Handle response types, parse csv
     const response = parseResponseType(rawRes);
     const { type, text } = response;
     console.log({ type, text });
     if (type !== "csv") {
       // TODO: Handle error
+      console.log(`${type} is not csv`);
       // Can only display csv
       return;
     }
-    const csv = text.split(", ").map((string) => string.trim()); // Sanitize name whitespace
+    const { nodes } = response;
 
     // Make graph data from csv
-    const _newData = makeGraphDataFromList(sourceId, csv);
+    const _newData = makeGraphDataFromList(sourceId, nodes);
     // Merge graph into active state
     const mergedGraph = mergeGraphs(graphData, _newData);
     setGraphData(mergedGraph);
@@ -66,7 +52,7 @@ export default function Graph() {
   return (
     <div>
       <NavigationHeader />
-      <InteractiveForceGraph data={graphData} onNodeClick={makeNewNodes} />
+      <InteractiveForceGraph data={graphData} onNodeClick={search} />
     </div>
   );
 }
@@ -142,9 +128,11 @@ const parseResponseType = (response: string) => {
     };
   }
   if (isCSV) {
+    const data = string.split("csv:")[1].trim();
     return {
       type: "csv",
-      text: string.split("csv:")[1].trim(),
+      text: data,
+      nodes: data.split(",").map((s: string) => s.trim()), // Sanitize name whitespace
     };
   } else {
     return {

@@ -1,8 +1,9 @@
-import { searchInputState, searchQueryListState } from "@/state";
+import { searchInputState } from "@/state";
 import { replaceItemAtIndex } from "@/utils";
 import { useRef } from "react";
 import { useRecoilState } from "recoil";
 import Editor from "./Editor";
+import { searchQueryListState } from "./SearchQueryList";
 import { Card, LabelText } from "./StyledComponents";
 
 export default function SearchQueryItem({ item }: { item: any }) {
