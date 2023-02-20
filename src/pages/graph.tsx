@@ -13,7 +13,9 @@ export default function Graph() {
 
   // Init nodes on mount
   useEffect(() => {
-    activeNodeId && graphData.nodes.length <= 0 && search({ id: activeNodeId });
+    if (activeNodeId && graphData.nodes.length <= 0) {
+      search({ id: activeNodeId });
+    }
   }, []);
 
   const search = async (node: any) => {
