@@ -32,7 +32,7 @@ function onLoad(current: ForceGraphMethods) {
   current.scene().fog = new THREE.FogExp2(0xffffff, 0.0015);
 
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 2);
+  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 10);
   // const lutPass = new LUTPass({
   //   intensity: 3,
   //   lut: ''

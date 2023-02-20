@@ -161,7 +161,7 @@ export default class extends three.Sprite {
       ...lines.map((line) => ctx.measureText(line).width)
     );
     const innerHeight = this.fontSize * lines.length;
-    const double = 1;
+    const double = 1.125;
     canvas.width = (innerWidth + relBorder[0] * 2 + relPadding[0] * 2) * double; // double
     canvas.height =
       (innerHeight + relBorder[1] * 2 + relPadding[1] * 2) * double; //double
@@ -244,6 +244,11 @@ export default class extends three.Sprite {
       }
     }
 
+    // text Shadow
+    // Add more shadow
+    // ctx.shadowColor = "rgba(255,255,255,1)";
+    // ctx.shadowBlur = 7;
+
     // paint background
     if (this.backgroundColor) {
       ctx.fillStyle = this.backgroundColor;
@@ -320,6 +325,10 @@ export default class extends three.Sprite {
     ctx.fillStyle = grad;
     // ctx.setTransform(1, 0, 0, 0.33, 0, 0);
     ctx.fillRect(0, 0, canvas.width, canvas.width);
+
+    // text Shadow
+    ctx.shadowColor = "white";
+    ctx.shadowBlur = 25;
 
     // paint text
     ctx.font = font; // Set font again after canvas is resized, as context properties are reset
