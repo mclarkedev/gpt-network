@@ -42,11 +42,15 @@ export default function Graph() {
     }
     const { nodes } = response;
 
-    // Make graph data from csv
-    const _newData = makeGraphDataFromList(sourceId, nodes);
-    // Merge graph into active state
-    const mergedGraph = mergeGraphs(graphData, _newData);
-    setGraphData(mergedGraph);
+    if (nodes) {
+      // Make graph data from csv
+      const _newData = makeGraphDataFromList(sourceId, nodes);
+      // Merge graph into active state
+      const mergedGraph = mergeGraphs(graphData, _newData);
+      setGraphData(mergedGraph);
+    } else {
+      console.error("No nodes found");
+    }
   };
 
   return (

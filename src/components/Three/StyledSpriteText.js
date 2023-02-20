@@ -313,9 +313,9 @@ export default class extends three.Sprite {
       canvas.width
     );
 
-    grad.addColorStop(0, "rgba(0, 0, 0, 1)");
-    grad.addColorStop(0.5, "rgba(0, 0, 0, 0)");
-    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    grad.addColorStop(0.5, "rgba(255, 255, 255, 0)");
+    grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
     ctx.fillStyle = grad;
     // ctx.setTransform(1, 0, 0, 0.33, 0, 0);
