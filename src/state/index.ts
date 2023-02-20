@@ -53,3 +53,23 @@ export const graphDataState = atom<GraphData>({
   },
   effects: [localStorageEffect("_:graphData")],
 });
+
+export const graphStatusState = atom<"pending" | "loading" | "complete">({
+  key: "graphStatus",
+  default: "pending",
+});
+
+export const graphStreamState = atom<string | null>({
+  key: "graphStream",
+  default: null,
+});
+
+export const graphPromptState = atom<string | null>({
+  key: "graphPrompt",
+  default: null,
+});
+
+export const graphHistoryState = atom<string[] | []>({
+  key: "graphHistory",
+  default: [],
+});

@@ -95,7 +95,6 @@ export default function InteractiveForceGraph({
       linkOpacity={1}
       cooldownTicks={5}
       onEngineStop={() => {
-        console.log("hasDoneInitialDrawRef", hasDoneInitialDrawRef);
         hasDoneInitialDrawRef.current.zoomToFit(400);
       }}
     />

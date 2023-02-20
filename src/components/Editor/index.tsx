@@ -34,7 +34,7 @@ const stitchContentToHTML = (contentArray = defaultContent, id: string) => {
  */
 export default function Editor({
   activeMention = "Start node",
-  defaultContent = ["Who is similar to ", separator, "?"],
+  defaultContent = ["Who, or what, is similar to ", separator, "?"],
   onChange = (content: string[]) => {},
 }) {
   const defaultHTML = stitchContentToHTML(defaultContent, activeMention);
