@@ -48,7 +48,6 @@ export default function InteractiveForceGraph({
   onNodeClick: ForceGraphProps["onNodeClick"];
 }) {
   var _data = JSON.parse(JSON.stringify(data)); // Mutable
-
   const hasDoneInitialDrawRef = useRef<any>(null);
 
   // Pass ref into lazy loaded component
@@ -63,8 +62,6 @@ export default function InteractiveForceGraph({
     },
     [hasDoneInitialDrawRef]
   );
-
-  console.log(_data);
 
   return (
     <ForceGraph3DForwardRef
@@ -88,6 +85,11 @@ export default function InteractiveForceGraph({
       enableNodeDrag={false}
       backgroundColor="white"
       onNodeClick={onNodeClick}
+      onNodeHover={(node: any, prevNode: any) => {
+        const scale = 1.07;
+        node?.["__threeObj"]?.scale?.set(scale, scale, scale);
+        prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
+      }}
       linkColor={"black"}
       linkWidth={0.25}
       linkOpacity={1}
