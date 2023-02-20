@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
 import { activeNodeIdState, graphDataState } from "@/state";
 import { fetchCompletionData } from "@/network";
-import { uniqueObjectsById } from "@/utils";
+import { genRandomTree, uniqueObjectsById } from "@/utils";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
 import NavigationHeader from "@/components/NavigationHeader";
 
@@ -13,7 +13,7 @@ export default function Graph() {
 
   // Init nodes on mount
   useEffect(() => {
-    search({ id: activeNodeId });
+    activeNodeId && graphData.nodes.length <= 0 && search({ id: activeNodeId });
   }, []);
 
   const search = async (node: any) => {
