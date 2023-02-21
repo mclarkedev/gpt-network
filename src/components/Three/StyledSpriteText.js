@@ -303,7 +303,7 @@ export default class extends three.Sprite {
     ctx.translate(...relBorder);
     ctx.translate(...relPadding);
 
-    canvas.height = canvas.width / 2;
+    canvas.height = canvas.width;
 
     // paint background
     var outerRadius = canvas.width * 0.4;
@@ -330,7 +330,7 @@ export default class extends three.Sprite {
 
     // Center text width
     var textWidth = ctx.measureText(this._text).width;
-    var textHeight = ctx.measureText(this._text).width;
+    var textHeight = innerHeight;
 
     // paint text
     ctx.font = font; // Set font again after canvas is resized, as context properties are reset
@@ -351,7 +351,7 @@ export default class extends three.Sprite {
       ctx.fillText(
         line,
         canvas.width / 4 - textWidth * 2, // Center width
-        canvas.width / 4 + textHeight // Center height
+        canvas.height / 2 + textHeight / 2 // Center height
       );
     });
 
