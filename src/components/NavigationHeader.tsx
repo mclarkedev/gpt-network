@@ -1,15 +1,17 @@
 import Link from "next/link";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 
-import { graphStatusState } from "@/state";
+import { graphDataState, graphStatusState } from "@/state";
 import { Chip, Row, SearchIcon } from "./StyledComponents";
 import SearchInput from "./SearchInput";
 
 export default function NavigationHeader() {
   const graphStatus = useRecoilValue(graphStatusState);
+  const resetGraph = useResetRecoilState(graphDataState);
+
   return (
     <div className="absolute top-0 left-0 right-0 z-50 p-5 text-black">
-      <div className="flex justify-between">
+      <div className="flex justify-between align-middle">
         <div></div>
         <div>
           <div>
@@ -22,6 +24,33 @@ export default function NavigationHeader() {
           </div>
         </div>
         <div>
+          {graphStatus === "complete" && (
+            <div
+              onClick={resetGraph}
+              className="bg-neutral-100 rounded-full px-3 py-3 text-md w-full cursor-pointer"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 13 13"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1.5 11.877L11.4379 1.87695"
+                  stroke="#252525"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M11.5 11.877L1.56211 1.87695"
+                  stroke="#252525"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+          )}
           {graphStatus === "loading" && (
             <div>
               <div role="status">
