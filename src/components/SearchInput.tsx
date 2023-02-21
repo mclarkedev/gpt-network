@@ -7,16 +7,16 @@ import { useUserActions } from "@/actions";
  */
 export default function SearchInput({}: {}) {
   const [searchInput, setSearchInput] = useRecoilState(searchInputState);
-  const setGraphData = useSetRecoilState(graphDataState);
+  // const setGraphData = useSetRecoilState(graphDataState);
   const { searchNode } = useUserActions();
 
   const onSubmit = (e: any) => {
     e.preventDefault();
     // Reset graph to single start node
-    setGraphData(() => ({
-      nodes: [{ id: searchInput }],
-      links: [],
-    }));
+    // setGraphData(() => ({
+    //   nodes: [{ id: searchInput }],
+    //   links: [],
+    // }));
     searchNode({ id: searchInput });
   };
 
@@ -29,7 +29,7 @@ export default function SearchInput({}: {}) {
       <form onSubmit={onSubmit} className="w-full">
         <input
           type={"text"}
-          placeholder="Search artists or designers..."
+          placeholder="Search topics ..."
           className="outline-none bg-transparent w-full"
           value={searchInput}
           onChange={onChange}
