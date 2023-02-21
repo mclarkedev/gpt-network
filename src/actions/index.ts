@@ -10,6 +10,11 @@ import {
 } from "@/state";
 import { fetchCompletionData } from "@/network";
 import { uniqueObjectsById } from "@/utils";
+import { Object3D } from "three";
+
+type NodeObjectWithThree = NodeObject & {
+  __threeObj?: Object3D;
+};
 
 function useUserActions() {
   const activeNodeId = useRecoilValue(activeNodeIdState);
@@ -25,25 +30,36 @@ function useUserActions() {
     });
   }
 
-  async function searchNode(node: NodeObject | any) {
+  async function searchNode(node: NodeObjectWithThree) {
     // Set active state scale
     const scale = 1.07;
     node?.["__threeObj"]?.scale?.set(scale, scale, scale);
     // Stateful input
     const sourceId = node.id;
+    if (!sourceId) {
+      return;
+    }
+
     setGraphStatus("loading");
 
-    const prompt = `Who, or what, influenced ${sourceId}?`;
-    setGraphPrompt(prompt);
+    const subject = sourceId;
+    subject && setGraphPrompt(`${subject}`);
+    sourceId && addGraphHistory(`${sourceId}`);
 
-    addGraphHistory(sourceId);
+    const exclude = graphData.nodes
+      .map((node) => {
+        return node.id;
+      })
+      .join(", ");
+    console.log(exclude);
 
     // Get data
     let rawRes = "";
     await fetchCompletionData({
-      prompt: `Who are ${sourceId}'s influences?`,
+      exclude,
+      subject,
       onUpdate: (res: string) => {
-        setGraphStatus("streaming");
+        setGraphStatus("loading");
         setGraphStream(res);
         node?.["__threeObj"]?.scale?.set(scale, scale, scale);
         rawRes = res;
@@ -57,7 +73,7 @@ function useUserActions() {
     console.log({ type, text });
     if (type !== "csv") {
       // TODO: Handle error
-      setGraphStatus("error: is not csv");
+      setGraphStatus("error");
       console.log(`${type} is not csv`);
       // Can only display csv
       return;
@@ -73,7 +89,7 @@ function useUserActions() {
       setGraphStatus("complete");
     } else {
       console.error("No nodes found");
-      setGraphStatus("error: no nodes found");
+      setGraphStatus("error");
     }
 
     return activeNodeId;
