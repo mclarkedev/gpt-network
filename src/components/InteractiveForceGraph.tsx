@@ -39,7 +39,7 @@ function onLoad(current: ForceGraphMethods) {
     .strength(() => 1);
 
   // Zoom
-  current.zoomToFit(400);
+  current.zoomToFit(100, 0);
 }
 
 const explainerGraphData = {
@@ -90,7 +90,7 @@ export default function InteractiveForceGraph({}: {}) {
         const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
         sprite.color = "black";
         sprite.backgroundColor = false;
-        sprite.textHeight = 8;
+        sprite.textHeight = 18;
         sprite.fontSize = 200; // default is 90
         sprite.fontFace = "IBM Plex Sans";
 

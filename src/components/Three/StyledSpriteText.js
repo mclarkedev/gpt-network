@@ -161,7 +161,7 @@ export default class extends three.Sprite {
       ...lines.map((line) => ctx.measureText(line).width)
     );
     const innerHeight = this.fontSize * lines.length;
-    const double = 1.5;
+    const double = 1.25;
     canvas.width = (innerWidth + relBorder[0] * 2 + relPadding[0] * 2) * double; // double
     canvas.height =
       (innerHeight + relBorder[1] * 2 + relPadding[1] * 2) * double; //double
