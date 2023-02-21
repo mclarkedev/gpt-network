@@ -1,24 +1,14 @@
 import React from "react";
-import { Card, Chip, Row, SearchIcon } from "@/components/StyledComponents";
-import SearchInput from "@/components/SearchInput";
+import InteractiveForceGraph from "@/components/InteractiveForceGraph";
+import NavigationHeader from "@/components/NavigationHeader";
+import StreamState from "@/components/StreamState";
 
-export default function Home() {
+export default function Graph() {
   return (
-    <div
-      className="inset-center center z-50"
-      style={{
-        width: 600,
-        maxHeight: "100vh",
-      }}
-    >
-      <Card>
-        <Chip>
-          <Row>
-            <SearchIcon className="mr-2" />
-            <SearchInput />
-          </Row>
-        </Chip>
-      </Card>
+    <div>
+      <NavigationHeader />
+      <StreamState />
+      <InteractiveForceGraph />
     </div>
   );
 }
