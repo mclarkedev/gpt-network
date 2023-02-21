@@ -44,15 +44,24 @@ function onLoad(current: ForceGraphMethods) {
 
 const explainerGraphData = {
   nodes: [
-    { id: "Discover" },
-    { id: "with Nexus" },
     { id: "Art" },
     { id: "Cinema" },
-    { id: "Theater" },
     { id: "Books" },
     { id: "Music" },
+    { id: "Museums" },
+    { id: "Visual Artists" },
+    { id: "Visual Art" },
+    { id: "Emerging Visual Artists" },
   ],
-  links: [],
+  links: [
+    { source: "Art", target: "Cinema" },
+    { source: "Art", target: "Music" },
+    { source: "Art", target: "Visual Art" },
+    { source: "Art", target: "Books" },
+    { source: "Visual Art", target: "Visual Artists" },
+    { source: "Visual Artists", target: "Emerging Visual Artists" },
+    { source: "Visual Art", target: "Museums" },
+  ],
 };
 
 export default function InteractiveForceGraph({}: {}) {
