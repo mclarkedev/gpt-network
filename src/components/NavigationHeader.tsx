@@ -39,14 +39,14 @@ export default function NavigationHeader() {
                 <path
                   d="M1.5 11.877L11.4379 1.87695"
                   stroke="#252525"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
                 <path
                   d="M11.5 11.877L1.56211 1.87695"
                   stroke="#252525"
-                  stroke-width="2"
-                  stroke-linecap="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                 />
               </svg>
             </div>
