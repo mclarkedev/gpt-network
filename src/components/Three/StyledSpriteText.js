@@ -161,7 +161,7 @@ export default class extends three.Sprite {
       ...lines.map((line) => ctx.measureText(line).width)
     );
     const innerHeight = this.fontSize * lines.length;
-    const double = 1.1;
+    const double = 1.5;
     canvas.width = (innerWidth + relBorder[0] * 2 + relPadding[0] * 2) * double; // double
     canvas.height =
       (innerHeight + relBorder[1] * 2 + relPadding[1] * 2) * double; //double
@@ -244,11 +244,6 @@ export default class extends three.Sprite {
       }
     }
 
-    // text Shadow
-    // Add more shadow
-    // ctx.shadowColor = "rgba(255,255,255,1)";
-    // ctx.shadowBlur = 7;
-
     // paint background
     if (this.backgroundColor) {
       ctx.fillStyle = this.backgroundColor;
@@ -308,18 +303,21 @@ export default class extends three.Sprite {
     ctx.translate(...relBorder);
     ctx.translate(...relPadding);
 
+    canvas.height = canvas.width / 2;
+
     // paint background
+    var outerRadius = canvas.width * 0.4;
+    var innerRadius = canvas.width * 0.01;
     var grad = ctx.createRadialGradient(
       canvas.width / 2,
-      canvas.width / 2,
-      0,
+      canvas.height / 2,
+      innerRadius,
       canvas.width / 2,
       canvas.height / 2,
-      canvas.width
+      outerRadius
     );
 
     grad.addColorStop(0, "rgba(255, 255, 255, 1)");
-    grad.addColorStop(0.5, "rgba(255, 255, 255, 0)");
     grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
     ctx.fillStyle = grad;
@@ -328,7 +326,11 @@ export default class extends three.Sprite {
 
     // text Shadow
     ctx.shadowColor = "white";
-    ctx.shadowBlur = 25;
+    ctx.shadowBlur = 20;
+
+    // Center text width
+    var textWidth = ctx.measureText(this._text).width;
+    var textHeight = ctx.measureText(this._text).width;
 
     // paint text
     ctx.font = font; // Set font again after canvas is resized, as context properties are reset
@@ -346,7 +348,11 @@ export default class extends three.Sprite {
       const lineY = (index + 1) * this.fontSize;
 
       drawTextStroke && ctx.strokeText(line, lineX, lineY);
-      ctx.fillText(line, lineX, lineY);
+      ctx.fillText(
+        line,
+        canvas.width / 4 - textWidth * 2, // Center width
+        canvas.width / 4 + textHeight // Center height
+      );
     });
 
     // Inject canvas into sprite

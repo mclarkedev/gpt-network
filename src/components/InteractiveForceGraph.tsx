@@ -26,16 +26,20 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  * onLoad inits our ThreeJS scene
  */
 function onLoad(current: ForceGraphMethods) {
-  // Fog
-  current.scene().fog = new THREE.FogExp2(0xffffff, 0.0015);
-
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 50);
-  // const lutPass = new LUTPass({
-  //   intensity: 3,
-  //   lut: ''
-  // });
+  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 10);
   current.postProcessingComposer().addPass(dotPass);
+
+  // Made links shorter
+  current
+    .d3Force("link")
+    ?.distance(() => {
+      return 1;
+    })
+    .strength(() => 1);
+
+  // Zoom
+  current.zoomToFit(400);
 }
 
 const explainerGraphData = {
@@ -63,7 +67,6 @@ export default function InteractiveForceGraph({}: {}) {
       if (current === null) {
       } else {
         onLoad(current);
-        current.zoomToFit(400);
         hasDoneInitialDrawRef.current = current;
       }
     },
@@ -97,7 +100,7 @@ export default function InteractiveForceGraph({}: {}) {
         prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
       }}
       linkColor={"black"}
-      linkWidth={0.25}
+      linkWidth={0.2}
       linkOpacity={1}
       cooldownTicks={5}
       onEngineStop={() => {
