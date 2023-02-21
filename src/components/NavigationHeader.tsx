@@ -2,17 +2,24 @@ import Link from "next/link";
 import { useRecoilValue } from "recoil";
 
 import { graphStatusState } from "@/state";
+import { Chip, Row, SearchIcon } from "./StyledComponents";
+import SearchInput from "./SearchInput";
 
 export default function NavigationHeader() {
   const graphStatus = useRecoilValue(graphStatusState);
   return (
-    <div className="absolute top-0 left-0 right-0 z-50 p-5">
+    <div className="absolute top-0 left-0 right-0 z-50 p-5 text-black">
       <div className="flex justify-between">
-        <Link href="/">
-          <div className={styles.card}>{"<-"}</div>
-        </Link>
+        <div></div>
         <div>
-          <div></div>
+          <div>
+            <Chip>
+              <Row>
+                <SearchIcon className="mr-2" />
+                <SearchInput />
+              </Row>
+            </Chip>
+          </div>
         </div>
         <div>
           {graphStatus === "loading" && (

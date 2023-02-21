@@ -1,6 +1,5 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { activeNodeIdState, graphDataState, searchInputState } from "@/state";
-import { useRouter } from "next/router";
+import { graphDataState, searchInputState } from "@/state";
 import { useUserActions } from "@/actions";
 
 /**
@@ -10,8 +9,6 @@ export default function SearchInput({}: {}) {
   const [searchInput, setSearchInput] = useRecoilState(searchInputState);
   const setGraphData = useSetRecoilState(graphDataState);
   const { searchNode } = useUserActions();
-  const [_, setActiveNodeId] = useRecoilState(activeNodeIdState);
-  const router = useRouter();
 
   const onSubmit = (e: any) => {
     e.preventDefault();
@@ -20,8 +17,6 @@ export default function SearchInput({}: {}) {
       nodes: [{ id: searchInput }],
       links: [],
     }));
-    setActiveNodeId(searchInput);
-    router.push("/graph");
     searchNode({ id: searchInput });
   };
 

@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   graphDataState,
   graphStatusState,
-  activeNodeIdState,
   graphStreamState,
   graphPromptState,
 } from "@/state";
@@ -17,7 +16,6 @@ type NodeObjectWithThree = NodeObject & {
 };
 
 function useUserActions() {
-  const activeNodeId = useRecoilValue(activeNodeIdState);
   const [graphData, setGraphData] = useRecoilState(graphDataState);
   const setGraphHistoryState = useSetRecoilState(graphHistoryState);
   const setGraphStatus = useSetRecoilState(graphStatusState);
@@ -87,12 +85,11 @@ function useUserActions() {
       const mergedGraph = mergeGraphs(graphData, _newData);
       setGraphData(mergedGraph);
       setGraphStatus("complete");
+      return mergedGraph;
     } else {
       console.error("No nodes found");
       setGraphStatus("error");
     }
-
-    return activeNodeId;
   }
 
   return {

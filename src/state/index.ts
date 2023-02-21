@@ -33,15 +33,6 @@ export const searchInputState = atom({
 });
 
 /**
- * Active Node Id
- * - User submits a string to be researched
- */
-export const activeNodeIdState = atom<string>({
-  key: "activeNodeId",
-  default: "",
-});
-
-/**
  * Graph Data
  * - User and API write to graph state
  */
