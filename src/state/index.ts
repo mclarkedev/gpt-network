@@ -32,7 +32,7 @@ export const searchInputState = atom({
   default: "",
 });
 
-type __meta = {
+export type __meta = {
   __meta: {
     camera: {
       position: {
@@ -55,7 +55,11 @@ export const graphDataState = atom<GraphData & __meta>({
     links: [],
     __meta: {
       camera: {
-        position: { x: 33, y: 40, z: -6 },
+        position: {
+          x: 47.57015497543777,
+          y: -69.88663392827746,
+          z: 5.280961341662786,
+        },
       },
     },
   },

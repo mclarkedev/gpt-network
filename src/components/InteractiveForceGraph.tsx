@@ -6,13 +6,17 @@ import React, {
   useRef,
 } from "react";
 import dynamic from "next/dynamic";
-import { ForceGraphMethods, ForceGraphProps } from "react-force-graph-3d";
+import {
+  ForceGraphMethods,
+  ForceGraphProps,
+  GraphData,
+} from "react-force-graph-3d";
 import * as THREE from "three";
 import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
 import { useRecoilValue } from "recoil";
 
 import StyledSpriteText from "@/components/Three/StyledSpriteText";
-import { graphDataState } from "@/state";
+import { graphDataState, __meta } from "@/state";
 import { useUserActions } from "@/actions";
 import {
   getBrowserVisibilityProp,
@@ -35,7 +39,7 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
 /**
  * onLoad inits our ThreeJS scene
  */
-function onLoad(current: ForceGraphMethods) {
+function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   // Post
   const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 53);
   current.postProcessingComposer().addPass(dotPass);
@@ -47,6 +51,14 @@ function onLoad(current: ForceGraphMethods) {
       return 1;
     })
     .strength(() => 1);
+
+  // Use last camera position
+  const {
+    __meta: {
+      camera: { position },
+    },
+  } = graphData;
+  current?.cameraPosition(position);
 }
 
 const explainerGraphData = {
@@ -71,7 +83,7 @@ const explainerGraphData = {
   ],
 };
 
-export default function InteractiveForceGraph({}: {}) {
+export default function InteractiveForceGraph() {
   // const isPageVisible = usePageVisibility();
   const graphData = useRecoilValue(graphDataState);
   const { searchNode } = useUserActions();
@@ -83,11 +95,11 @@ export default function InteractiveForceGraph({}: {}) {
     (current: ForceGraphMethods | null) => {
       if (current === null) {
       } else {
-        onLoad(current);
+        onLoad(current, graphData);
         hasDoneInitialDrawRef.current = current;
       }
     },
-    [hasDoneInitialDrawRef]
+    [hasDoneInitialDrawRef, graphData]
   );
 
   /**
@@ -107,6 +119,7 @@ export default function InteractiveForceGraph({}: {}) {
       if (isDocHidden) {
         hasDoneInitialDrawRef.current?.d3ReheatSimulation();
         hasDoneInitialDrawRef.current?.resumeAnimation();
+        console.log(hasDoneInitialDrawRef.current?.camera()?.position);
         console.log("resume");
       } else {
         hasDoneInitialDrawRef.current?.pauseAnimation();
@@ -167,7 +180,9 @@ export default function InteractiveForceGraph({}: {}) {
            * Use last camera position
            */
           const {
-            __meta: { camera: position },
+            __meta: {
+              camera: { position },
+            },
           } = graphData;
           hasDoneInitialDrawRef.current?.cameraPosition(position);
           /**
