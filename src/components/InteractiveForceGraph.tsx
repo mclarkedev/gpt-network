@@ -2,18 +2,22 @@ import React, {
   ForwardedRef,
   forwardRef,
   useCallback,
+  useEffect,
   useRef,
-  useState,
 } from "react";
 import dynamic from "next/dynamic";
 import { ForceGraphMethods, ForceGraphProps } from "react-force-graph-3d";
 import * as THREE from "three";
 import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
+import { useRecoilValue } from "recoil";
 
 import StyledSpriteText from "@/components/Three/StyledSpriteText";
-import { useRecoilValue } from "recoil";
 import { graphDataState } from "@/state";
 import { useUserActions } from "@/actions";
+import {
+  getBrowserVisibilityProp,
+  getIsDocumentHidden,
+} from "@/utils/pageVisibility";
 
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
@@ -68,6 +72,7 @@ const explainerGraphData = {
 };
 
 export default function InteractiveForceGraph({}: {}) {
+  // const isPageVisible = usePageVisibility();
   const graphData = useRecoilValue(graphDataState);
   const { searchNode } = useUserActions();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
@@ -84,6 +89,33 @@ export default function InteractiveForceGraph({}: {}) {
     },
     [hasDoneInitialDrawRef]
   );
+
+  /**
+   * Pause rendering when page is not visible
+   * Resuming causes intro animation on page visible
+   */
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const visibilityChange = getBrowserVisibilityProp();
+
+    function handleVisibilityChange() {
+      const isDocHidden = getIsDocumentHidden();
+
+      if (isDocHidden) {
+        hasDoneInitialDrawRef.current?.d3ReheatSimulation();
+        hasDoneInitialDrawRef.current?.resumeAnimation();
+        console.log("resume");
+      } else {
+        hasDoneInitialDrawRef.current?.pauseAnimation();
+        console.log("pause");
+      }
+    }
+
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
+  }, []);
 
   return (
     <ForceGraph3DForwardRef
@@ -130,7 +162,7 @@ export default function InteractiveForceGraph({}: {}) {
       cooldownTicks={100}
       d3AlphaDecay={0.2}
       onEngineStop={() => {
-        if (_data.nodes.length) {
+        if (_data.nodes.length ** _data.__meta?.camera?.position) {
           /**
            * Use last camera position
            */
