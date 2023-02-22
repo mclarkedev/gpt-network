@@ -37,7 +37,7 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  */
 function onLoad(current: ForceGraphMethods) {
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 10);
+  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 53);
   current.postProcessingComposer().addPass(dotPass);
 
   // Made links shorter
@@ -123,7 +123,7 @@ export default function InteractiveForceGraph({}: {}) {
       graphData={_data.nodes.length ? _data : explainerGraphData}
       nodeThreeObject={(node) => {
         const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
-        sprite.color = "black";
+        sprite.color = "rgba(40,40,40,1)";
         sprite.backgroundColor = false;
         sprite.textHeight = 18;
         sprite.fontSize = 200; // default is 90
@@ -136,7 +136,7 @@ export default function InteractiveForceGraph({}: {}) {
         return group;
       }}
       enableNodeDrag={false}
-      backgroundColor="white"
+      backgroundColor="rgba(240,240,240,1)"
       onNodeClick={async (node) => {
         /**
          * Set last camera position
