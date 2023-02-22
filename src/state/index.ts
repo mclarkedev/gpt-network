@@ -32,15 +32,32 @@ export const searchInputState = atom({
   default: "",
 });
 
+type __meta = {
+  __meta: {
+    camera: {
+      position: {
+        x: number;
+        y: number;
+        z: number;
+      };
+    };
+  };
+};
+
 /**
  * Graph Data
  * - User and API write to graph state
  */
-export const graphDataState = atom<GraphData>({
+export const graphDataState = atom<GraphData & __meta>({
   key: "graphData",
   default: {
     nodes: [],
     links: [],
+    __meta: {
+      camera: {
+        position: { x: 33, y: 40, z: -6 },
+      },
+    },
   },
   effects: [localStorageEffect("_:graphData")],
 });

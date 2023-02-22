@@ -28,7 +28,7 @@ export default class extends three.Sprite {
     this._strokeWidth = 0;
     this._strokeColor = "white";
 
-    this._fontFace = "Arial";
+    this._fontFace = "IBM Plex Sans";
     this._fontSize = 90; // defines text resolution
     this._fontWeight = "normal";
 
@@ -154,7 +154,7 @@ export default class extends three.Sprite {
     const relPadding = padding.map((p) => p * this.fontSize * 0.1); // padding in canvas units
 
     const lines = this.text.split("\n");
-    const font = `${this.fontWeight} ${this.fontSize}px ${this.fontFace}`;
+    const font = `${this.fontWeight} ${this.fontSize}px ${this.fontFace}, Arial`;
 
     ctx.font = font; // measure canvas with appropriate font
     const innerWidth = Math.max(

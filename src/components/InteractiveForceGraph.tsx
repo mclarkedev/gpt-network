@@ -1,4 +1,10 @@
-import React, { ForwardedRef, forwardRef, useCallback, useRef } from "react";
+import React, {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import dynamic from "next/dynamic";
 import { ForceGraphMethods, ForceGraphProps } from "react-force-graph-3d";
 import * as THREE from "three";
@@ -37,9 +43,6 @@ function onLoad(current: ForceGraphMethods) {
       return 1;
     })
     .strength(() => 1);
-
-  // Zoom
-  current.zoomToFit(100, 0);
 }
 
 const explainerGraphData = {
@@ -102,7 +105,20 @@ export default function InteractiveForceGraph({}: {}) {
       }}
       enableNodeDrag={false}
       backgroundColor="white"
-      onNodeClick={searchNode}
+      onNodeClick={async (node) => {
+        /**
+         * Set last camera position
+         */
+        const position = hasDoneInitialDrawRef.current.camera().position;
+        const { x, y, z } = position;
+        const __meta = { camera: { position: { x, y, z } } };
+        /**
+         * Pause animation while fetching
+         */
+        hasDoneInitialDrawRef.current.pauseAnimation();
+        await searchNode(node, __meta);
+        hasDoneInitialDrawRef.current?.resumeAnimation();
+      }}
       onNodeHover={(node: any, prevNode: any) => {
         const scale = 1.07;
         node?.["__threeObj"]?.scale?.set(scale, scale, scale);
@@ -111,10 +127,24 @@ export default function InteractiveForceGraph({}: {}) {
       linkColor={"black"}
       linkWidth={0.2}
       linkOpacity={1}
-      cooldownTicks={5}
+      cooldownTicks={100}
+      d3AlphaDecay={0.2}
       onEngineStop={() => {
-        hasDoneInitialDrawRef.current.zoomToFit(400);
+        if (_data.nodes.length) {
+          /**
+           * Use last camera position
+           */
+          const {
+            __meta: { camera: position },
+          } = graphData;
+          hasDoneInitialDrawRef.current?.cameraPosition(position);
+          /**
+           * Resume Animation
+           */
+          hasDoneInitialDrawRef.current?.resumeAnimation();
+        }
       }}
+      showNavInfo={false}
     />
   );
 }

@@ -11,6 +11,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <main className={inter.className}>
         <Component {...pageProps} />
+        <div className={plex.className} />
       </main>
     </RecoilRoot>
   );

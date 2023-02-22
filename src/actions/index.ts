@@ -1,6 +1,6 @@
 import { graphHistoryState } from "./../state/index";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   graphDataState,
   graphStatusState,
@@ -28,7 +28,7 @@ function useUserActions() {
     });
   }
 
-  async function searchNode(node: NodeObjectWithThree) {
+  async function searchNode(node: NodeObjectWithThree, __meta: any) {
     // Set active state scale
     const scale = 1.07;
     node?.["__threeObj"]?.scale?.set(scale, scale, scale);
@@ -83,7 +83,8 @@ function useUserActions() {
       const _newData = makeGraphDataFromList(sourceId, nodes);
       // Merge graph into active state
       const mergedGraph = mergeGraphs(graphData, _newData);
-      setGraphData(mergedGraph);
+      const withMeta = { ...mergedGraph, __meta };
+      setGraphData(withMeta);
       setGraphStatus("complete");
       return mergedGraph;
     } else {
