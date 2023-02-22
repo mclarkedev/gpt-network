@@ -5,15 +5,15 @@ import { atom } from "recoil";
  * https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence
  */
 const localStorageEffect =
-  (key) =>
-  ({ setSelf, onSet }) => {
+  (key: any) =>
+  ({ setSelf, onSet }: any) => {
     if (typeof window !== "undefined") {
       const savedValue = localStorage?.getItem(key);
       if (savedValue != null) {
         setSelf(JSON.parse(savedValue));
       }
 
-      onSet((newValue, _, isReset) => {
+      onSet((newValue: any, _: any, isReset: any) => {
         isReset
           ? window.localStorage?.removeItem(key)
           : window.localStorage?.setItem(key, JSON.stringify(newValue));
@@ -66,7 +66,9 @@ export const graphDataState = atom<GraphData & __meta>({
   effects: [localStorageEffect("_:graphData")],
 });
 
-export const graphStatusState = atom<"pending" | "loading" | "complete">({
+export const graphStatusState = atom<
+  "pending" | "loading" | "complete" | "error"
+>({
   key: "graphStatus",
   default: "pending",
 });

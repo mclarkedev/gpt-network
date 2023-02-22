@@ -41,7 +41,7 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  */
 function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 53);
+  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 500); // 53 - chrome
   current.postProcessingComposer().addPass(dotPass);
 
   // Made links shorter
@@ -133,6 +133,7 @@ export default function InteractiveForceGraph() {
   return (
     <ForceGraph3DForwardRef
       ref={graphRefCallback}
+      // rendererConfig={{ powerPreference: "high-performance" }}
       graphData={_data.nodes.length ? _data : explainerGraphData}
       nodeThreeObject={(node) => {
         const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
@@ -154,7 +155,7 @@ export default function InteractiveForceGraph() {
         /**
          * Set last camera position
          */
-        const position = hasDoneInitialDrawRef.current.camera().position;
+        const position = hasDoneInitialDrawRef.current?.camera()?.position;
         const { x, y, z } = position;
         const __meta = { camera: { position: { x, y, z } } };
         /**
@@ -162,6 +163,9 @@ export default function InteractiveForceGraph() {
          */
         hasDoneInitialDrawRef.current.pauseAnimation();
         await searchNode(node, __meta);
+        /**
+         * Resume animation after
+         */
         hasDoneInitialDrawRef.current?.resumeAnimation();
       }}
       onNodeHover={(node: any, prevNode: any) => {
@@ -172,25 +176,8 @@ export default function InteractiveForceGraph() {
       linkColor={"black"}
       linkWidth={0.2}
       linkOpacity={1}
-      cooldownTicks={100}
+      cooldownTicks={80}
       d3AlphaDecay={0.2}
-      onEngineStop={() => {
-        if (_data.nodes.length ** _data.__meta?.camera?.position) {
-          /**
-           * Use last camera position
-           */
-          const {
-            __meta: {
-              camera: { position },
-            },
-          } = graphData;
-          hasDoneInitialDrawRef.current?.cameraPosition(position);
-          /**
-           * Resume Animation
-           */
-          hasDoneInitialDrawRef.current?.resumeAnimation();
-        }
-      }}
       showNavInfo={false}
     />
   );

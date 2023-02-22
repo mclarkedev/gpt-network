@@ -80,7 +80,7 @@ function useUserActions() {
 
     if (nodes) {
       // Make graph data from csv
-      const _newData = makeGraphDataFromList(sourceId, nodes);
+      const _newData = makeGraphDataFromList(`${sourceId}`, nodes);
       // Merge graph into active state
       const mergedGraph = mergeGraphs(graphData, _newData);
       const withMeta = { ...mergedGraph, __meta };
