@@ -1,5 +1,5 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { graphDataState, searchInputState } from "@/state";
+import { useRecoilState } from "recoil";
+import { searchInputState } from "@/state";
 import { useUserActions } from "@/actions";
 
 /**

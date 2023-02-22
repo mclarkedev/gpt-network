@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 
 import { graphDataState, graphStatusState } from "@/state";
@@ -78,7 +77,3 @@ export default function NavigationHeader() {
     </div>
   );
 }
-
-const styles = {
-  card: "bg-neutral-800 rounded-full px-5 py-2 text-sm w-fit",
-};
