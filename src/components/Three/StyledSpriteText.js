@@ -317,7 +317,7 @@ export default class extends three.Sprite {
       outerRadius
     );
 
-    grad.addColorStop(0, "rgba(200, 255, 255, 1)");
+    grad.addColorStop(0, "rgba(255, 255, 255, 2)");
     grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
     ctx.fillStyle = grad;

@@ -6,10 +6,7 @@ export const Card = (props: any) => (
 );
 
 export const Chip = (props: any) => (
-  <div
-    {...props}
-    className="bg-neutral-100 rounded-full px-5 py-2 text-md w-full"
-  />
+  <div {...props} className="bg-white rounded-full px-5 py-2 text-md w-full" />
 );
 
 export const LabelText = (props: any) => (

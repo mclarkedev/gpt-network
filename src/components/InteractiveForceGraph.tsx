@@ -136,7 +136,7 @@ export default function InteractiveForceGraph({}: {}) {
         return group;
       }}
       enableNodeDrag={false}
-      backgroundColor="rgba(240,240,240,1)"
+      backgroundColor="rgba(200,255,255,1)"
       onNodeClick={async (node) => {
         /**
          * Set last camera position

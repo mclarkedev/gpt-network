@@ -24,7 +24,7 @@ export default function NavigationHeader() {
         </div>
         <div>
           {graphStatus === "loading" ? (
-            <div>
+            <div className="bg-white p-2 rounded-full text-md cursor-pointer w-[39] h-[39]">
               <div role="status">
                 <svg
                   aria-hidden="true"
@@ -48,7 +48,7 @@ export default function NavigationHeader() {
           ) : (
             <div
               onClick={resetGraph}
-              className="bg-neutral-100 rounded-full px-3 py-3 text-md w-full cursor-pointer"
+              className="bg-white rounded-full px-3 py-3 text-md w-full cursor-pointer border-slate-600 border-2 hover:border-black hover:bg-black hover:text-white"
             >
               <svg
                 width="13"
@@ -59,13 +59,13 @@ export default function NavigationHeader() {
               >
                 <path
                   d="M1.5 11.877L11.4379 1.87695"
-                  stroke="#252525"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
                 <path
                   d="M11.5 11.877L1.56211 1.87695"
-                  stroke="#252525"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
