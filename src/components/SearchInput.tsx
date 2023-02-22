@@ -7,17 +7,12 @@ import { useUserActions } from "@/actions";
  */
 export default function SearchInput({}: {}) {
   const [searchInput, setSearchInput] = useRecoilState(searchInputState);
-  // const setGraphData = useSetRecoilState(graphDataState);
   const { searchNode } = useUserActions();
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-    // Reset graph to single start node
-    // setGraphData(() => ({
-    //   nodes: [{ id: searchInput }],
-    //   links: [],
-    // }));
     searchNode({ id: searchInput });
+    setSearchInput("");
   };
 
   const onChange = (e: any) => {

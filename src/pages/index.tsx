@@ -7,7 +7,7 @@ export default function Graph() {
   return (
     <div>
       <NavigationHeader />
-      <StreamState />
+      {/* <StreamState /> */}
       <InteractiveForceGraph />
     </div>
   );
