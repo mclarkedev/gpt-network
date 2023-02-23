@@ -53,12 +53,8 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
     .strength(() => 1);
 
   // Use last camera position
-  const {
-    __meta: {
-      camera: { position },
-    },
-  } = graphData;
-  current?.cameraPosition(position);
+  const position = graphData.__meta?.camera?.position;
+  position && current?.cameraPosition(position);
 }
 
 const explainerGraphData = {
