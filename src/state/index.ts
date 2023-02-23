@@ -21,17 +21,6 @@ const localStorageEffect =
     }
   };
 
-// -----------------------------------------------------------------------------
-
-/**
- * Search Input State
- * - User types into SearchInput
- */
-export const searchInputState = atom({
-  key: "searchInput",
-  default: "",
-});
-
 export type __meta = {
   __meta: {
     camera: {
