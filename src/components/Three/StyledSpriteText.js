@@ -305,7 +305,10 @@ export default class extends three.Sprite {
 
     canvas.height = canvas.width;
 
-    // paint background
+    // Fix safari gradient blend artifacts
+    ctx.globalCompositeOperation = "darker";
+
+    // paint background exactly here in code flow
     var outerRadius = canvas.width * 0.4;
     var innerRadius = canvas.width * 0.01;
     var grad = ctx.createRadialGradient(
@@ -317,8 +320,8 @@ export default class extends three.Sprite {
       outerRadius
     );
 
-    grad.addColorStop(0, "rgba(255, 255, 255, 2)");
-    grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+    grad.addColorStop(0, "rgba(240, 255, 255, 0.8)");
+    grad.addColorStop(1, "rgba(240, 255, 255, 0)");
 
     ctx.fillStyle = grad;
     // ctx.setTransform(1, 0, 0, 0.33, 0, 0);
