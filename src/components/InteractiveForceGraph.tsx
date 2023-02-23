@@ -14,6 +14,12 @@ import {
 import * as THREE from "three";
 import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
 import { useRecoilValue } from "recoil";
+import { IBM_Plex_Sans } from "@next/font/google";
+
+const IBMPlexSans = IBM_Plex_Sans({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 import StyledSpriteText from "@/components/Three/StyledSpriteText";
 import { graphDataState, __meta } from "@/state";
@@ -137,7 +143,8 @@ export default function InteractiveForceGraph() {
         sprite.backgroundColor = false;
         sprite.textHeight = 18;
         sprite.fontSize = 200; // default is 90
-        sprite.fontFace = "IBM Plex Sans";
+        sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
+        sprite.fontWeight = "400";
 
         const group = new THREE.Group();
         group.add(sprite);

@@ -154,7 +154,7 @@ export default class extends three.Sprite {
     const relPadding = padding.map((p) => p * this.fontSize * 0.1); // padding in canvas units
 
     const lines = this.text.split("\n");
-    const font = `${this.fontWeight} ${this.fontSize}px ${this.fontFace}, Arial`;
+    const font = `${this.fontWeight} ${this.fontSize}px ${this.fontFace}`;
 
     ctx.font = font; // measure canvas with appropriate font
     const innerWidth = Math.max(
