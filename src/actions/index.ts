@@ -28,7 +28,11 @@ function useUserActions() {
     });
   }
 
-  async function searchNode(node: NodeObjectWithThree, __meta?: any) {
+  async function searchNode(
+    node: NodeObjectWithThree,
+    __meta?: any,
+    isReset?: Boolean
+  ) {
     // Set active state scale
     const scale = 1.07;
     node?.["__threeObj"]?.scale?.set(scale, scale, scale);
@@ -83,8 +87,13 @@ function useUserActions() {
       const _newData = makeGraphDataFromList(`${sourceId}`, nodes);
       // Merge graph into active state
       const mergedGraph = mergeGraphs(graphData, _newData);
-      const withMeta = { ...mergedGraph, __meta };
-      setGraphData(withMeta);
+      const mergedGraphWithMeta = { ...mergedGraph, __meta };
+      const newGraphState = {
+        ..._newData,
+        __meta: undefined,
+      };
+
+      setGraphData(isReset ? newGraphState : mergedGraphWithMeta);
       setGraphStatus("complete");
       return mergedGraph;
     } else {

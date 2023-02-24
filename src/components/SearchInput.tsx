@@ -1,5 +1,7 @@
 import { useUserActions } from "@/actions";
+import { graphDataState } from "@/state";
 import { useRef } from "react";
+import { useResetRecoilState } from "recoil";
 
 /**
  * SearchInput
@@ -7,12 +9,16 @@ import { useRef } from "react";
 export default function SearchInput({}: {}) {
   const formRef = useRef<any>(null);
   const { searchNode } = useUserActions();
+  const resetGraph = useResetRecoilState(graphDataState);
 
   const onSubmit = (e: any) => {
     const value = e?.target?.[0]?.value;
     e.preventDefault();
-    value && searchNode({ id: value });
-    !value && console.log("Missing search value");
+    if (value) {
+      searchNode({ id: value }, undefined, true);
+    } else {
+      console.log("Missing search value");
+    }
     formRef?.current?.reset();
   };
 

@@ -143,7 +143,7 @@ export default function InteractiveForceGraph() {
         sprite.color = "rgba(40,40,40,1)";
         sprite.backgroundColor = false;
         sprite.textHeight = 18;
-        sprite.fontSize = 200; // default is 90
+        sprite.fontSize = 90; // default is 90
         sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
         sprite.fontWeight = plexFontWeight;
 

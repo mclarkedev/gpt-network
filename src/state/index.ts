@@ -22,7 +22,7 @@ const localStorageEffect =
   };
 
 export type __meta = {
-  __meta: {
+  __meta?: {
     camera: {
       position: {
         x: number;
