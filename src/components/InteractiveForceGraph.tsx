@@ -67,6 +67,7 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
 
 const explainerGraphData = {
   nodes: [
+    { id: "Explore" },
     { id: "Art" },
     { id: "Cinema" },
     { id: "Books" },
@@ -77,6 +78,7 @@ const explainerGraphData = {
     { id: "Emerging Visual Artists" },
   ],
   links: [
+    { source: "Explore", target: "Art" },
     { source: "Art", target: "Cinema" },
     { source: "Art", target: "Music" },
     { source: "Art", target: "Visual Art" },
