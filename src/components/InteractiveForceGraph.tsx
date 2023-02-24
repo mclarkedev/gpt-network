@@ -131,6 +131,14 @@ export default function InteractiveForceGraph() {
     }
 
     document.addEventListener(visibilityChange, handleVisibilityChange, false);
+
+    return () => {
+      document.removeEventListener(
+        visibilityChange,
+        handleVisibilityChange,
+        false
+      );
+    };
   }, []);
 
   return (
