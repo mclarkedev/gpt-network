@@ -1,6 +1,8 @@
 import { GraphData } from "react-force-graph-3d";
 import { atom } from "recoil";
 
+const VERSION = "v0";
+
 /**
  * https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence
  */
@@ -52,15 +54,15 @@ export const graphDataState = atom<GraphData & __meta>({
       },
     },
   },
-  effects: [localStorageEffect("_:graphData")],
+  effects: [localStorageEffect(`${VERSION}:graphData`)],
 });
 
 export const graphStatusState = atom<
   "pending" | "loading" | "complete" | "error"
 >({
   key: "graphStatus",
-  default: "pending",
-  effects: [localStorageEffect("_:graphStatus")],
+  default: undefined,
+  effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
 export const graphStreamState = atom<string | null>({
