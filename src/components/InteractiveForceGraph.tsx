@@ -29,6 +29,7 @@ import {
   getBrowserVisibilityProp,
   getIsDocumentHidden,
 } from "@/utils/pageVisibility";
+import { LoadingIcon } from "./StyledComponents";
 
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
@@ -87,7 +88,6 @@ const explainerGraphData = {
 };
 
 export default function InteractiveForceGraph() {
-  // const isPageVisible = usePageVisibility();
   const graphData = useRecoilValue(graphDataState);
   const { searchNode } = useUserActions();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
@@ -142,57 +142,64 @@ export default function InteractiveForceGraph() {
   }, []);
 
   return (
-    <ForceGraph3DForwardRef
-      ref={graphRefCallback}
-      rendererConfig={{ powerPreference: "high-performance" }}
-      graphData={_data.nodes.length ? _data : explainerGraphData}
-      nodeThreeObject={(node) => {
-        const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
-        sprite.color = "rgba(40,40,40,1)";
-        sprite.backgroundColor = false;
-        sprite.textHeight = 18;
-        sprite.fontSize = 65; // default is 90
-        sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
-        sprite.fontWeight = plexFontWeight;
+    <>
+      <ForceGraph3DForwardRef
+        ref={graphRefCallback}
+        rendererConfig={{ powerPreference: "high-performance" }}
+        graphData={_data.nodes.length ? _data : explainerGraphData}
+        nodeThreeObject={(node) => {
+          const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
+          sprite.color = "rgba(40,40,40,1)";
+          sprite.backgroundColor = false;
+          sprite.textHeight = 18;
+          sprite.fontSize = 65; // default is 90
+          sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
+          sprite.fontWeight = plexFontWeight;
 
-        const group = new THREE.Group();
-        group.add(sprite);
-        group.renderOrder = 2; // Fix link z-index artifact
+          const group = new THREE.Group();
+          group.add(sprite);
+          group.renderOrder = 2; // Fix link z-index artifact
 
-        return group;
-      }}
-      enableNodeDrag={false}
-      backgroundColor="rgb(240,240,240)"
-      onNodeClick={async (node) => {
-        /**
-         * Set last camera position
-         */
-        const position = hasDoneInitialDrawRef.current?.camera()?.position;
-        const { x, y, z } = position;
-        const __meta = { camera: { position: { x, y, z } } };
-        /**
-         * Pause animation while fetching
-         */
-        hasDoneInitialDrawRef.current.pauseAnimation();
-        await searchNode(node, __meta);
-        /**
-         * Resume animation after
-         */
-        hasDoneInitialDrawRef.current?.resumeAnimation();
-      }}
-      onNodeHover={(node: any, prevNode: any) => {
-        const scale = 1.08;
-        window.requestAnimationFrame(() => {
-          node?.["__threeObj"]?.scale?.set(scale, scale, scale);
-          prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
-        });
-      }}
-      linkColor={"black"}
-      linkWidth={0.2}
-      linkOpacity={0.3}
-      cooldownTicks={80}
-      d3AlphaDecay={0.2}
-      showNavInfo={false}
-    />
+          return group;
+        }}
+        enableNodeDrag={false}
+        backgroundColor="rgb(240,240,240)"
+        onNodeClick={async (node) => {
+          /**
+           * Set last camera position
+           */
+          const position = hasDoneInitialDrawRef.current?.camera()?.position;
+          const { x, y, z } = position;
+          const __meta = { camera: { position: { x, y, z } } };
+          /**
+           * Pause animation while fetching
+           */
+          hasDoneInitialDrawRef.current.pauseAnimation();
+          await searchNode(node, __meta);
+          /**
+           * Resume animation after
+           */
+          hasDoneInitialDrawRef.current?.resumeAnimation();
+        }}
+        onNodeHover={(node: any, prevNode: any) => {
+          const scale = 1.08;
+          window.requestAnimationFrame(() => {
+            node?.["__threeObj"]?.scale?.set(scale, scale, scale);
+            prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
+          });
+        }}
+        linkColor={"black"}
+        linkWidth={0.2}
+        linkOpacity={0.3}
+        cooldownTicks={80}
+        d3AlphaDecay={0.2}
+        showNavInfo={false}
+      />
+      <div className="flex h-[100vh]">
+        <div className="m-auto">
+          <LoadingIcon />
+        </div>
+      </div>
+    </>
   );
 }
