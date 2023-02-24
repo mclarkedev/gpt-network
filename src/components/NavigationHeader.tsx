@@ -1,12 +1,17 @@
-import { useRecoilValue, useResetRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 
 import { graphDataState, graphStatusState } from "@/state";
 import { Chip, Row, SearchIcon } from "./StyledComponents";
 import SearchInput from "./SearchInput";
 
 export default function NavigationHeader() {
-  const graphStatus = useRecoilValue(graphStatusState);
+  const [graphStatus, setGraphStatus] = useRecoilState(graphStatusState);
   const resetGraph = useResetRecoilState(graphDataState);
+
+  function handleReset() {
+    setGraphStatus("pending");
+    resetGraph();
+  }
 
   return (
     <div className="absolute top-0 left-0 right-0 z-50 p-5 text-black">
@@ -47,8 +52,11 @@ export default function NavigationHeader() {
             </div>
           ) : (
             <div
-              onClick={resetGraph}
+              onClick={handleReset}
               className="bg-white rounded-full px-3 py-3 text-md w-full cursor-pointer border-slate-600 border-2 hover:border-black hover:bg-black hover:text-white"
+              style={{
+                visibility: graphStatus === "pending" ? "hidden" : "visible",
+              }}
             >
               <svg
                 width="13"

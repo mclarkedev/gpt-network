@@ -60,6 +60,7 @@ export const graphStatusState = atom<
 >({
   key: "graphStatus",
   default: "pending",
+  effects: [localStorageEffect("_:graphStatus")],
 });
 
 export const graphStreamState = atom<string | null>({
