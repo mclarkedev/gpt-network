@@ -16,8 +16,9 @@ import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
 import { useRecoilValue } from "recoil";
 import { IBM_Plex_Sans } from "@next/font/google";
 
+const plexFontWeight = "700";
 const IBMPlexSans = IBM_Plex_Sans({
-  weight: "400",
+  weight: "700",
   subsets: ["latin"],
 });
 
@@ -144,7 +145,7 @@ export default function InteractiveForceGraph() {
         sprite.textHeight = 18;
         sprite.fontSize = 200; // default is 90
         sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
-        sprite.fontWeight = "400";
+        sprite.fontWeight = plexFontWeight;
 
         const group = new THREE.Group();
         group.add(sprite);
@@ -172,13 +173,13 @@ export default function InteractiveForceGraph() {
         hasDoneInitialDrawRef.current?.resumeAnimation();
       }}
       onNodeHover={(node: any, prevNode: any) => {
-        const scale = 1.07;
+        const scale = 1.08;
         node?.["__threeObj"]?.scale?.set(scale, scale, scale);
         prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
       }}
       linkColor={"black"}
       linkWidth={0.2}
-      linkOpacity={1}
+      linkOpacity={0.3}
       cooldownTicks={80}
       d3AlphaDecay={0.2}
       showNavInfo={false}
