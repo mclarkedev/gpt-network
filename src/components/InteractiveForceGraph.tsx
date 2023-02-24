@@ -136,14 +136,14 @@ export default function InteractiveForceGraph() {
   return (
     <ForceGraph3DForwardRef
       ref={graphRefCallback}
-      // rendererConfig={{ powerPreference: "high-performance" }}
+      rendererConfig={{ powerPreference: "high-performance" }}
       graphData={_data.nodes.length ? _data : explainerGraphData}
       nodeThreeObject={(node) => {
         const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
         sprite.color = "rgba(40,40,40,1)";
         sprite.backgroundColor = false;
         sprite.textHeight = 18;
-        sprite.fontSize = 90; // default is 90
+        sprite.fontSize = 65; // default is 90
         sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
         sprite.fontWeight = plexFontWeight;
 
@@ -174,8 +174,10 @@ export default function InteractiveForceGraph() {
       }}
       onNodeHover={(node: any, prevNode: any) => {
         const scale = 1.08;
-        node?.["__threeObj"]?.scale?.set(scale, scale, scale);
-        prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
+        window.requestAnimationFrame(() => {
+          node?.["__threeObj"]?.scale?.set(scale, scale, scale);
+          prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
+        });
       }}
       linkColor={"black"}
       linkWidth={0.2}
