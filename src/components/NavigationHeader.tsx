@@ -71,8 +71,8 @@ export default function NavigationHeader() {
         </div>
       </div>
       {localGraphStatus === "loading" && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 translate-x-1/2 translate-y-1/2 z-50">
-          <div className="bg-white p-2 rounded-full text-md cursor-pointer h-fit w-fit">
+        <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none">
+          <div className="relative top-1/2 bg-white p-2 rounded-full text-md cursor-pointer h-fit w-fit m-auto text-center">
             <div role="status">
               <svg
                 aria-hidden="true"
