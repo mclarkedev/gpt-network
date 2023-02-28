@@ -1,19 +1,4 @@
-import { parseJsonSSE } from "@/utils";
-
-const basePromptOLD = `I am an encyclopedia API.
-I will be given a request about a subject in the following format:
-
-– {request}
-
-I will respond in the following typed format:
-
-{type}: My response to request #1
-
-I can only return the following types:
-type error = A error message why I couldn't respond in a csv list
-type csv = A list of comma separated strings, when the question is asking for a list of stuff, never returning more than 3
-
-– `;
+import { fetchWithTimeout, parseJsonSSE } from "@/utils";
 
 // https://platform.openai.com/playground/p/cmlu65BgvtmbxknKfg0nXmAU
 const basePrompt = (
@@ -52,6 +37,7 @@ export async function fetchCompletionData({
   subject,
   onUpdate,
   onFinish,
+  onError,
 }: any) {
   let state = "";
   if (!subject) {
@@ -59,49 +45,53 @@ export async function fetchCompletionData({
     return;
   }
   const prompt = `${basePrompt(exclude, subject)}`;
-  console.log(prompt);
-  const response = await fetch("/api/openai/completion", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      prompt, // Add base prompt into all prompt
-    }),
-  });
+  try {
+    const response = await fetchWithTimeout("/api/openai/completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt, // Add base prompt into all prompt
+      }),
+    });
 
-  if (!response.ok) {
-    throw new Error(response.statusText);
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    const data = response.body;
+
+    if (!data) {
+      return;
+    }
+
+    await parseJsonSSE<{
+      id: string;
+      object: string;
+      created: number;
+      choices?: {
+        text: string;
+        index: number;
+        logprobs: null;
+        finish_reason: null | string;
+      }[];
+      model: string;
+    }>({
+      data,
+      onParse: (json) => {
+        if (!json.choices?.length) {
+          throw new Error("Something went wrong.");
+        }
+
+        const { text: _text } = json.choices[0];
+        state = state + _text;
+        onUpdate(state);
+      },
+      onFinish,
+    });
+  } catch (error) {
+    onError();
+    console.log(error);
   }
-
-  const data = response.body;
-
-  if (!data) {
-    return;
-  }
-
-  await parseJsonSSE<{
-    id: string;
-    object: string;
-    created: number;
-    choices?: {
-      text: string;
-      index: number;
-      logprobs: null;
-      finish_reason: null | string;
-    }[];
-    model: string;
-  }>({
-    data,
-    onParse: (json) => {
-      if (!json.choices?.length) {
-        throw new Error("Something went wrong.");
-      }
-
-      const { text: _text } = json.choices[0];
-      state = state + _text;
-      onUpdate(state);
-    },
-    onFinish,
-  });
 }

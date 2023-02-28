@@ -67,6 +67,9 @@ function useUserActions() {
         rawRes = res;
       },
       onFinish: console.log,
+      onError: () => {
+        setGraphStatus("error");
+      },
     });
 
     // Handle response types, parse csv

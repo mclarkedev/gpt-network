@@ -67,6 +67,23 @@ export const parseJsonSSE = async <T>({
   onFinish();
 };
 
+// Network helper
+export async function fetchWithTimeout(
+  resource: URL | RequestInfo,
+  options: any
+) {
+  const timeout = 8000;
+
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal,
+  });
+  clearTimeout(id);
+  return response;
+}
+
 /**
  * uniqueObjects
  */

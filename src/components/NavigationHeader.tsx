@@ -22,13 +22,6 @@ export default function NavigationHeader() {
     setLocalGraphStatus(graphStatus);
   }, [graphStatus]);
 
-  /**
-   * Reset graph status on hard app reloads
-   */
-  useEffect(() => {
-    setGraphStatus("pending");
-  }, []);
-
   return (
     <Suspense>
       <div className="absolute top-0 left-0 right-0 z-50 p-5 text-black">
