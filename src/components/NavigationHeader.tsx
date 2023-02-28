@@ -15,9 +15,19 @@ export default function NavigationHeader() {
     resetGraph();
   }
 
+  /**
+   * Only use client-side state (avoiding ssr)
+   */
   useEffect(() => {
     setLocalGraphStatus(graphStatus);
   }, [graphStatus]);
+
+  /**
+   * Reset graph status on hard app reloads
+   */
+  useEffect(() => {
+    setGraphStatus("pending");
+  }, []);
 
   return (
     <Suspense>
@@ -25,12 +35,10 @@ export default function NavigationHeader() {
         <div className="flex justify-between align-middle">
           <div></div>
           <div>
-            <div>
-              <div className="bg-white rounded-full px-5 py-2 text-md w-full">
-                <div className="flex">
-                  <SearchIcon className="mr-2" />
-                  <SearchInput />
-                </div>
+            <div className="bg-white rounded-full px-5 py-2 text-md w-full border-2 border-transparent hover:bg-neutral-100 hover:border-neutral-200">
+              <div className="flex">
+                <SearchIcon className="mr-2" />
+                <SearchInput />
               </div>
             </div>
           </div>
@@ -43,26 +51,7 @@ export default function NavigationHeader() {
                   visibility: "visible",
                 }}
               >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 13 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1.5 11.877L11.4379 1.87695"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M11.5 11.877L1.56211 1.87695"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <XIcon />
               </div>
             ) : (
               <div className="w-[41px]"></div>
@@ -106,3 +95,28 @@ const SearchIcon = ({ className }: { className?: string }) => (
     />
   </svg>
 );
+
+const XIcon = () => {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 13 13"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.5 11.877L11.4379 1.87695"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M11.5 11.877L1.56211 1.87695"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
