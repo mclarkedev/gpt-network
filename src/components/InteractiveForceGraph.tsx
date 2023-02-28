@@ -124,11 +124,8 @@ export default function InteractiveForceGraph() {
       if (isDocHidden) {
         hasDoneInitialDrawRef.current?.d3ReheatSimulation();
         hasDoneInitialDrawRef.current?.resumeAnimation();
-        console.log(hasDoneInitialDrawRef.current?.camera()?.position);
-        console.log("resume");
       } else {
         hasDoneInitialDrawRef.current?.pauseAnimation();
-        console.log("pause");
       }
     }
 
@@ -150,17 +147,20 @@ export default function InteractiveForceGraph() {
         rendererConfig={{ powerPreference: "high-performance" }}
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={(node) => {
-          const sprite = new StyledSpriteText(`${node.id}`); // Forked from "three-spritetext"
+          // Forked from "three-spritetext"
+          const sprite = new StyledSpriteText(`${node.id}`);
           sprite.color = "rgba(40,40,40,1)";
           sprite.backgroundColor = false;
           sprite.textHeight = 18;
-          sprite.fontSize = 65; // default is 90
+          // Reduce resolution for performance
+          sprite.fontSize = 65;
           sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
           sprite.fontWeight = plexFontWeight;
 
           const group = new THREE.Group();
           group.add(sprite);
-          group.renderOrder = 2; // Fix link z-index artifact
+          // Fix link z-index artifact
+          group.renderOrder = 2;
 
           return group;
         }}
@@ -199,7 +199,9 @@ export default function InteractiveForceGraph() {
       />
       <div className="flex h-[100vh]">
         <div className="m-auto">
-          <LoadingIcon />
+          <div className="bg-white p-2 rounded-full text-md cursor-pointer w-[39] h-[39]">
+            <LoadingIcon />
+          </div>
         </div>
       </div>
     </>

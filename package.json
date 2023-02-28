@@ -11,16 +11,6 @@
   },
   "dependencies": {
     "@next/font": "^13.1.6",
-    "@tiptap/extension-character-count": "^2.0.0-beta.217",
-    "@tiptap/extension-mention": "^2.0.0-beta.217",
-    "@tiptap/pm": "^2.0.0-beta.217",
-    "@tiptap/react": "^2.0.0-beta.217",
-    "@tiptap/starter-kit": "^2.0.0-beta.217",
-    "@types/node": "18.13.0",
-    "@types/react": "18.0.28",
-    "@types/react-dom": "18.0.10",
-    "eslint": "8.34.0",
-    "eslint-config-next": "13.1.6",
     "next": "13.1.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -34,6 +24,11 @@
     "autoprefixer": "^10.4.13",
     "cypress": "^12.7.0",
     "postcss": "^8.4.21",
-    "tailwindcss": "^3.2.6"
+    "tailwindcss": "^3.2.6",
+    "eslint": "8.34.0",
+    "eslint-config-next": "13.1.6",
+    "@types/node": "18.13.0",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.10"
   }
 }
