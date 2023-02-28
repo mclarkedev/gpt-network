@@ -16,20 +16,20 @@ import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
 import { useRecoilValue } from "recoil";
 import { IBM_Plex_Sans } from "@next/font/google";
 
+import StyledSpriteText from "@/components/Three/StyledSpriteText";
+import { graphDataState, __meta } from "@/state";
+import useSearchNode from "@/actions/useSearchNode";
+import {
+  getBrowserVisibilityProp,
+  getIsDocumentHidden,
+} from "@/utils/pageVisibility";
+import { LoadingIcon } from "./Icons";
+
 const plexFontWeight = "700";
 const IBMPlexSans = IBM_Plex_Sans({
   weight: "700",
   subsets: ["latin"],
 });
-
-import StyledSpriteText from "@/components/Three/StyledSpriteText";
-import { graphDataState, __meta } from "@/state";
-import { useUserActions } from "@/actions";
-import {
-  getBrowserVisibilityProp,
-  getIsDocumentHidden,
-} from "@/utils/pageVisibility";
-import { LoadingIcon } from "./StyledComponents";
 
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
@@ -49,7 +49,7 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  */
 function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 500); // 53 - chrome
+  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 500);
   current.postProcessingComposer().addPass(dotPass);
 
   // Made links shorter
@@ -91,7 +91,7 @@ const explainerGraphData = {
 
 export default function InteractiveForceGraph() {
   const graphData = useRecoilValue(graphDataState);
-  const { searchNode } = useUserActions();
+  const { searchNode } = useSearchNode();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
   const hasDoneInitialDrawRef = useRef<any>(null);
 

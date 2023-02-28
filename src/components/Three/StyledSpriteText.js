@@ -1,3 +1,4 @@
+// Forked from "three-spritetext"
 import { LinearFilter, Sprite, SpriteMaterial, Texture } from "three";
 
 const three =

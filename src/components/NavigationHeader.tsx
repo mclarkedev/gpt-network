@@ -3,7 +3,7 @@ import { useRecoilState, useResetRecoilState } from "recoil";
 import { graphDataState, graphStatusState } from "@/state";
 import SearchInput from "./SearchInput";
 import { Suspense, useEffect, useState } from "react";
-import { LoadingIcon } from "./StyledComponents";
+import { LoadingIcon, SearchIcon, XIcon } from "./Icons";
 
 export default function NavigationHeader() {
   const [graphStatus, setGraphStatus] = useRecoilState(graphStatusState);
@@ -62,54 +62,3 @@ export default function NavigationHeader() {
     </Suspense>
   );
 }
-
-const SearchIcon = ({ className }: { className?: string }) => (
-  <svg
-    width="25"
-    height="25"
-    viewBox="0 0 25 25"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className={className}
-  >
-    <path
-      d="M19.5 19.3789L16 15.8789"
-      stroke="gray"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M11.5 17.3789C14.8137 17.3789 17.5 14.6926 17.5 11.3789C17.5 8.0652 14.8137 5.37891 11.5 5.37891C8.18629 5.37891 5.5 8.0652 5.5 11.3789C5.5 14.6926 8.18629 17.3789 11.5 17.3789Z"
-      stroke="gray"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const XIcon = () => {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 13 13"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M1.5 11.877L11.4379 1.87695"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M11.5 11.877L1.56211 1.87695"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-};

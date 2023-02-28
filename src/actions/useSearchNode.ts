@@ -1,4 +1,4 @@
-import { graphHistoryState } from "./../state/index";
+import { graphHistoryState } from "../state/index";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
@@ -15,7 +15,7 @@ type NodeObjectWithThree = NodeObject & {
   __threeObj?: Object3D;
 };
 
-function useUserActions() {
+function useSearchNode() {
   const [graphData, setGraphData] = useRecoilState(graphDataState);
   const setGraphHistoryState = useSetRecoilState(graphHistoryState);
   const setGraphStatus = useSetRecoilState(graphStatusState);
@@ -77,10 +77,7 @@ function useUserActions() {
     const { type, text } = response;
     console.log({ type, text });
     if (type !== "csv") {
-      // TODO: Handle error
       setGraphStatus("error");
-      console.log(`${type} is not csv`);
-      // Can only display csv
       return;
     }
     const { nodes } = response;
@@ -194,4 +191,4 @@ const parseResponseType = (response: string) => {
   }
 };
 
-export { useUserActions };
+export default useSearchNode;
