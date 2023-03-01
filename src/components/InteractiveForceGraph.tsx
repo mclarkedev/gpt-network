@@ -49,7 +49,7 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  */
 function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(1, 1), 3, 500);
+  const dotPass = new DotScreenPass(new THREE.Vector2(10, 10), 3, 500);
   current.postProcessingComposer().addPass(dotPass);
 
   // Made links shorter
@@ -109,7 +109,6 @@ export default function InteractiveForceGraph() {
 
   /**
    * Pause rendering when page is not visible
-   * Resuming causes intro animation on page visible
    */
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -122,7 +121,6 @@ export default function InteractiveForceGraph() {
       const isDocHidden = getIsDocumentHidden();
 
       if (isDocHidden) {
-        hasDoneInitialDrawRef.current?.d3ReheatSimulation();
         hasDoneInitialDrawRef.current?.resumeAnimation();
       } else {
         hasDoneInitialDrawRef.current?.pauseAnimation();
@@ -132,11 +130,7 @@ export default function InteractiveForceGraph() {
     document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
     return () => {
-      document.removeEventListener(
-        visibilityChange,
-        handleVisibilityChange,
-        false
-      );
+      document.removeEventListener(visibilityChange,handleVisibilityChange,false); //prettier-ignore
     };
   }, []);
 
@@ -144,7 +138,10 @@ export default function InteractiveForceGraph() {
     <>
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
-        rendererConfig={{ powerPreference: "high-performance" }}
+        rendererConfig={{
+          powerPreference: "high-performance",
+          antialias: false,
+        }}
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={(node) => {
           // Forked from "three-spritetext"
@@ -153,7 +150,7 @@ export default function InteractiveForceGraph() {
           sprite.backgroundColor = false;
           sprite.textHeight = 18;
           // Reduce resolution for performance
-          sprite.fontSize = 65;
+          sprite.fontSize = 200;
           sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
           sprite.fontWeight = plexFontWeight;
 
@@ -161,7 +158,6 @@ export default function InteractiveForceGraph() {
           group.add(sprite);
           // Fix link z-index artifact
           group.renderOrder = 2;
-
           return group;
         }}
         enableNodeDrag={false}
@@ -184,11 +180,11 @@ export default function InteractiveForceGraph() {
           hasDoneInitialDrawRef.current?.resumeAnimation();
         }}
         onNodeHover={(node: any, prevNode: any) => {
-          const scale = 1.08;
-          window.requestAnimationFrame(() => {
-            node?.["__threeObj"]?.scale?.set(scale, scale, scale);
-            prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
-          });
+          // const scale = 1.08;
+          // window.requestAnimationFrame(() => {
+          //   node?.["__threeObj"]?.scale?.set(scale, scale, scale);
+          //   prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
+          // });
         }}
         linkColor={"black"}
         linkWidth={0.2}
