@@ -14,6 +14,8 @@ const handler = async (req: NextRequest): Promise<Response> => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
+  console.log(req);
+
   const { prompt } = (await req.json()) as {
     prompt?: string;
   };
@@ -33,6 +35,8 @@ const handler = async (req: NextRequest): Promise<Response> => {
     stream: true,
     n: 1,
   };
+
+  console.log(payload);
 
   const res = await fetch("https://api.openai.com/v1/completions", {
     headers: {

@@ -65,6 +65,12 @@ export const graphStatusState = atom<
   effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
+export const commandModalState = atom<any>({
+  key: "commandModal",
+  default: false,
+  // effects: [localStorageEffect(`${VERSION}:commandModal`)],
+});
+
 export const graphStreamState = atom<string | null>({
   key: "graphStream",
   default: null,
