@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
 import NavigationHeader from "@/components/NavigationHeader";
-import { IBM_Plex_Sans } from "@next/font/google";
 import SearchInput from "@/components/SearchInput";
 import { commandModalState } from "@/state";
 import { useRecoilState } from "recoil";
 import { SearchIcon } from "@/components/Icons";
+import DevStats from "@/components/Three/DevStats";
 
 const CommandModal = () => {
   const modalRef = useRef<any>();
@@ -62,11 +62,18 @@ const CommandModal = () => {
 
 export default function Graph() {
   return (
-    <div>
+    <>
       <CommandModal />
       <NavigationHeader />
+      <div
+        className="fixed left-1/2 bottom-0 z-10 p-2 px-4 text-neutral-800 text-sm bg-white rounded-sm m-2 bg-opacity-80"
+        style={{ transform: "translate(-50%)" }}
+      >
+        Rotate: Left Click, Zoom: Middle click/mouse
+      </div>
       <InteractiveForceGraph />
+      <DevStats />
       {/* <div className="fixed top-0 bottom-0 left-0 right-0 bg-slate-100 z-50 mix-blend-difference touch-none pointer-events-none" /> */}
-    </div>
+    </>
   );
 }
