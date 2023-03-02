@@ -1,4 +1,4 @@
-import useSearchNode from "@/actions/useSearchNode";
+import useSearchEntity from "@/actions/useSearchEntity";
 import { commandModalState } from "@/state";
 import { useRef } from "react";
 import { useSetRecoilState } from "recoil";
@@ -9,13 +9,13 @@ import { useSetRecoilState } from "recoil";
 export default function SearchInput({}: {}) {
   const formRef = useRef<any>(null);
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const { searchNode } = useSearchNode();
+  const { searchEntity } = useSearchEntity();
 
   const onSubmit = (e: any) => {
     const value = e?.target?.[0]?.value;
     e.preventDefault();
     if (value) {
-      searchNode({ id: value }, undefined, true);
+      searchEntity(value);
       setShowCommandModal(false);
     } else {
       console.log("Missing search value");

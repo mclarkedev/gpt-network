@@ -25,7 +25,7 @@ export default function NavigationHeader() {
   return (
     <Suspense>
       {/* <div className="absolute top-0 left-0 right-0 z-10 p-5 text-black"> */}
-      <div className="flex justify-between align-middle">
+      <div className="p-3 flex justify-between align-middle">
         <div></div>
         <div></div>
         <div className="flex items-center">

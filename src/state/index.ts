@@ -57,6 +57,12 @@ export const graphDataState = atom<GraphData & __meta>({
   // effects: [localStorageEffect(`${VERSION}:graphData`)],
 });
 
+export const entityDataState = atom<{ name: string; array: string[] }>({
+  key: "entityData",
+  default: { name: "name", array: ["search"] },
+  // effects: [localStorageEffect(`${VERSION}:graphData`)],
+});
+
 export const graphStatusState = atom<
   "pending" | "loading" | "complete" | "error"
 >({
