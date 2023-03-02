@@ -54,7 +54,7 @@ export const graphDataState = atom<GraphData & __meta>({
       },
     },
   },
-  effects: [localStorageEffect(`${VERSION}:graphData`)],
+  // effects: [localStorageEffect(`${VERSION}:graphData`)],
 });
 
 export const graphStatusState = atom<
@@ -62,7 +62,7 @@ export const graphStatusState = atom<
 >({
   key: "graphStatus",
   default: undefined,
-  effects: [localStorageEffect(`${VERSION}:graphStatus`)],
+  // effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
 export const commandModalState = atom<any>({
