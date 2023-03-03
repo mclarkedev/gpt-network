@@ -8,7 +8,6 @@ import { useSetRecoilState } from "recoil";
  */
 export default function SearchInput({}: {}) {
   const formRef = useRef<any>(null);
-  const setShowCommandModal = useSetRecoilState(commandModalState);
   const { searchEntity } = useSearchEntity();
 
   const onSubmit = (e: any) => {
@@ -16,7 +15,6 @@ export default function SearchInput({}: {}) {
     e.preventDefault();
     if (value) {
       searchEntity(value);
-      setShowCommandModal(false);
     } else {
       console.log("Missing search value");
     }

@@ -1,9 +1,10 @@
-import { entityDataState, homeDataState } from "@/state";
-import { useRecoilState } from "recoil";
+import { entityDataState, commandModalState } from "@/state";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { fetchCompletionData, prompts } from "@/network/completion";
 import { useRouter } from "next/router";
 
 function useSearchEntity() {
+  const setShowCommandModal = useSetRecoilState(commandModalState);
   const [entityData, setEntityData] = useRecoilState(entityDataState);
   const router = useRouter();
 
@@ -43,7 +44,7 @@ function useSearchEntity() {
   }
 
   async function searchEntity(entityName: string) {
-    console.log(router.pathname);
+    setShowCommandModal(false);
     if (router.pathname !== "/entity") {
       router.push("/entity");
     }

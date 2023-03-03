@@ -57,7 +57,7 @@ export const entityDataState = atom<any>({
   key: "entityDataState",
   default: { name: "name", similar: [] },
   effects: [
-    localStorageEffect(`${VERSION}:entityDataState`),
+    // localStorageEffect(`${VERSION}:entityDataState`),
     setRedisEffect("matt"),
   ],
 });
