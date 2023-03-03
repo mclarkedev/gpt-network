@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
-import { entityDataState, homeDataState } from "@/state";
+import { homeDataState } from "@/state";
 import { useRecoilValue } from "recoil";
 import clsx from "clsx";
-import { useRouter } from "next/router";
 import useSearchEntity from "@/actions/useSearchEntity";
 import Login from "@/components/Login";
+import CommandModal from "@/components/CommandModal";
 
 const classes = {
   cardText: "px-3 py-2 my-2 text-lg font-medium",
@@ -16,10 +16,9 @@ const classes = {
 
 export default function Home() {
   const { searchEntity } = useSearchEntity();
-  const entityData = useRecoilValue(entityDataState);
+  // const entityData = useRecoilValue(entityDataState);
   const homeData = useRecoilValue(homeDataState);
   const [historyData, setHistoryData] = useState<any[]>([]);
-  const router = useRouter();
 
   function handleEntityClick(e: any, entity: string) {
     if (e.stopPropagation) e.stopPropagation();
@@ -29,14 +28,13 @@ export default function Home() {
 
     console.log(entity);
     setHistoryData([...historyData, entity]);
-    router.push("/entity");
     searchEntity(entity);
     return false;
   }
 
   return (
     <>
-      {/* <CommandModal /> */}
+      <CommandModal />
       <Login />
       <NavigationHeader />
       <div className="w-96 m-auto">

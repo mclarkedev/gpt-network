@@ -1,9 +1,11 @@
 import { entityDataState, homeDataState } from "@/state";
 import { useRecoilState } from "recoil";
 import { fetchCompletionData, prompts } from "@/network/completion";
+import { useRouter } from "next/router";
 
 function useSearchEntity() {
   const [entityData, setEntityData] = useRecoilState(entityDataState);
+  const router = useRouter();
 
   async function searchSimilar(entityName: string) {
     let out: any;
@@ -41,6 +43,11 @@ function useSearchEntity() {
   }
 
   async function searchEntity(entityName: string) {
+    console.log(router.pathname);
+    if (router.pathname !== "/entity") {
+      router.push("/entity");
+    }
+
     const data = await searchSimilar(entityName);
     await searchBio(entityName, data);
   }
