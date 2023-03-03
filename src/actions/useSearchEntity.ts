@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 function useSearchEntity() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const setHomeHistory = useSetRecoilState(homeHistoryState);
+  const [homeHistory, setHomeHistory] = useRecoilState(homeHistoryState);
   const [homeFrontier, setHomeFrontier] = useRecoilState(homeFrontierState);
   const setEntityData = useSetRecoilState(entityDataState);
   const router = useRouter();
@@ -76,11 +76,22 @@ function useSearchEntity() {
     setHomeHistory((history) => uniqueStrings([entityName, ...history]));
 
     /**
+     * If any new entities were already viewed, then don't add them to the frontier
+     */
+    const newEntities = data.similar
+      .map((i: string) => {
+        const wasViewed = homeHistory.includes(entityName);
+        console.log(wasViewed);
+        return wasViewed ? null : i;
+      })
+      .filter((i) => i);
+
+    console.log(newEntities);
+
+    /**
      * Persist all new entities into frontier
      */
-    setHomeFrontier((frontier) =>
-      uniqueStrings([...data.similar, ...frontier])
-    );
+    setHomeFrontier((frontier) => uniqueStrings([...newEntities, ...frontier]));
   }
 
   return {
