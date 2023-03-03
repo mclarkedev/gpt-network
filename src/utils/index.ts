@@ -100,3 +100,20 @@ export function uniqueObjectsById(arr: any[]) {
 
   return uniqueArr;
 }
+
+/**
+ * uniqueStrings
+ */
+export function uniqueStrings(arr: any[]) {
+  let uniqueArr = [];
+  let ids: any[] = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (!ids.includes(arr[i])) {
+      uniqueArr.push(arr[i]);
+      ids.push(arr[i]);
+    }
+  }
+
+  return uniqueArr;
+}

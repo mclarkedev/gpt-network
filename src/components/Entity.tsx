@@ -1,5 +1,5 @@
 import useSearchEntity from "@/actions/useSearchEntity";
-import { entityDataState } from "@/state";
+import { entityDataState, homeDataState } from "@/state";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -13,6 +13,7 @@ const classes = {
 
 export default function Entity() {
   const entityData = useRecoilValue(entityDataState);
+  const homeData = useRecoilValue(homeDataState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -39,6 +40,28 @@ export default function Entity() {
       <div className="text-3xl font-bold">{entityData.name}</div>
       <div className="py-2 font-normal">{entityData.bio}</div>
       {entityData.similar.map((entity) => {
+        const wasPressed = historyData.includes(entity);
+
+        return (
+          <div
+            key={entity}
+            className={clsx([
+              classes.cardText,
+              classes.cardContainer,
+              classes.active(wasPressed),
+            ])}
+            onClick={(e) => handleEntityClick(e, entity)}
+          >
+            <span>{entity}</span>
+          </div>
+        );
+      })}
+      <hr />
+      <hr />
+      <hr />
+      <hr />
+
+      {homeData.feed.map((entity) => {
         const wasPressed = historyData.includes(entity);
 
         return (
