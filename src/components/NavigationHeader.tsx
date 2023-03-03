@@ -1,6 +1,11 @@
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 
-import { commandModalState, graphDataState, graphStatusState } from "@/state";
+import {
+  commandModalState,
+  entityDataState,
+  graphDataState,
+  graphStatusState,
+} from "@/state";
 import { Suspense, useEffect, useState } from "react";
 import { LoadingIcon, SearchIcon, XIcon } from "./Icons";
 
@@ -8,11 +13,11 @@ export default function NavigationHeader({ LeftSlot }: any) {
   const setShowCommandModal = useSetRecoilState(commandModalState);
   const [graphStatus, setGraphStatus] = useRecoilState(graphStatusState);
   const [localGraphStatus, setLocalGraphStatus] = useState<null | string>(null);
-  const resetGraph = useResetRecoilState(graphDataState);
+  const resetEntity = useResetRecoilState(entityDataState);
 
   function handleReset() {
     setGraphStatus("pending");
-    resetGraph();
+    resetEntity();
   }
 
   /**
@@ -38,7 +43,7 @@ export default function NavigationHeader({ LeftSlot }: any) {
               Search
             </div>
           </div>
-          {localGraphStatus !== "pending" && (
+          {/* {localGraphStatus !== "pending" && (
             <div
               onClick={handleReset}
               className="group bg-black text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer border-2 border-neutral-200 hover:bg-black hover:text-white transition-colors"
@@ -48,7 +53,7 @@ export default function NavigationHeader({ LeftSlot }: any) {
             >
               <XIcon className="text-neutral-200 group-hover:text-white" />
             </div>
-          )}
+          )} */}
         </div>
       </div>
       {/* </div> */}

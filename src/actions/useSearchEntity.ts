@@ -23,10 +23,10 @@ function useSearchEntity() {
         }
       },
       onFinish: () => {
-        out &&
-          setHomeData({
-            feed: uniqueStrings([...out.similar, ...homeData.feed]),
-          });
+        // out &&
+        //   setHomeData({
+        //     feed: uniqueStrings([...out.similar, ...homeData.feed]),
+        //   });
       },
       onError: console.log,
     });

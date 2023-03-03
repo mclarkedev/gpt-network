@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import useSearchEntity from "@/actions/useSearchEntity";
+import Login from "@/components/Login";
 
 const classes = {
   cardText: "px-3 py-2 my-2 text-lg font-medium",
@@ -36,6 +37,7 @@ export default function Home() {
   return (
     <>
       {/* <CommandModal /> */}
+      <Login />
       <NavigationHeader />
       <div className="w-96 m-auto">
         {homeData?.feed?.map((entity) => {
