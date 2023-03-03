@@ -1,26 +1,48 @@
-import { prompts } from "./../network/index";
 import { entityDataState } from "./../state/index";
 import { useRecoilState } from "recoil";
-import { fetchCompletionData } from "@/network";
+import { fetchCompletionData, prompts } from "@/network";
 
 function useSearchEntity() {
   const [entityData, setEntityData] = useRecoilState(entityDataState);
 
-  async function searchEntity(entityName: string) {
+  async function searchSimilar(entityName: string) {
+    let out;
     await fetchCompletionData({
       prompt: prompts.base01(entityName),
       onUpdate: (res: string) => {
         const parsed = parseResponseType(res);
         if (parsed.type === "csv" && parsed.array) {
-          setEntityData({
+          const data = {
             name: entityName,
-            array: parsed.array,
-          });
+            similar: parsed.array,
+          };
+          setEntityData(data);
+          out = data;
         }
       },
       onFinish: console.log,
       onError: console.log,
     });
+    return out;
+  }
+
+  async function searchBio(entityName: string, data: any) {
+    await fetchCompletionData({
+      prompt: `In one sentence, who is ${entityName}?`,
+      onUpdate: (res: string) => {
+        setEntityData({
+          ...data,
+          bio: res,
+        });
+      },
+      onFinish: console.log,
+      onError: console.log,
+    });
+  }
+
+  async function searchEntity(entityName: string) {
+    const data = await searchSimilar(entityName);
+    await searchBio(entityName, data);
   }
 
   return {

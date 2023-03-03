@@ -37,17 +37,13 @@ export default function Entity() {
   return (
     <div className="w-96 m-auto">
       <div className="text-3xl font-bold">{entityData.name}</div>
-      {entityData.array.map((entity) => {
-        // if (typeof entity !== "string") {
-        //   return null;
-        // }
+      <div className="py-2 font-normal">{entityData.bio}</div>
+      {entityData.similar.map((entity) => {
         const wasPressed = historyData.includes(entity);
-        // const entityName = node?.id?.split(" | ")[0];
-        // const userCopy = node?.id?.split(" | ")[1];
+
         return (
           <div
             key={entity}
-            // className="text-neutral-800 hover:text-neutral-400 cursor-pointer py-1"
             className={clsx([
               classes.cardText,
               classes.cardContainer,
@@ -56,18 +52,6 @@ export default function Entity() {
             onClick={(e) => handleEntityClick(e, entity)}
           >
             <span>{entity}</span>
-            {/* {node?.id?.split(" | ").map((i: string, idx) => {
-              return (
-                <div
-                  key={i}
-                  className={
-                    idx === 1 ? "text-sm font-normal text-neutral-500" : ""
-                  }
-                >
-                  {i}
-                </div>
-              );
-            })} */}
           </div>
         );
       })}

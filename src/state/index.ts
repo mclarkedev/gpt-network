@@ -57,9 +57,9 @@ export const graphDataState = atom<GraphData & __meta>({
   // effects: [localStorageEffect(`${VERSION}:graphData`)],
 });
 
-export const entityDataState = atom<{ name: string; array: string[] }>({
+export const entityDataState = atom<any>({
   key: "entityData",
-  default: { name: "name", array: ["search"] },
+  default: { name: "name", similar: [] },
   // effects: [localStorageEffect(`${VERSION}:graphData`)],
 });
 
