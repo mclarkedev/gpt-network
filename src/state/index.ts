@@ -1,7 +1,26 @@
 import { GraphData } from "react-force-graph-3d";
 import { atom } from "recoil";
+// import redis from "lib/redis";
 
 const VERSION = "v0-html";
+
+const setRedisEffect =
+  (userId: string) =>
+  ({ setSelf, onSet, trigger }: any) => {
+    const key = `user:${userId}`;
+    // Initialize atom value to the remote storage state
+    if (trigger === "get") {
+      // Avoid expensive initialization
+      // const user = redis.hgetall(key);
+      // console.log(user);
+      // setSelf(); // Call synchronously to initialize
+    }
+
+    // Subscribe to local changes and update the server value
+    onSet((userInfo: string) => {
+      // redis.set(userId, userInfo);
+    });
+  };
 
 /**
  * https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence
@@ -60,7 +79,10 @@ export const graphDataState = atom<GraphData & __meta>({
 export const entityDataState = atom<any>({
   key: "entityDataState",
   default: { name: "name", similar: [] },
-  effects: [localStorageEffect(`${VERSION}:entityDataState`)],
+  effects: [
+    localStorageEffect(`${VERSION}:entityDataState`),
+    setRedisEffect("matt"),
+  ],
 });
 
 export const homeDataState = atom<any>({

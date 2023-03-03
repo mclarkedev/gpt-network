@@ -5,6 +5,7 @@ import { commandModalState } from "@/state";
 import { useRecoilState } from "recoil";
 import { SearchIcon } from "@/components/Icons";
 import Entity from "@/components/Entity";
+import Link from "next/link";
 
 const CommandModal = () => {
   const modalRef = useRef<any>();
@@ -59,11 +60,15 @@ const CommandModal = () => {
   ) : null;
 };
 
+const BackButton = () => {
+  return <Link href={"/"}>Back</Link>;
+};
+
 export default function EntityScreen() {
   return (
     <>
       <CommandModal />
-      <NavigationHeader />
+      <NavigationHeader LeftSlot={BackButton} />
       <Entity />
     </>
   );

@@ -4,7 +4,7 @@ import { commandModalState, graphDataState, graphStatusState } from "@/state";
 import { Suspense, useEffect, useState } from "react";
 import { LoadingIcon, SearchIcon, XIcon } from "./Icons";
 
-export default function NavigationHeader() {
+export default function NavigationHeader({ LeftSlot }: any) {
   const setShowCommandModal = useSetRecoilState(commandModalState);
   const [graphStatus, setGraphStatus] = useRecoilState(graphStatusState);
   const [localGraphStatus, setLocalGraphStatus] = useState<null | string>(null);
@@ -26,7 +26,7 @@ export default function NavigationHeader() {
     <Suspense>
       {/* <div className="absolute top-0 left-0 right-0 z-10 p-5 text-black"> */}
       <div className="p-3 flex justify-between align-middle">
-        <div></div>
+        <div>{LeftSlot && <LeftSlot />}</div>
         <div></div>
         <div className="flex items-center">
           <div

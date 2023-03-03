@@ -1,6 +1,6 @@
 import { entityDataState, homeDataState } from "@/state";
 import { useRecoilState } from "recoil";
-import { fetchCompletionData, prompts } from "@/network";
+import { fetchCompletionData, prompts } from "@/network/completion";
 import { uniqueObjectsById, uniqueStrings } from "@/utils";
 
 function useSearchEntity() {

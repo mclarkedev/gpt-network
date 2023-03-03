@@ -7,7 +7,7 @@ import {
   graphStreamState,
   graphPromptState,
 } from "@/state";
-import { fetchCompletionData } from "@/network";
+import { fetchCompletionData } from "@/network/completion";
 import { uniqueObjectsById } from "@/utils";
 import { Object3D } from "three";
 
