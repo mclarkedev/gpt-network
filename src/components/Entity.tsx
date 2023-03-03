@@ -1,8 +1,9 @@
-import useSearchEntity from "@/actions/useSearchEntity";
-import { entityDataState, homeDataState } from "@/state";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
+
+import useSearchEntity from "@/actions/useSearchEntity";
+import { entityDataState, homeDataState } from "@/state";
 
 const classes = {
   cardText: "px-3 py-2 my-2 text-lg font-medium",
@@ -13,7 +14,7 @@ const classes = {
 
 export default function Entity() {
   const entityData = useRecoilValue(entityDataState);
-  const homeData = useRecoilValue(homeDataState);
+  // const homeData = useRecoilValue(homeDataState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function Entity() {
     <div className="w-96 m-auto">
       <div className="text-3xl font-bold">{entityData.name}</div>
       <div className="py-2 font-normal">{entityData.bio}</div>
-      {entityData.similar.map((entity) => {
+      {entityData.similar.map((entity: any) => {
         const wasPressed = historyData.includes(entity);
 
         return (
@@ -56,12 +57,8 @@ export default function Entity() {
           </div>
         );
       })}
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-
-      {homeData.feed.map((entity) => {
+      {/* <hr /> */}
+      {/* {homeData.feed.map((entity: any) => {
         const wasPressed = historyData.includes(entity);
 
         return (
@@ -77,7 +74,7 @@ export default function Entity() {
             <span>{entity}</span>
           </div>
         );
-      })}
+      })} */}
       {/* <div
         onClick={() => handleEntityClick({ id: "no subject" })}
         className={clsx([

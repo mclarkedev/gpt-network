@@ -1,8 +1,10 @@
-// pages/api/auth/[...nextauth].js
 import NextAuth from "next-auth";
-import AppleProvider from "next-auth/providers/apple";
 import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
+
+if (!process.env.GOOGLE_ID || !process.env.GOOGLE_SECRET) {
+  console.log(process.env);
+  throw new Error("Missing Environment Variables GOOGLE_ID and GOOGLE_SECRET");
+}
 
 export default NextAuth({
   secret: process.env.SECRET,

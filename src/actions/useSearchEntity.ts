@@ -1,11 +1,9 @@
 import { entityDataState, homeDataState } from "@/state";
 import { useRecoilState } from "recoil";
 import { fetchCompletionData, prompts } from "@/network/completion";
-import { uniqueObjectsById, uniqueStrings } from "@/utils";
 
 function useSearchEntity() {
   const [entityData, setEntityData] = useRecoilState(entityDataState);
-  const [homeData, setHomeData] = useRecoilState(homeDataState);
 
   async function searchSimilar(entityName: string) {
     let out: any;
@@ -22,12 +20,7 @@ function useSearchEntity() {
           out = data;
         }
       },
-      onFinish: () => {
-        // out &&
-        //   setHomeData({
-        //     feed: uniqueStrings([...out.similar, ...homeData.feed]),
-        //   });
-      },
+      onFinish: console.log,
       onError: console.log,
     });
     return out;

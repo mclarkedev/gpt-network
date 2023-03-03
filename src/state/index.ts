@@ -1,4 +1,3 @@
-import { GraphData } from "react-force-graph-3d";
 import { atom } from "recoil";
 // import redis from "lib/redis";
 
@@ -54,28 +53,6 @@ export type __meta = {
   };
 };
 
-/**
- * Graph Data
- * - User and API write to graph state
- */
-export const graphDataState = atom<GraphData & __meta>({
-  key: "graphData",
-  default: {
-    nodes: [],
-    links: [],
-    __meta: {
-      camera: {
-        position: {
-          x: 47.57015497543777,
-          y: -69.88663392827746,
-          z: 5.280961341662786,
-        },
-      },
-    },
-  },
-  // effects: [localStorageEffect(`${VERSION}:graphData`)],
-});
-
 export const entityDataState = atom<any>({
   key: "entityDataState",
   default: { name: "name", similar: [] },
@@ -91,31 +68,7 @@ export const homeDataState = atom<any>({
   effects: [localStorageEffect(`${VERSION}:homeDataState`)],
 });
 
-export const graphStatusState = atom<
-  "pending" | "loading" | "complete" | "error"
->({
-  key: "graphStatus",
-  default: undefined,
-  // effects: [localStorageEffect(`${VERSION}:graphStatus`)],
-});
-
 export const commandModalState = atom<any>({
   key: "commandModal",
   default: false,
-  // effects: [localStorageEffect(`${VERSION}:commandModal`)],
-});
-
-export const graphStreamState = atom<string | null>({
-  key: "graphStream",
-  default: null,
-});
-
-export const graphPromptState = atom<string | null>({
-  key: "graphPrompt",
-  default: null,
-});
-
-export const graphHistoryState = atom<string[] | []>({
-  key: "graphHistory",
-  default: [],
 });

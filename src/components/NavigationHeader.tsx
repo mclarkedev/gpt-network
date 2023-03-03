@@ -1,35 +1,14 @@
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 
-import {
-  commandModalState,
-  entityDataState,
-  graphDataState,
-  graphStatusState,
-} from "@/state";
-import { Suspense, useEffect, useState } from "react";
-import { LoadingIcon, SearchIcon, XIcon } from "./Icons";
+import { commandModalState } from "@/state";
+import { Suspense } from "react";
+import { SearchIcon } from "./Icons";
 
 export default function NavigationHeader({ LeftSlot }: any) {
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const [graphStatus, setGraphStatus] = useRecoilState(graphStatusState);
-  const [localGraphStatus, setLocalGraphStatus] = useState<null | string>(null);
-  const resetEntity = useResetRecoilState(entityDataState);
-
-  function handleReset() {
-    setGraphStatus("pending");
-    resetEntity();
-  }
-
-  /**
-   * Only use client-side state (avoiding ssr)
-   */
-  useEffect(() => {
-    setLocalGraphStatus(graphStatus);
-  }, [graphStatus]);
 
   return (
     <Suspense>
-      {/* <div className="absolute top-0 left-0 right-0 z-10 p-5 text-black"> */}
       <div className="p-3 flex justify-between align-middle">
         <div>{LeftSlot && <LeftSlot />}</div>
         <div></div>
@@ -43,30 +22,8 @@ export default function NavigationHeader({ LeftSlot }: any) {
               Search
             </div>
           </div>
-          {/* {localGraphStatus !== "pending" && (
-            <div
-              onClick={handleReset}
-              className="group bg-black text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer border-2 border-neutral-200 hover:bg-black hover:text-white transition-colors"
-              style={{
-                visibility: "visible",
-              }}
-            >
-              <XIcon className="text-neutral-200 group-hover:text-white" />
-            </div>
-          )} */}
         </div>
       </div>
-      {/* </div> */}
-      {localGraphStatus === "loading" && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none">
-          <div
-            className="relative top-1/2 bg-white p-2 rounded-full text-md cursor-pointer h-fit w-fit m-auto text-center"
-            onClick={handleReset}
-          >
-            <LoadingIcon />
-          </div>
-        </div>
-      )}
     </Suspense>
   );
 }
