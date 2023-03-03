@@ -1,14 +1,13 @@
 import { useSetRecoilState } from "recoil";
 
 import { commandModalState } from "@/state";
-import { Suspense } from "react";
 import { SearchIcon } from "./Icons";
 
 export default function NavigationHeader({ LeftSlot }: any) {
   const setShowCommandModal = useSetRecoilState(commandModalState);
 
   return (
-    <Suspense>
+    <>
       <div className="p-3 flex justify-between align-middle">
         <div>{LeftSlot && <LeftSlot />}</div>
         <div></div>
@@ -24,6 +23,6 @@ export default function NavigationHeader({ LeftSlot }: any) {
           </div>
         </div>
       </div>
-    </Suspense>
+    </>
   );
 }

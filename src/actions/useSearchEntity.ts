@@ -1,10 +1,12 @@
-import { entityDataState, commandModalState } from "@/state";
+import { uniqueStrings } from "@/utils";
+import { entityDataState, commandModalState, homeDataState } from "@/state";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { fetchCompletionData, prompts } from "@/network/completion";
 import { useRouter } from "next/router";
 
 function useSearchEntity() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
+  const [homeData, setHomeData] = useRecoilState(homeDataState);
   const [entityData, setEntityData] = useRecoilState(entityDataState);
   const router = useRouter();
 
@@ -44,11 +46,25 @@ function useSearchEntity() {
   }
 
   async function searchEntity(entityName: string) {
+    /**
+     * Transition UI and route
+     */
     setShowCommandModal(false);
     if (router.pathname !== "/entity") {
       router.push("/entity");
     }
-
+    /**
+     * Set Home Data (history)
+     */
+    setHomeData((homeData: { feed: any[] }) => ({
+      ...homeData,
+      feed: homeData?.feed?.length
+        ? uniqueStrings([...homeData?.feed, entityName])
+        : [entityName],
+    }));
+    /**
+     * Fetch data
+     */
     const data = await searchSimilar(entityName);
     await searchBio(entityName, data);
   }

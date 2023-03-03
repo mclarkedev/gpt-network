@@ -6,11 +6,13 @@ export const config = {
 };
 
 const handler = async (req: NextRequest): Promise<Response> => {
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
   console.log(req);
+  const data2 = await redis.get("key");
+  console.log(data2);
 
   const { prompt } = (await req.json()) as {
     prompt?: string;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import useSearchEntity from "@/actions/useSearchEntity";
-import { entityDataState, homeDataState } from "@/state";
+import { entityDataState } from "@/state";
 
 const classes = {
   cardText: "px-3 py-2 my-2 text-lg font-medium",
@@ -14,7 +14,6 @@ const classes = {
 
 export default function Entity() {
   const entityData = useRecoilValue(entityDataState);
-  // const homeData = useRecoilValue(homeDataState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
   useEffect(() => {

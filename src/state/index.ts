@@ -1,45 +1,26 @@
-import { atom } from "recoil";
-// import redis from "lib/redis";
+import { fetchHomeData } from "@/network/userHome";
+import redis from "lib/redis";
+import { atom, AtomEffect, useSetRecoilState } from "recoil";
+import { recoilPersist } from "recoil-persist";
 
-const VERSION = "v0-html";
+const { persistAtom } = recoilPersist();
 
-const setRedisEffect =
-  (userId: string) =>
-  ({ setSelf, onSet, trigger }: any) => {
-    const key = `user:${userId}`;
-    // Initialize atom value to the remote storage state
-    if (trigger === "get") {
-      // Avoid expensive initialization
-      // const user = redis.hgetall(key);
-      // console.log(user);
-      // setSelf(); // Call synchronously to initialize
-    }
+// SSR persist Helper
+const ssrCompletedState = atom({
+  key: "SsrCompleted",
+  default: false,
+});
 
-    // Subscribe to local changes and update the server value
-    onSet((userInfo: string) => {
-      // redis.set(userId, userInfo);
-    });
-  };
+// SSR persist Helper
+export const useSsrComplectedState = () => {
+  const setSsrCompleted = useSetRecoilState(ssrCompletedState);
+  return () => setSsrCompleted(true);
+};
 
-/**
- * https://recoiljs.org/docs/guides/atom-effects/#local-storage-persistence
- */
-const localStorageEffect =
-  (key: any) =>
-  ({ setSelf, onSet }: any) => {
-    if (typeof window !== "undefined") {
-      const savedValue = localStorage?.getItem(key);
-      if (savedValue != null) {
-        setSelf(JSON.parse(savedValue));
-      }
-
-      onSet((newValue: any, _: any, isReset: any) => {
-        isReset
-          ? window.localStorage?.removeItem(key)
-          : window.localStorage?.setItem(key, JSON.stringify(newValue));
-      });
-    }
-  };
+// SSR persist Helper
+export const persistAtomEffect = <T>(param: Parameters<AtomEffect<T>>[0]) => {
+  param.getPromise(ssrCompletedState).then(() => persistAtom(param));
+};
 
 export type __meta = {
   __meta?: {
@@ -56,16 +37,15 @@ export type __meta = {
 export const entityDataState = atom<any>({
   key: "entityDataState",
   default: { name: "name", similar: [] },
-  effects: [
-    // localStorageEffect(`${VERSION}:entityDataState`),
-    setRedisEffect("matt"),
-  ],
 });
 
 export const homeDataState = atom<any>({
   key: "homeDataState",
-  default: { feed: [] },
-  effects: [localStorageEffect(`${VERSION}:homeDataState`)],
+  default: null,
+  effects: [
+    persistAtomEffect,
+    // setRedisEffect()
+  ],
 });
 
 export const commandModalState = atom<any>({

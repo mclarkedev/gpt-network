@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
 import { homeDataState } from "@/state";
 import { useRecoilValue } from "recoil";
@@ -16,7 +16,6 @@ const classes = {
 
 export default function Home() {
   const { searchEntity } = useSearchEntity();
-  // const entityData = useRecoilValue(entityDataState);
   const homeData = useRecoilValue(homeDataState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
