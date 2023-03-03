@@ -1,5 +1,3 @@
-import { fetchHomeData } from "@/network/userHome";
-import redis from "lib/redis";
 import { atom, AtomEffect, useSetRecoilState } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
@@ -22,30 +20,27 @@ export const persistAtomEffect = <T>(param: Parameters<AtomEffect<T>>[0]) => {
   param.getPromise(ssrCompletedState).then(() => persistAtom(param));
 };
 
-export type __meta = {
-  __meta?: {
-    camera: {
-      position: {
-        x: number;
-        y: number;
-        z: number;
-      };
-    };
-  };
-};
-
 export const entityDataState = atom<any>({
   key: "entityDataState",
   default: { name: "name", similar: [] },
 });
 
-export const homeDataState = atom<any>({
-  key: "homeDataState",
-  default: null,
-  effects: [
-    persistAtomEffect,
-    // setRedisEffect()
-  ],
+export const homePinnedState = atom<string[]>({
+  key: "homePinnedState",
+  default: [],
+  effects: [persistAtomEffect],
+});
+
+export const homeFrontierState = atom<string[]>({
+  key: "homeFrontierState",
+  default: [],
+  effects: [persistAtomEffect],
+});
+
+export const homeHistoryState = atom<string[]>({
+  key: "homeHistoryState",
+  default: [],
+  effects: [persistAtomEffect],
 });
 
 export const commandModalState = atom<any>({

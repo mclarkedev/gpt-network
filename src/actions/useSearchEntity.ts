@@ -1,13 +1,15 @@
-import { uniqueStrings } from "@/utils";
-import { entityDataState, commandModalState, homeDataState } from "@/state";
+import { homeHistoryState } from "./../state/index";
+import { removeItemAtIndex, uniqueStrings } from "@/utils";
+import { entityDataState, commandModalState, homeFrontierState } from "@/state";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { fetchCompletionData, prompts } from "@/network/completion";
 import { useRouter } from "next/router";
 
 function useSearchEntity() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const [homeData, setHomeData] = useRecoilState(homeDataState);
-  const [entityData, setEntityData] = useRecoilState(entityDataState);
+  const setHomeHistory = useSetRecoilState(homeHistoryState);
+  const [homeFrontier, setHomeFrontier] = useRecoilState(homeFrontierState);
+  const setEntityData = useSetRecoilState(entityDataState);
   const router = useRouter();
 
   async function searchSimilar(entityName: string) {
@@ -53,20 +55,32 @@ function useSearchEntity() {
     if (router.pathname !== "/entity") {
       router.push("/entity");
     }
+
     /**
-     * Set Home Data (history)
-     */
-    setHomeData((homeData: { feed: any[] }) => ({
-      ...homeData,
-      feed: homeData?.feed?.length
-        ? uniqueStrings([...homeData?.feed, entityName])
-        : [entityName],
-    }));
-    /**
-     * Fetch data
+     * Fetch data, and wait for all data to resolve before setting home data
      */
     const data = await searchSimilar(entityName);
     await searchBio(entityName, data);
+
+    /**
+     * If viewed entity exists in frontier, remove it, since the user has just viewed it
+     */
+    if (homeFrontier.includes(entityName)) {
+      const index = homeFrontier.indexOf(entityName);
+      setHomeFrontier((frontier) => removeItemAtIndex(frontier, index));
+    }
+
+    /**
+     * Persist visited entity into history
+     */
+    setHomeHistory((history) => uniqueStrings([entityName, ...history]));
+
+    /**
+     * Persist all new entities into frontier
+     */
+    setHomeFrontier((frontier) =>
+      uniqueStrings([...data.similar, ...frontier])
+    );
   }
 
   return {

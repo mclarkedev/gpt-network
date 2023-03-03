@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import NavigationHeader from "@/components/NavigationHeader";
-import { homeDataState } from "@/state";
+import { homeFrontierState, homeHistoryState } from "@/state";
 import { useRecoilValue } from "recoil";
 import clsx from "clsx";
 import useSearchEntity from "@/actions/useSearchEntity";
@@ -16,7 +16,8 @@ const classes = {
 
 export default function Home() {
   const { searchEntity } = useSearchEntity();
-  const homeData = useRecoilValue(homeDataState);
+  const homeFrontier = useRecoilValue(homeFrontierState);
+  const homeHistory = useRecoilValue(homeHistoryState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
   function handleEntityClick(e: any, entity: string) {
@@ -34,15 +35,31 @@ export default function Home() {
   return (
     <>
       <CommandModal />
-      <Login />
+      {/* <Login /> */}
       <NavigationHeader />
       <div className="w-96 m-auto">
-        {homeData?.feed?.map((entity) => {
-          // const wasPressed = historyData.includes(entity);
-
+        <div className="font-bold my-2">Frontier</div>
+        {homeFrontier.map((entity) => {
           return (
             <div
               key={entity}
+              className={clsx([
+                classes.cardText,
+                classes.cardContainer,
+                classes.active(false),
+              ])}
+              onClick={(e) => handleEntityClick(e, entity)}
+            >
+              <span>{entity}</span>
+            </div>
+          );
+        })}
+        <div className="font-bold my-2 mt-10">Recently Viewed</div>
+        {homeHistory.map((entity) => {
+          return (
+            <div
+              key={entity}
+              style={{ color: "gray" }}
               className={clsx([
                 classes.cardText,
                 classes.cardContainer,
