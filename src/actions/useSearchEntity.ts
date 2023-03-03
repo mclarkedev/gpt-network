@@ -84,7 +84,7 @@ function useSearchEntity() {
         console.log(wasViewed);
         return wasViewed ? null : i;
       })
-      .filter((i) => i);
+      .filter((i: any) => i);
 
     console.log(newEntities);
 
