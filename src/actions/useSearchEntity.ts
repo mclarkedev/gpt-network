@@ -1,8 +1,6 @@
+import { prompts } from "./../network/index";
 import { entityDataState } from "./../state/index";
-import { graphHistoryState } from "../state/index";
-import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { graphStatusState, graphStreamState, graphPromptState } from "@/state";
+import { useRecoilState } from "recoil";
 import { fetchCompletionData } from "@/network";
 
 function useSearchEntity() {
@@ -10,8 +8,7 @@ function useSearchEntity() {
 
   async function searchEntity(entityName: string) {
     await fetchCompletionData({
-      // undefined,
-      subject: entityName,
+      prompt: prompts.base01(entityName),
       onUpdate: (res: string) => {
         const parsed = parseResponseType(res);
         if (parsed.type === "csv" && parsed.array) {

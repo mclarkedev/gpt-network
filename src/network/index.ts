@@ -1,59 +1,26 @@
 import { fetchWithTimeout, parseJsonSSE } from "@/utils";
 
-// https://platform.openai.com/playground/p/cmlu65BgvtmbxknKfg0nXmAU
-const basePrompt = (
-  exclude: string,
-  subject: string
-) => `I am an encyclopedia API that accepts a "subject" and returns a machine readable "csv".
-
-Let's try it.
-
-subject: Wade Guyton
-csv: Donald Judd, Whitney Museum of American Art, Postminimalism
-
-subject: Tauba Auerbach
-csv: John Baldessari, Ellsworth Kelly, Neo-Dada
-
-subject: Neo-Dada
-csv: Joseph Beuys, Fluxus, Happenings
-
-subject: Joseph Beuys
-csv: Yves Klein, Nam June Paik, Arte Povera
-
-subject: Arte Povera
-csv: Jannis Kounellis, Guiseppe Penone, Mario Merz
-
-subject: ${subject}
-`;
-
-// Before I respond, I look at the "exclude" list, which is a list of previously researched entities, and repond with similar, but never the same, entities in my "csv" response. I NEVER SAY ANYTHING if it is in the exclude list. If exclude: thisName, and thisName, my CSV RESPONSE WILL NEVER BE csv: thisName.
-// exclude: ${exclude || "film"}
-
 /**
  * Fetch OpenAI Completion Data from "/api/openai/completion"
  */
 export async function fetchCompletionData({
-  exclude,
-  subject,
+  prompt,
   onUpdate,
   onFinish,
   onError,
 }: any) {
   let state = "";
-  if (!subject) {
-    console.log("No subject, handle error");
+  if (!prompt) {
+    console.log("No prompt, handle error");
     return;
   }
-  const prompt = `${basePrompt(exclude, subject)}`;
   try {
     const response = await fetchWithTimeout("/api/openai/completion", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        prompt, // Add base prompt into all prompt
-      }),
+      body: JSON.stringify({ prompt }),
     });
 
     if (!response.ok) {
@@ -95,3 +62,29 @@ export async function fetchCompletionData({
     console.log(error);
   }
 }
+
+export const prompts = {
+  base01: (
+    subject: string
+  ) => `I am an encyclopedia API that accepts a "subject" and returns a machine readable "csv".
+  
+  Let's try it.
+  
+  subject: Wade Guyton
+  csv: Donald Judd, Whitney Museum of American Art, Postminimalism
+  
+  subject: Tauba Auerbach
+  csv: John Baldessari, Ellsworth Kelly, Neo-Dada
+  
+  subject: Neo-Dada
+  csv: Joseph Beuys, Fluxus, Happenings
+  
+  subject: Joseph Beuys
+  csv: Yves Klein, Nam June Paik, Arte Povera
+  
+  subject: Arte Povera
+  csv: Jannis Kounellis, Guiseppe Penone, Mario Merz
+  
+  subject: ${subject}
+  `,
+};
