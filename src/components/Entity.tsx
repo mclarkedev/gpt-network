@@ -17,10 +17,6 @@ export default function Entity() {
   const homeHistory = useRecoilValue(homeHistoryState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
-  // useEffect(() => {
-  //   console.log(entityData);
-  // }, [entityData]);
-
   const { searchEntity } = useSearchEntity();
 
   function handleEntityClick(e: any, entity: string) {
@@ -29,8 +25,6 @@ export default function Entity() {
     e.cancelBubble = true;
     e.returnValue = false;
 
-    // console.log(entity);
-    // console.log(historyData[node.id]);
     setHistoryData([...historyData, entity]);
     searchEntity(entity);
     return false;
@@ -57,34 +51,6 @@ export default function Entity() {
           </div>
         );
       })}
-      {/* <hr /> */}
-      {/* {homeData.feed.map((entity: any) => {
-        const wasPressed = historyData.includes(entity);
-
-        return (
-          <div
-            key={entity}
-            className={clsx([
-              classes.cardText,
-              classes.cardContainer,
-              classes.active(wasPressed),
-            ])}
-            onClick={(e) => handleEntityClick(e, entity)}
-          >
-            <span>{entity}</span>
-          </div>
-        );
-      })} */}
-      {/* <div
-        onClick={() => handleEntityClick({ id: "no subject" })}
-        className={clsx([
-          classes.cardText,
-          classes.cardContainer,
-          "text-center",
-        ])}
-      >
-        Load more...
-      </div> */}
     </div>
   );
 }
