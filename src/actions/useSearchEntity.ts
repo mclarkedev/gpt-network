@@ -1,14 +1,13 @@
 import { homeHistoryState } from "./../state/index";
-import { removeItemAtIndex, uniqueStrings } from "@/utils";
-import { entityDataState, commandModalState, homeFrontierState } from "@/state";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { uniqueStrings } from "@/utils";
+import { entityDataState, commandModalState } from "@/state";
+import { useSetRecoilState } from "recoil";
 import { fetchCompletionData, prompts } from "@/network/completion";
 import { useRouter } from "next/router";
 
 function useSearchEntity() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const [homeHistory, setHomeHistory] = useRecoilState(homeHistoryState);
-  const [homeFrontier, setHomeFrontier] = useRecoilState(homeFrontierState);
+  const setHomeHistory = useSetRecoilState(homeHistoryState);
   const setEntityData = useSetRecoilState(entityDataState);
   const router = useRouter();
 
@@ -63,35 +62,9 @@ function useSearchEntity() {
     await searchBio(entityName, data);
 
     /**
-     * If viewed entity exists in frontier, remove it, since the user has just viewed it
-     */
-    if (homeFrontier.includes(entityName)) {
-      const index = homeFrontier.indexOf(entityName);
-      setHomeFrontier((frontier) => removeItemAtIndex(frontier, index));
-    }
-
-    /**
      * Persist visited entity into history
      */
     setHomeHistory((history) => uniqueStrings([entityName, ...history]));
-
-    /**
-     * If any new entities were already viewed, then don't add them to the frontier
-     */
-    const newEntities = data.similar
-      .map((i: string) => {
-        const wasViewed = homeHistory.includes(entityName);
-        console.log(wasViewed);
-        return wasViewed ? null : i;
-      })
-      .filter((i: any) => i);
-
-    console.log(newEntities);
-
-    /**
-     * Persist all new entities into frontier
-     */
-    setHomeFrontier((frontier) => uniqueStrings([...newEntities, ...frontier]));
   }
 
   return {

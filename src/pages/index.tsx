@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import NavigationHeader from "@/components/NavigationHeader";
-import { homeFrontierState, homeHistoryState } from "@/state";
 import { useRecoilValue } from "recoil";
 import clsx from "clsx";
+
 import useSearchEntity from "@/actions/useSearchEntity";
-import Login from "@/components/Login";
 import CommandModal from "@/components/CommandModal";
+import NavigationHeader from "@/components/NavigationHeader";
+import { homeHistoryState } from "@/state";
 
 const classes = {
   cardText: "px-3 py-2 my-2 text-lg font-medium",
@@ -16,7 +16,6 @@ const classes = {
 
 export default function Home() {
   const { searchEntity } = useSearchEntity();
-  const homeFrontier = useRecoilValue(homeFrontierState);
   const homeHistory = useRecoilValue(homeHistoryState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
@@ -38,7 +37,7 @@ export default function Home() {
       {/* <Login /> */}
       <NavigationHeader />
       <div className="w-96 m-auto">
-        <div className="font-bold my-2">Frontier</div>
+        {/* <div className="font-bold my-2">Frontier</div>
         {homeFrontier.map((entity) => {
           return (
             <div
@@ -53,13 +52,13 @@ export default function Home() {
               <span>{entity}</span>
             </div>
           );
-        })}
+        })} */}
         <div className="font-bold my-2 mt-10">Recently Viewed</div>
         {homeHistory.map((entity) => {
           return (
             <div
               key={entity}
-              style={{ color: "gray" }}
+              // style={{ color: "gray" }}
               className={clsx([
                 classes.cardText,
                 classes.cardContainer,

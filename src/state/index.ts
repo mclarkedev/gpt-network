@@ -31,12 +31,6 @@ export const homePinnedState = atom<string[]>({
   effects: [persistAtomEffect],
 });
 
-export const homeFrontierState = atom<string[]>({
-  key: "homeFrontierState",
-  default: [],
-  effects: [persistAtomEffect],
-});
-
 export const homeHistoryState = atom<string[]>({
   key: "homeHistoryState",
   default: [],

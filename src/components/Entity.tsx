@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import useSearchEntity from "@/actions/useSearchEntity";
@@ -17,9 +17,9 @@ export default function Entity() {
   const homeHistory = useRecoilValue(homeHistoryState);
   const [historyData, setHistoryData] = useState<any[]>([]);
 
-  useEffect(() => {
-    console.log(entityData);
-  }, [entityData]);
+  // useEffect(() => {
+  //   console.log(entityData);
+  // }, [entityData]);
 
   const { searchEntity } = useSearchEntity();
 
@@ -29,7 +29,7 @@ export default function Entity() {
     e.cancelBubble = true;
     e.returnValue = false;
 
-    console.log(entity);
+    // console.log(entity);
     // console.log(historyData[node.id]);
     setHistoryData([...historyData, entity]);
     searchEntity(entity);
