@@ -1,19 +1,18 @@
 import { graphDataState } from "@/state";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 export default function GraphDataPanel() {
-  const graphData = useRecoilValue(graphDataState);
+  const { nodes, links } = useRecoilValue(graphDataState);
+  const [mounted, setMounted] = useState(false);
   // const { searchNode } = useSearchNode();
-  var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
-  // const hasDoneInitialDrawRef = useRef<any>(null);
 
-  const { nodes, links } = _data;
-
-  const orderedNodes = links.map((link) => {
-    return link.target;
+  useEffect(() => {
+    setMounted(true);
   });
 
-  return (
+  const render = mounted && nodes.length;
+  return render ? (
     <div
       className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
@@ -46,5 +45,5 @@ export default function GraphDataPanel() {
         );
       })}
     </div>
-  );
+  ) : null;
 }
