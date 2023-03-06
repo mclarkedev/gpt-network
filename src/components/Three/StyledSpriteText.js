@@ -322,14 +322,14 @@ export default class extends three.Sprite {
       outerRadius
     );
 
-    grad.addColorStop(0, "rgba(240, 255, 255, 0.8)");
-    grad.addColorStop(1, "rgba(240, 255, 255, 0)");
+    grad.addColorStop(0, "rgba(0, 0, 0, 0.8)");
+    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.width);
 
     // text Shadow
-    ctx.shadowColor = "white";
+    ctx.shadowColor = "black";
     ctx.shadowBlur = 20;
 
     // Center text width

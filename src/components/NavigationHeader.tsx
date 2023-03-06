@@ -30,7 +30,7 @@ export default function NavigationHeader() {
           <div></div>
           <div className="flex items-center">
             <div
-              className="group bg-black text-neutral-200black rounded-full px-4 py-2 mr-2 text-md w-full border-2 border-neutral-200 cursor-pointer hover:bg-black hover:text-white transition-colors"
+              className="group bg-neutral-800 text-neutral-200black rounded-full px-4 py-2 mr-2 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
               onClick={() => setShowCommandModal(true)}
             >
               <div className="flex items-center text-neutral-200 pr-2 group-hover:text-white">
@@ -41,7 +41,7 @@ export default function NavigationHeader() {
             {localGraphStatus !== "pending" && (
               <div
                 onClick={handleReset}
-                className="group bg-black text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer border-2 border-neutral-200 hover:bg-black hover:text-white transition-colors"
+                className="group bg-neutral-800 text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
                 style={{
                   visibility: "visible",
                 }}

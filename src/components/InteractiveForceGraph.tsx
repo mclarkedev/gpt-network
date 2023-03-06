@@ -49,8 +49,8 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  */
 function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   // Post
-  const dotPass = new DotScreenPass(new THREE.Vector2(10, 10), 3, 500);
-  current.postProcessingComposer().addPass(dotPass);
+  // const dotPass = new DotScreenPass(new THREE.Vector2(10, 10), 3, 500);
+  // current.postProcessingComposer().addPass(dotPass);
 
   // Made links shorter
   current
@@ -146,7 +146,7 @@ export default function InteractiveForceGraph() {
         nodeThreeObject={(node) => {
           // Forked from "three-spritetext"
           const sprite = new StyledSpriteText(`${node.id}`);
-          sprite.color = "rgba(40,40,40,1)";
+          sprite.color = "rgba(255,255,255,1)";
           sprite.backgroundColor = false;
           sprite.textHeight = 18;
           // Reduce resolution for performance
@@ -161,7 +161,7 @@ export default function InteractiveForceGraph() {
           return group;
         }}
         enableNodeDrag={false}
-        backgroundColor="rgb(240,240,240)"
+        backgroundColor="rgb(0,0,0)"
         onNodeClick={async (node) => {
           /**
            * Set last camera position
@@ -180,18 +180,18 @@ export default function InteractiveForceGraph() {
           hasDoneInitialDrawRef.current?.resumeAnimation();
         }}
         onNodeHover={(node: any, prevNode: any) => {
-          // const scale = 1.08;
-          // window.requestAnimationFrame(() => {
-          //   node?.["__threeObj"]?.scale?.set(scale, scale, scale);
-          //   prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
-          // });
+          const scale = 1.08;
+          window.requestAnimationFrame(() => {
+            node?.["__threeObj"]?.scale?.set(scale, scale, scale);
+            prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
+          });
         }}
-        linkColor={"black"}
+        linkColor={"white"}
         linkWidth={0.2}
         linkOpacity={0.3}
         cooldownTicks={80}
         d3AlphaDecay={0.2}
-        showNavInfo={false}
+        showNavInfo={true}
       />
       {/* Always show loading spinner beneath, in case graph is initializing */}
       <div className="fixed top-0 left-1/2 flex h-[100vh] z-[-5]">
