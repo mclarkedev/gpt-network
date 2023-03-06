@@ -43,17 +43,6 @@ const CommandModal = () => {
               <SearchIcon className="text-neutral-400 mr-2" />
               <SearchInput />
             </div>
-            {/* <hr />
-            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-              <h6 className="text-sm">Recent searches</h6>
-              <div>Donald Judd</div>
-              <div>MoMA</div>
-            </div> */}
-            <hr />
-            <div className="bg-neutral-100 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 text-sm text-gray-400">
-              Discover similar artists, filmmakers, computer scientists and
-              more.
-            </div>
           </div>
         </div>
       </div>
