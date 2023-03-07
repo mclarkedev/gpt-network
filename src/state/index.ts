@@ -47,9 +47,9 @@ export const graphDataState = atom<GraphData & __meta>({
     __meta: {
       camera: {
         position: {
-          x: 47.57015497543777,
-          y: -69.88663392827746,
-          z: 5.280961341662786,
+          x: 117,
+          y: -112,
+          z: 62,
         },
       },
     },
