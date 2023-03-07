@@ -64,11 +64,9 @@ const Item = ({
 export default function ContextMenu({
   resumeAnimation,
   handleGraphNodeClick,
-}: // refreshGraph,
-{
+}: {
   resumeAnimation: () => void;
   handleGraphNodeClick: (nodeId?: string | number) => void;
-  refreshGraph: () => void;
 }) {
   // UI state
   const [{ show, position }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
@@ -177,8 +175,9 @@ export default function ContextMenu({
   return show ? (
     <div>
       <div
-        className="absolute bg-neutral-800 z-50 rounded-xl"
+        className="absolute bg-neutral-800 rounded-xl"
         style={{
+          zIndex: 999999,
           transform: `translate(${position.x}px, ${position.y}px)`,
         }}
       >
@@ -197,7 +196,7 @@ export default function ContextMenu({
         </div>
       </div>
       <div
-        className="fixed top-0 right-0 left-0 bottom-0 z-40 bg-white bg-opacity-0"
+        className="fixed top-0 right-0 left-0 bottom-0 z-50 bg-white bg-opacity-0"
         onClick={closeContextMenu}
         onMouseOver={() => {
           setActiveItem(0);

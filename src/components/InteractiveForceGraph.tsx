@@ -1,6 +1,7 @@
 import React, {
   ForwardedRef,
   forwardRef,
+  MouseEvent,
   useCallback,
   useEffect,
   useRef,
@@ -148,7 +149,6 @@ export default function InteractiveForceGraph() {
   const { searchNode } = useSearchNode();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
   const hasDoneInitialDrawRef = useRef<ForceGraphMethods | null>(null);
-  const [refresh, setRefresh] = useState(0);
 
   /**
    * Lazy loaded component with ref pass
@@ -225,46 +225,38 @@ export default function InteractiveForceGraph() {
   }
 
   const resumeAnimation = () => {
-    /**
-     * Resume animation when context menu closes
-     */
     hasDoneInitialDrawRef?.current?.resumeAnimation();
   };
 
   const pauseAnimation = () => {
-    /**
-     * Pause animation while in context menu
-     */
     hasDoneInitialDrawRef?.current?.pauseAnimation();
   };
 
-  const openContextMenu = (node, e) => {
-    const { offsetX: x, offsetY: y } = e;
-    setContextMenu({ show: true, position: { x, y } });
+  const openContextMenu = (
+    nodeId: string | number | undefined,
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    const { pageX: pX, pageY: pY } = event;
+    setContextMenu({ show: true, position: { x: pX, y: pY } }); // Accept context menu and click event offsets as fall backs
+    nodeId && setFocusedNodeId(nodeId); // Always set focused node
     pauseAnimation();
   };
 
   const focusNode = (node: any, prevNode: any) => {
     emphasizeNode(node, prevNode);
-    setFocusedNodeId(node?.id);
+    node?.id && setFocusedNodeId(node.id); // Must never set undefined
   };
-
-  const refreshGraph = () => {
-    setRefresh(refresh + 1);
-  };
-
-  useEffect(() => {}, [refresh]);
 
   return (
     <>
       <GraphDataPanel
+        onRightClick={openContextMenu}
         onNodeClick={handleGraphNodeClick}
         onNodeHover={handleNodeHover}
       />
       <ContextMenu
         resumeAnimation={resumeAnimation}
         handleGraphNodeClick={handleGraphNodeClick}
-        refreshGraph={refreshGraph}
       />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
@@ -272,8 +264,8 @@ export default function InteractiveForceGraph() {
         nodeThreeObject={renderNode}
         enableNodeDrag={false}
         backgroundColor="rgb(0,0,0)"
-        onNodeClick={(node) => handleGraphNodeClick(node.id)}
-        onNodeRightClick={openContextMenu}
+        onNodeClick={({ id }) => handleGraphNodeClick(id)}
+        onNodeRightClick={(node, e) => openContextMenu(node.id, e)}
         onNodeHover={focusNode}
         d3AlphaDecay={0.05}
         showNavInfo={true}

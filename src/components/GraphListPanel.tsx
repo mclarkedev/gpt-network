@@ -1,6 +1,7 @@
 import useSearchNode from "@/actions/useSearchNode";
 import { focusedNodeIdState, graphDataState } from "@/state";
-import { useEffect, useState } from "react";
+import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import { NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 type Edge = {
@@ -50,15 +51,19 @@ function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
 let prevNodeId: string | null = null;
 
 export default function GraphDataPanel({
+  onRightClick,
   onNodeClick,
   onNodeHover,
 }: {
+  onRightClick: (
+    nodeId: string,
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => void;
   onNodeClick: (nodeId: string) => void;
   onNodeHover: (nodeId: string | null, prevNodeId: string | null) => void;
 }) {
   const { nodes, links } = useRecoilValue(graphDataState);
   const [mounted, setMounted] = useState(false);
-  const [hovered, setHovered] = useState(null);
   const [focusedNodeId, setFocusedNodeId] = useRecoilState(focusedNodeIdState);
 
   const safeLinks = links.map((i) => ({
@@ -73,17 +78,26 @@ export default function GraphDataPanel({
   }, [setMounted]);
 
   function handleMouseOver(nodeId: string) {
+    // Keep track of previous node id so that we can blur the last active node
     // if node id is new, then set it to node id and set previous hover state node to prev node
     if (nodeId !== prevNodeId) {
       onNodeHover(nodeId, prevNodeId);
       prevNodeId = nodeId;
     }
-    setHovered(nodeId);
   }
 
   function handleMouseLeavePanel() {
     onNodeHover(null, prevNodeId);
   }
+
+  const handleContextMenu = (
+    dfsNode: NodeWithDepth,
+    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
+    event.preventDefault();
+    setFocusedNodeId(dfsNode.id);
+    onRightClick(dfsNode.id, event);
+  };
 
   const render = mounted && nodes.length && nodes?.[0]?.id;
   return render ? (
@@ -100,6 +114,7 @@ export default function GraphDataPanel({
           <div
             key={dfsNode.id}
             className="flex pl-2 text-neutral-400 text-sm w-[200px] bg-neutral-800 cursor-pointer"
+            onContextMenu={(event) => handleContextMenu(dfsNode, event)}
           >
             {[...new Array(dfsNode.depth)]?.map((depth, index) => {
               return (
