@@ -12,6 +12,10 @@ type NodeWithDepth = {
   depth: number;
 };
 
+/**
+ * Depth-First Tree Traversal returns ordered nodes with depth from links
+ * - FIX: Return unconnected subtrees
+ */
 function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
   const graph = new Map<string, string[]>();
   for (const edge of edges) {
@@ -46,8 +50,14 @@ function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
   return nodesWithDepth;
 }
 
+/**
+ * prevNodeId state stores the last hovered node
+ */
 let prevNodeId: string | null = null;
 
+/**
+ * NodesPane
+ */
 export default function NodesPane({
   onRightClick,
   onNodeClick,
@@ -113,31 +123,36 @@ export default function NodesPane({
         Nodes
       </div>
       {orderedNodeIds.map((dfsNode) => {
+        const depthMarkers = [...new Array(dfsNode.depth)];
         return (
           <div
             key={dfsNode.id}
-            className="flex pl-2 text-neutral-400 text-sm w-[200px] bg-neutral-800 cursor-pointer"
-            onContextMenu={(event) => handleContextMenu(dfsNode, event)}
+            className={`hover:bg-neutral-700 hover:text-white flex-1 ${
+              focusedNodeId === dfsNode.id
+                ? "bg-neutral-700 text-white"
+                : "bg-neutral-800"
+            }`}
+            onMouseUp={() => onNodeClick(dfsNode.id)}
+            onMouseOver={() => handleMouseOver(dfsNode.id)}
           >
-            {[...new Array(dfsNode.depth)]?.map((depth, index) => {
-              return (
-                <div
-                  key={index}
-                  className="border-neutral-700 border-l-[1px] ml-[1px]"
-                  style={{ opacity: 0.5 }}
-                >
-                  {depth}
-                </div>
-              );
-            })}
             <div
-              className={`py-1 hover:bg-neutral-700 hover:text-white flex-1 ${
-                focusedNodeId === dfsNode.id ? "bg-neutral-700 text-white" : ""
-              }`}
-              onMouseUp={() => onNodeClick(dfsNode.id)}
-              onMouseOver={() => handleMouseOver(dfsNode.id)}
+              className="flex pl-2 text-neutral-400 text-sm w-[200px] cursor-pointer"
+              onContextMenu={(event) => handleContextMenu(dfsNode, event)}
             >
-              <span className="ml-2">{dfsNode.id}</span>
+              {depthMarkers.map((depth, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="border-neutral-700 border-l-[1px] ml-[1px]"
+                    style={{ opacity: 0.5 }}
+                  >
+                    {depth}
+                  </div>
+                );
+              })}
+              <div className="py-1">
+                <span className="ml-2">{dfsNode.id}</span>
+              </div>
             </div>
           </div>
         );
