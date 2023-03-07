@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { contextMenuState } from "@/state";
 
@@ -54,28 +54,29 @@ const Item = ({
 };
 
 /**
+ * Context Menu actions
+ */
+const items = [
+  {
+    name: "Action 1",
+    onClick: () => {
+      console.log("click 1");
+    },
+  },
+  {
+    name: "Action 2",
+    onClick: () => {
+      console.log("click 2");
+    },
+  },
+];
+
+/**
  * Context Menu
  */
 export default function ContextMenu({ onClick }: { onClick: () => void }) {
   const [{ show, position }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
-
-  const items = [
-    {
-      name: "Action 1",
-      onClick: () => {
-        console.log("click 1");
-      },
-    },
-    {
-      name: "Action 2",
-      onClick: () => {
-        console.log("click 2");
-      },
-    },
-  ];
-
-  const maxItems = items.length;
 
   /**
    * Reset state when shown again
@@ -84,6 +85,9 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
     setActiveItem(0);
   }, [show]);
 
+  /**
+   * Handle key roving
+   */
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       // console.log(event.key);
@@ -91,7 +95,7 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
         activeItem > 1 && setActiveItem(activeItem - 1);
       }
       if (event.key === "ArrowDown") {
-        activeItem < maxItems && setActiveItem(activeItem + 1);
+        activeItem < items.length && setActiveItem(activeItem + 1);
       }
       if (event.key === "Enter") {
         console.log("trigger onclick for", activeItem);
@@ -107,8 +111,11 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeItem, setActiveItem]);
+  }, [activeItem, setActiveItem, items, setContextMenuState]);
 
+  /**
+   * Show
+   */
   return show ? (
     <div>
       <div
