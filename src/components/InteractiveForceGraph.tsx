@@ -34,6 +34,30 @@ const IBMPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
 });
 
+const explainerGraphData = {
+  nodes: [
+    { id: "Explore" },
+    { id: "Art" },
+    { id: "Cinema" },
+    { id: "Books" },
+    { id: "Music" },
+    { id: "Museums" },
+    { id: "Visual Artists" },
+    { id: "Visual Art" },
+    { id: "Emerging Visual Artists" },
+  ],
+  links: [
+    { source: "Explore", target: "Art" },
+    { source: "Art", target: "Cinema" },
+    { source: "Art", target: "Music" },
+    { source: "Art", target: "Visual Art" },
+    { source: "Art", target: "Books" },
+    { source: "Visual Art", target: "Visual Artists" },
+    { source: "Visual Artists", target: "Emerging Visual Artists" },
+    { source: "Visual Art", target: "Museums" },
+  ],
+};
+
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
   ssr: false,
@@ -59,45 +83,21 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   current
     .d3Force("link")
     ?.distance(() => {
-      return 1;
+      return 200;
     })
-    .strength(() => 1);
+    .strength(() => 4);
 
   // Use last camera position
   const position = graphData.__meta?.camera?.position;
   position && current?.cameraPosition(position);
 }
 
-const explainerGraphData = {
-  nodes: [
-    { id: "Explore" },
-    { id: "Art" },
-    { id: "Cinema" },
-    { id: "Books" },
-    { id: "Music" },
-    { id: "Museums" },
-    { id: "Visual Artists" },
-    { id: "Visual Art" },
-    { id: "Emerging Visual Artists" },
-  ],
-  links: [
-    { source: "Explore", target: "Art" },
-    { source: "Art", target: "Cinema" },
-    { source: "Art", target: "Music" },
-    { source: "Art", target: "Visual Art" },
-    { source: "Art", target: "Books" },
-    { source: "Visual Art", target: "Visual Artists" },
-    { source: "Visual Artists", target: "Emerging Visual Artists" },
-    { source: "Visual Art", target: "Museums" },
-  ],
-};
-
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
 function renderNode(node: NodeObject, color?: string) {
   // Forked from "three-spritetext"
   const sprite = new StyledSpriteText(`${node.id}`);
-  sprite.color = color ? color : "rgba(255,255,255,1)";
+  sprite.color = color ? color : "rgba(255,255,255,0.7)";
   sprite.backgroundColor = false;
   sprite.textHeight = 18;
   // Reduce resolution for performance
@@ -199,7 +199,7 @@ export default function InteractiveForceGraph() {
       // _node?.scale?.set(scale, scale, scale);
 
       const prevObj = prevNode && renderNode(prevNode);
-      const nodeObj = node && renderNode(node, "blue");
+      const nodeObj = node && renderNode(node, "white");
 
       _node?.add(nodeObj);
       _prevNode?.clear();
@@ -215,11 +215,10 @@ export default function InteractiveForceGraph() {
       />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
-        nodeOpacity={0.3}
-        rendererConfig={{
-          powerPreference: "high-performance",
-          antialias: false,
-        }}
+        // rendererConfig={{
+        //   powerPreference: "high-performance",
+        //   antialias: false,
+        // }}
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={renderNode}
         enableNodeDrag={false}

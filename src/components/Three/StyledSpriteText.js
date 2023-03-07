@@ -305,28 +305,28 @@ export default class extends three.Sprite {
     ctx.translate(...relPadding);
 
     // Force square background aspect
-    canvas.height = canvas.width;
+    // canvas.height = canvas.width;
 
     // Fix safari gradient blend artifacts
-    ctx.globalCompositeOperation = "darker";
+    // ctx.globalCompositeOperation = "lighter";
 
     // paint background exactly here in code flow
-    var outerRadius = canvas.width * 0.4;
-    var innerRadius = canvas.width * 0.01;
-    var grad = ctx.createRadialGradient(
-      canvas.width / 2,
-      canvas.height / 2,
-      innerRadius,
-      canvas.width / 2,
-      canvas.height / 2,
-      outerRadius
-    );
+    // var outerRadius = canvas.width * 0.4;
+    // var innerRadius = canvas.width * 0.01;
+    // var grad = ctx.createRadialGradient(
+    //   canvas.width / 2,
+    //   canvas.height / 2,
+    //   innerRadius,
+    //   canvas.width / 2,
+    //   canvas.height / 2,
+    //   outerRadius
+    // );
 
-    grad.addColorStop(0, "rgba(0, 0, 0, 0.8)");
-    grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    // grad.addColorStop(0, "rgba(0, 0, 0, 0.8)");
+    // grad.addColorStop(1, "rgba(0, 0, 0, 0)");
 
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.width);
+    // ctx.fillStyle = grad;
+    // ctx.fillRect(0, 0, canvas.width, canvas.width);
 
     // text Shadow
     ctx.shadowColor = "black";
