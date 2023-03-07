@@ -46,10 +46,18 @@ function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
   return nodesWithDepth;
 }
 
-export default function GraphDataPanel() {
+let prevNodeId: string | null = null;
+
+export default function GraphDataPanel({
+  onNodeClick,
+  onNodeHover,
+}: {
+  onNodeClick: (nodeId: string) => void;
+  onNodeHover: (nodeId: string | null, prevNodeId: string | null) => void;
+}) {
   const { nodes, links } = useRecoilValue(graphDataState);
   const [mounted, setMounted] = useState(false);
-  // const { searchNode } = useSearchNode();
+  const [hovered, setHovered] = useState(null);
 
   const safeLinks = links.map((i) => ({
     source: `${i.source}`,
@@ -57,17 +65,30 @@ export default function GraphDataPanel() {
   }));
   const safeStartNode = `${nodes?.[0]?.id}`;
   const orderedNodeIds = dfsTraversal(safeLinks, safeStartNode);
-  console.log(links);
 
   useEffect(() => {
     setMounted(true);
   }, [setMounted]);
+
+  function handleMouseOver(nodeId: string) {
+    // if node id is new, then set it to node id and set previous hover state node to prev node
+    if (nodeId !== prevNodeId) {
+      onNodeHover(nodeId, prevNodeId);
+      prevNodeId = nodeId;
+    }
+    setHovered(nodeId);
+  }
+
+  function handleMouseLeavePanel() {
+    onNodeHover(null, prevNodeId);
+  }
 
   const render = mounted && nodes.length && nodes?.[0]?.id;
   return render ? (
     <div
       className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
+      onMouseLeave={handleMouseLeavePanel}
     >
       <div className="sticky top-0 px-3 py-2 pt-3 bg-neutral-800 text-neutral-500 text-sm">
         Nodes
@@ -89,7 +110,11 @@ export default function GraphDataPanel() {
                 </div>
               );
             })}
-            <div className="py-1 hover:bg-neutral-700 hover:text-white flex-1">
+            <div
+              className="py-1 hover:bg-neutral-700 hover:text-white flex-1"
+              onClick={() => onNodeClick(dfsNode.id)}
+              onMouseOver={() => handleMouseOver(dfsNode.id)}
+            >
               <span className="ml-2"> {dfsNode.id}</span>
             </div>
           </div>

@@ -10,6 +10,7 @@ import {
   ForceGraphMethods,
   ForceGraphProps,
   GraphData,
+  NodeObject,
 } from "react-force-graph-3d";
 import * as THREE from "three";
 import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
@@ -24,6 +25,8 @@ import {
   getIsDocumentHidden,
 } from "@/utils/pageVisibility";
 import { LoadingIcon } from "./Icons";
+import GraphDataPanel from "./GraphListPanel";
+import { Object3D } from "three";
 
 const plexFontWeight = "700";
 const IBMPlexSans = IBM_Plex_Sans({
@@ -89,6 +92,26 @@ const explainerGraphData = {
   ],
 };
 
+type MutableNodeObject = NodeObject & { __threeObj: Object3D };
+
+function renderNode(node: NodeObject, color?: string) {
+  // Forked from "three-spritetext"
+  const sprite = new StyledSpriteText(`${node.id}`);
+  sprite.color = color ? color : "rgba(255,255,255,1)";
+  sprite.backgroundColor = false;
+  sprite.textHeight = 18;
+  // Reduce resolution for performance
+  sprite.fontSize = 200;
+  sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
+  sprite.fontWeight = plexFontWeight;
+
+  const group = new THREE.Group();
+  group.add(sprite);
+  // Fix link z-index artifact
+  group.renderOrder = 2;
+  return group;
+}
+
 export default function InteractiveForceGraph() {
   const graphData = useRecoilValue(graphDataState);
   const { searchNode } = useSearchNode();
@@ -134,32 +157,71 @@ export default function InteractiveForceGraph() {
     };
   }, []);
 
+  function handleNodeClick(nodeId: string) {
+    const current = hasDoneInitialDrawRef.current as ForceGraphMethods;
+
+    if (current && nodeId) {
+      // console.log(nodeId);
+      const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
+      if (node) {
+        // Aim at node from outside it
+        const distance = 40;
+        const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
+        current?.cameraPosition(
+          {
+            x: node.x * distRatio,
+            y: node.y * distRatio,
+            z: node.z * distRatio,
+          }, // new position
+          node, // lookAt ({ x, y, z })
+          1000 // ms transition duration
+        );
+      }
+    }
+  }
+
+  function handleNodeHover(nodeId: string | null, prevNodeId: string | null) {
+    const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
+    const prevNode = _data.nodes.filter(
+      (i: NodeObject) => i.id === prevNodeId
+    )?.[0];
+
+    focusNode(node, prevNode);
+  }
+
+  function focusNode(node: MutableNodeObject, prevNode: MutableNodeObject) {
+    const scale = 1.08;
+    window.requestAnimationFrame(() => {
+      const _prevNode = prevNode?.["__threeObj"];
+      const _node = node?.["__threeObj"];
+      // must set prev node first
+      // _prevNode?.scale?.set(1, 1, 1);
+      // _node?.scale?.set(scale, scale, scale);
+
+      const prevObj = prevNode && renderNode(prevNode);
+      const nodeObj = node && renderNode(node, "blue");
+
+      _node?.add(nodeObj);
+      _prevNode?.clear();
+      _prevNode?.add(prevObj);
+    });
+  }
+
   return (
     <>
+      <GraphDataPanel
+        onNodeClick={handleNodeClick}
+        onNodeHover={handleNodeHover}
+      />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
+        nodeOpacity={0.3}
         rendererConfig={{
           powerPreference: "high-performance",
           antialias: false,
         }}
         graphData={_data.nodes.length ? _data : explainerGraphData}
-        nodeThreeObject={(node) => {
-          // Forked from "three-spritetext"
-          const sprite = new StyledSpriteText(`${node.id}`);
-          sprite.color = "rgba(255,255,255,1)";
-          sprite.backgroundColor = false;
-          sprite.textHeight = 18;
-          // Reduce resolution for performance
-          sprite.fontSize = 200;
-          sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
-          sprite.fontWeight = plexFontWeight;
-
-          const group = new THREE.Group();
-          group.add(sprite);
-          // Fix link z-index artifact
-          group.renderOrder = 2;
-          return group;
-        }}
+        nodeThreeObject={renderNode}
         enableNodeDrag={false}
         backgroundColor="rgb(0,0,0)"
         onNodeClick={async (node) => {
@@ -180,11 +242,7 @@ export default function InteractiveForceGraph() {
           hasDoneInitialDrawRef.current?.resumeAnimation();
         }}
         onNodeHover={(node: any, prevNode: any) => {
-          const scale = 1.08;
-          window.requestAnimationFrame(() => {
-            node?.["__threeObj"]?.scale?.set(scale, scale, scale);
-            prevNode?.["__threeObj"]?.scale?.set(1, 1, 1);
-          });
+          focusNode(node, prevNode);
         }}
         linkColor={"white"}
         linkWidth={0.2}
