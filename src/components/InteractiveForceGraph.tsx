@@ -13,7 +13,7 @@ import {
   NodeObject,
 } from "react-force-graph-3d";
 import * as THREE from "three";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { IBM_Plex_Sans } from "@next/font/google";
 import { Object3D } from "three";
 
@@ -29,7 +29,8 @@ import { usePageVisibility } from "@/utils/pageVisibility";
 import { LoadingIcon } from "@/components/Icons";
 import NodesPane from "@/components/NodesPane";
 import ContextMenu from "@/components/ContextMenu";
-import SummaryView from "./SummaryView";
+import SummaryView from "@/components/SummaryView";
+import useResizeDimensions from "@/hooks/useResizeDimensions";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
@@ -180,6 +181,11 @@ export default function InteractiveForceGraph() {
   usePageVisibility(pauseAnimation, resumeAnimation);
 
   /**
+   * Resize chart to window dims
+   */
+  const dims = useResizeDimensions();
+
+  /**
    * handleNodeHover
    */
   function handleNodeHover(
@@ -258,6 +264,8 @@ export default function InteractiveForceGraph() {
       <SummaryView resumeAnimation={resumeAnimation} onClose={blurNode} />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
+        height={dims.innerHeight}
+        width={dims.innerWidth}
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={renderNode}
         enableNodeDrag={false}

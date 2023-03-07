@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { debounce, fromEvent, map, timer } from "rxjs";
+
 // Graph gen helper
 export function genRandomTree(N = 300, reverse = false) {
   return {
@@ -100,3 +103,16 @@ export function uniqueObjectsById(arr: any[]) {
 
   return uniqueArr;
 }
+
+// Resize handler
+export const debouncedResizeSubscription = (
+  onDebounce = console.log,
+  time = 500
+) => {
+  return fromEvent(window, "resize")
+    .pipe(
+      debounce(() => timer(time)),
+      map((event) => onDebounce(event))
+    )
+    .subscribe();
+};
