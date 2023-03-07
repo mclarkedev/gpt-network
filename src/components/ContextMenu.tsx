@@ -44,7 +44,7 @@ const Item = ({
       key={index}
       className={`${
         active ? "bg-blue-700 text-white" : "text-white"
-      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+      } group flex w-full items-center rounded-md px-3 py-2 text-sm focus:outline-none focus:outline-blue-900 focus:outline-1 overflow-hidden text-ellipsis whitespace-nowrap`}
       onClick={() => {
         closeContextMenu();
         item.onClick();
@@ -95,6 +95,14 @@ export default function ContextMenu({
    * Context Menu actions
    */
   const items = [
+    // {
+    //   name: `Look up ${focusedNodeId?.slice(0, 20)}${
+    //     focusedNodeId?.length > 20 ? "..." : ""
+    //   }`,
+    //   onClick: () => {
+    //     handleGraphNodeClick(focusedNodeId);
+    //   },
+    // },
     {
       name: "Expand Node",
       onClick: () => {

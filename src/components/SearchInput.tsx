@@ -33,7 +33,7 @@ export default function SearchInput({}: {}) {
             type={"text"}
             placeholder="Search topics ..."
             autoFocus
-            className="outline-none bg-transparent w-full font-medium text-black placeholder:text-neutral-500"
+            className="outline-none bg-transparent w-full font-medium text-lg text-black placeholder:text-neutral-500"
           />
         </form>
       </div>

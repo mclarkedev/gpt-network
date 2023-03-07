@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 
 import { commandModalState } from "@/state";
-import { SearchIcon } from "@/components/Icons";
 import SearchInput from "@/components/SearchInput";
 
 export default function CommandModal() {

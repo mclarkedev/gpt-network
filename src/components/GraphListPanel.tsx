@@ -99,14 +99,14 @@ export default function GraphDataPanel({
         return (
           <div
             key={dfsNode.id}
-            className="flex pl-2 text-neutral-400 text-sm w-[200px] bg-neutral-800 "
+            className="flex pl-2 text-neutral-400 text-sm w-[200px] bg-neutral-800 cursor-pointer"
           >
             {[...new Array(dfsNode.depth)]?.map((depth, index) => {
               return (
                 <div
                   key={index}
                   className="border-neutral-700 border-l-[1px] ml-[1px]"
-                  style={{ opacity: index / 4 }}
+                  style={{ opacity: 0.5 }}
                 >
                   {depth}
                 </div>
@@ -116,10 +116,10 @@ export default function GraphDataPanel({
               className={`py-1 hover:bg-neutral-700 hover:text-white flex-1 ${
                 focusedNodeId === dfsNode.id ? "bg-neutral-700 text-white" : ""
               }`}
-              onClick={() => onNodeClick(dfsNode.id)}
+              onMouseUp={() => onNodeClick(dfsNode.id)}
               onMouseOver={() => handleMouseOver(dfsNode.id)}
             >
-              <span className="ml-2"> {dfsNode.id}</span>
+              <span className="ml-2">{dfsNode.id}</span>
             </div>
           </div>
         );
