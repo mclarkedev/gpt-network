@@ -1,26 +1,94 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 import { contextMenuState } from "@/state";
+
+type ContextMenuItem = {
+  name: string;
+  onClick: () => void;
+};
+
+const Item = ({
+  item,
+  index,
+  activeItem,
+  setActiveItem,
+}: {
+  item: ContextMenuItem;
+  index: number;
+  activeItem: number;
+  setActiveItem: Dispatch<SetStateAction<number>>;
+}) => {
+  const oneBasedIndex = index + 1;
+  const active = oneBasedIndex === activeItem;
+  const ref = useRef<any | null>(null);
+
+  useEffect(() => {
+    console.log("render");
+    if (active) {
+      console.log("ACTIVE");
+      ref?.current?.focus();
+    } else {
+      ref?.current?.blur();
+    }
+  }, [active, activeItem]);
+
+  return (
+    <button
+      ref={ref}
+      key={index}
+      className={`${
+        active ? "bg-blue-700 text-white" : "text-white"
+      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+      onClick={() => item.onClick()}
+      onMouseOver={() => {
+        setActiveItem(oneBasedIndex);
+      }}
+    >
+      {item.name}
+    </button>
+  );
+};
 
 export default function ContextMenu({ onClick }: { onClick: () => void }) {
   const { show, position } = useRecoilValue(contextMenuState);
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
+  const items = [
+    {
+      name: "Action 1",
+      onClick: () => {
+        console.log("click 1");
+      },
+    },
+    {
+      name: "Action 2",
+      onClick: () => {
+        console.log("click 2");
+      },
+    },
+  ];
+
+  const maxItems = items.length;
+
+  /**
+   * Reset state when shown again
+   */
+  useEffect(() => {
+    setActiveItem(0);
+  }, [show]);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      /**
-       * Up
-       */
+      console.log(event.key);
       if (event.key === "ArrowUp") {
-        console.log("render");
-        activeItem && setActiveItem(activeItem - 1);
+        activeItem > 1 && setActiveItem(activeItem - 1);
       }
-      /**
-       * Down
-       */
       if (event.key === "ArrowDown") {
-        setActiveItem(activeItem + 1);
+        activeItem < maxItems && setActiveItem(activeItem + 1);
+      }
+      if (event.key === "Enter") {
+        console.log("trigger onclick for", activeItem);
       }
     }
 
@@ -30,15 +98,6 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeItem, setActiveItem]);
-
-  const items = [
-    {
-      name: "Action",
-      onClick: () => {
-        console.log("click");
-      },
-    },
-  ];
 
   return show ? (
     <div>
@@ -50,25 +109,23 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
       >
         <div className="px-1 py-1 ">
           {/* <div className="text-sm p-2 text-neutral-500">Save to list</div> */}
-          {items.map((i, index) => {
-            const active = index + 1 === activeItem;
-            return (
-              <button
-                key={index}
-                className={`${
-                  active ? "bg-blue-700 text-white" : "text-white"
-                } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                onClick={() => i.onClick()}
-              >
-                {i.name}
-              </button>
-            );
-          })}
+          {items.map((item, index) => (
+            <Item
+              key={item.name}
+              activeItem={activeItem}
+              item={item}
+              index={index}
+              setActiveItem={setActiveItem}
+            />
+          ))}
         </div>
       </div>
       <div
-        className="fixed top-0 right-0 left-0 bottom-0 z-50 bg-white bg-opacity-0"
+        className="fixed top-0 right-0 left-0 bottom-0 z-40 bg-white bg-opacity-0"
         onClick={onClick}
+        onMouseOver={() => {
+          setActiveItem(0);
+        }}
       ></div>
     </div>
   ) : null;
