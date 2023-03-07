@@ -85,11 +85,13 @@ export const contextMenuState = atom<{
 });
 
 export const summaryViewState = atom<{
+  text: string;
   show: boolean;
   position: { x: number; y: number };
 }>({
   key: "queryView",
   default: {
+    text: "",
     show: false,
     position: {
       x: 0,

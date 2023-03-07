@@ -16,24 +16,25 @@ import {
 } from "@/state";
 import { NodeObject } from "react-force-graph-3d";
 import PopOver from "./PopOver";
+import { LoadingIcon } from "./Icons";
 
-type ContextMenuItem = {
-  name: string;
-  onClick: () => void;
-};
+// type ContextMenuItem = {
+//   name: string;
+//   onClick: () => void;
+// };
 
 /**
  * Context Menu
  */
 export default function SummaryView({
   resumeAnimation,
-  handleGraphNodeClick,
-}: {
+}: //   handleGraphNodeClick,
+{
   resumeAnimation: () => void;
   handleGraphNodeClick: (nodeId?: string | number) => void;
 }) {
   // UI state
-  const [{ show: showSummaryView, position: summaryViewPosition }, setContextMenuState] = useRecoilState(summaryViewState); // prettier-ignore
+  const [{ show, position, text }, setContextMenuState] = useRecoilState(summaryViewState); // prettier-ignore
   const setFocusedNodeId = useSetRecoilState(focusedNodeIdState);
   //   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
@@ -97,15 +98,10 @@ export default function SummaryView({
   /**
    * Show
    */
-  return showSummaryView ? (
-    <PopOver
-      position={summaryViewPosition}
-      onClickOutside={() => closeContextMenu()}
-    >
-      <div className="px-1 py-1 ">
-        <div className="text-sm p-2 text-white">
-          Dieter Rams is a designer that has designed a lot of nice objects.
-        </div>
+  return show ? (
+    <PopOver position={position} onClickOutside={() => closeContextMenu()}>
+      <div className="px-1 py-1 w-[40ch]">
+        {text ? <div className="text-sm p-2 text-white">{text}</div> : "..."}
       </div>
     </PopOver>
   ) : null;

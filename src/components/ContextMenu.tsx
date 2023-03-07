@@ -16,6 +16,7 @@ import {
 } from "@/state";
 import { NodeObject } from "react-force-graph-3d";
 import PopOver from "./PopOver";
+import fetchSummaryData from "@/network/fetchSummaryData";
 
 type ContextMenuItem = {
   name: string;
@@ -110,14 +111,26 @@ export default function ContextMenu({
    */
   const items = [
     {
-      name: `Look up ${focusedNodeId?.slice(0, 20)}${
-        focusedNodeId?.length > 20 ? "..." : ""
+      name: `Look up ${`${focusedNodeId}`.slice(0, 20)}${
+        `${focusedNodeId}`.length > 20 ? "..." : ""
       }`,
       onClick: () => {
-        setSummaryViewState({
+        fetchSummaryData({
+          subject: `${focusedNodeId}`,
+          onUpdate: (text) => {
+            setSummaryViewState((summaryView) => ({
+              ...summaryView,
+              text: text,
+            }));
+          },
+          onError: console.log,
+          onFinish: console.log,
+        });
+        setSummaryViewState((summaryView) => ({
+          ...summaryView,
           position: { x: contextMenuPosition.x, y: contextMenuPosition.y },
           show: true,
-        });
+        }));
       },
     },
     {
