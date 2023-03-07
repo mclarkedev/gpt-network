@@ -15,6 +15,7 @@ import {
 import * as THREE from "three";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { IBM_Plex_Sans } from "@next/font/google";
+import { Object3D } from "three";
 
 import StyledSpriteText from "@/components/Three/StyledSpriteText";
 import { focusedNodeIdState, graphDataState, __meta } from "@/state";
@@ -25,7 +26,8 @@ import {
 } from "@/utils/pageVisibility";
 import { LoadingIcon } from "./Icons";
 import GraphDataPanel from "./GraphListPanel";
-import { Object3D } from "three";
+
+type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
 const plexFontWeight = "700";
 const IBMPlexSans = IBM_Plex_Sans({
@@ -57,8 +59,6 @@ const explainerGraphData = {
   ],
 };
 
-type MutableNodeObject = NodeObject & { __threeObj: Object3D };
-
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
   ssr: false,
@@ -76,25 +76,22 @@ const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
  * onLoad inits our ThreeJS scene
  */
 function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
-  // Post
-  // const dotPass = new DotScreenPass(new THREE.Vector2(10, 10), 3, 500);
-  // current.postProcessingComposer().addPass(dotPass);
-
-  // Made links shorter
-  // current
-  //   .d3Force("link")
-  //   ?.distance(() => {
-  //     return 50;
-  //   })
-  //   .strength(() => 1);
-
-  // current.d3Force("charge");
+  // Improve link spacing
+  current
+    .d3Force("link")
+    ?.distance(() => {
+      return 50;
+    })
+    .strength(() => 1);
 
   // Use last camera position
   const position = graphData.__meta?.camera?.position;
   position && current?.cameraPosition(position);
 }
 
+/**
+ * Render Node
+ */
 function renderNode(node: NodeObject, color?: string) {
   // Forked from "three-spritetext"
   const sprite = new StyledSpriteText(`${node.id}`);
@@ -113,6 +110,9 @@ function renderNode(node: NodeObject, color?: string) {
   return group;
 }
 
+/**
+ * InteractiveForceGraph
+ */
 export default function InteractiveForceGraph() {
   const graphData = useRecoilValue(graphDataState);
   const setFocusedNodeId = useSetRecoilState(focusedNodeIdState);
@@ -141,10 +141,8 @@ export default function InteractiveForceGraph() {
     }
 
     const visibilityChange = getBrowserVisibilityProp();
-
     function handleVisibilityChange() {
       const isDocHidden = getIsDocumentHidden();
-
       if (isDocHidden) {
         hasDoneInitialDrawRef.current?.resumeAnimation();
       } else {
@@ -214,11 +212,6 @@ export default function InteractiveForceGraph() {
       />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
-        // rendererConfig={{
-        //   powerPreference: "high-performance",
-        //   antialias: false,
-        // }}
-        // forceEngine={"ngraph"}
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={renderNode}
         enableNodeDrag={false}
@@ -228,10 +221,6 @@ export default function InteractiveForceGraph() {
           focusNode(node, prevNode);
           setFocusedNodeId(node?.id);
         }}
-        linkColor={"white"}
-        linkWidth={0.2}
-        linkOpacity={0.3}
-        // cooldownTicks={80}
         d3AlphaDecay={0.05}
         showNavInfo={true}
       />
