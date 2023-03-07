@@ -162,7 +162,7 @@ export default class extends three.Sprite {
       ...lines.map((line) => ctx.measureText(line).width)
     );
     const innerHeight = this.fontSize * lines.length;
-    const double = 1.25;
+    const double = 1;
     canvas.width = (innerWidth + relBorder[0] * 2 + relPadding[0] * 2) * double; // double
     canvas.height =
       (innerHeight + relBorder[1] * 2 + relPadding[1] * 2) * double; //double
@@ -332,9 +332,9 @@ export default class extends three.Sprite {
     ctx.shadowColor = "black";
     ctx.shadowBlur = 20;
 
-    // Center text width
-    var textWidth = ctx.measureText(this._text).width;
-    var textHeight = innerHeight;
+    // // Center text width
+    // var textWidth = ctx.measureText(this._text).width;
+    // var textHeight = innerHeight;
 
     // paint text
     ctx.font = font; // Set font again after canvas is resized, as context properties are reset
@@ -352,11 +352,7 @@ export default class extends three.Sprite {
       const lineY = (index + 1) * this.fontSize;
 
       drawTextStroke && ctx.strokeText(line, lineX, lineY);
-      ctx.fillText(
-        line,
-        canvas.width / 4 - textWidth * 2, // Center width
-        canvas.height / 2 + textHeight / 2 // Center height
-      );
+      ctx.fillText(line, lineX, lineY);
     });
 
     // Inject canvas into sprite
