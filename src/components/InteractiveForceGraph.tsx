@@ -27,7 +27,7 @@ import {
 import useSearchNode from "@/actions/useSearchNode";
 import { usePageVisibility } from "@/utils/pageVisibility";
 import { LoadingIcon } from "@/components/Icons";
-import GraphDataPanel from "@/components/GraphListPanel";
+import GraphDataPanel from "@/components/NodesPane";
 import ContextMenu from "@/components/ContextMenu";
 import SummaryView from "./SummaryView";
 

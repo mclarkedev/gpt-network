@@ -50,7 +50,7 @@ function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
 
 let prevNodeId: string | null = null;
 
-export default function GraphDataPanel({
+export default function NodesPane({
   onRightClick,
   onNodeClick,
   onNodeHover,
