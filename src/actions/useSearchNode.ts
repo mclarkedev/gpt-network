@@ -28,16 +28,15 @@ function useSearchNode() {
     __meta?: any,
     isReset?: Boolean
   ) {
-    const sourceId = nodeId;
-    if (!sourceId) {
+    if (!nodeId) {
       return;
     }
 
     setGraphStatus("loading");
 
-    const subject = sourceId;
-    subject && setGraphPrompt(`${subject}`);
-    sourceId && addGraphHistory(`${sourceId}`);
+    const subject = `${nodeId}`;
+    subject && setGraphPrompt(subject);
+    subject && addGraphHistory(subject);
 
     const exclude = graphData.nodes
       .map((node) => {
@@ -53,7 +52,6 @@ function useSearchNode() {
       onUpdate: (res: string) => {
         setGraphStatus("loading");
         setGraphStream(res);
-        // node?.["__threeObj"]?.scale?.set(scale, scale, scale);
         rawRes = res;
       },
       onFinish: console.log,
@@ -65,16 +63,15 @@ function useSearchNode() {
     // Handle response types, parse csv
     const response = parseResponseType(rawRes);
     const { type, text } = response;
-    console.log({ type, text });
     if (type !== "csv") {
       setGraphStatus("error");
       return;
     }
+    // If we have nodes, merge and stich graph based on reset
     const { nodes } = response;
-
     if (nodes) {
       // Make graph data from csv
-      const _newData = makeGraphDataFromList(`${sourceId}`, nodes);
+      const _newData = makeGraphDataFromList(`${subject}`, nodes);
       // Merge graph into active state
       const mergedGraph = mergeGraphs(graphData, _newData);
       const mergedGraphWithMeta = { ...mergedGraph, __meta };
@@ -93,20 +90,32 @@ function useSearchNode() {
   };
 }
 
+/**
+ * makeNode
+ */
 export const makeNode = (sourceId: string) => {
   return { id: sourceId };
 };
 
+/**
+ * makeLink
+ */
 export const makeLink = (sourceId: string, targetId: string) => {
   return { source: sourceId, target: targetId };
 };
 
+/**
+ * makeNodeLink
+ */
 export const makeNodeLink = (sourceId: string, targetId: string) => {
   const node = makeNode(targetId);
   const link = makeLink(sourceId, targetId);
   return { node, link };
 };
 
+/**
+ * makeGraphData
+ */
 export const makeGraphData = (
   nodeLinks: { node: NodeObject; link: LinkObject }[]
 ) => {
@@ -122,6 +131,9 @@ export const makeGraphData = (
   };
 };
 
+/**
+ * makeGraphDataFromList
+ */
 const makeGraphDataFromList = (sourceId: string, nodes: string[]) => {
   // Always make node, even though it may exist in state
   // It will merge into its duplicate
@@ -144,6 +156,9 @@ const makeGraphDataFromList = (sourceId: string, nodes: string[]) => {
   };
 };
 
+/**
+ * mergeGraphs
+ */
 const mergeGraphs = (graph1: GraphData, graph2: GraphData) => {
   return {
     nodes: uniqueObjectsById([...graph1?.nodes, ...graph2.nodes]),
@@ -151,6 +166,9 @@ const mergeGraphs = (graph1: GraphData, graph2: GraphData) => {
   };
 };
 
+/**
+ * parseResponseType
+ */
 const parseResponseType = (response: string) => {
   const string = response.trim();
   const isNull = string.startsWith("null:");

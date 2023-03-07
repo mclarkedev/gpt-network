@@ -1,7 +1,15 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 import { contextMenuState, focusedNodeIdState, graphDataState } from "@/state";
+import { NodeObject } from "react-force-graph-3d";
 
 type ContextMenuItem = {
   name: string;
@@ -70,12 +78,6 @@ export default function ContextMenu({
   const [{ show, position }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
-  const closeContextMenu = () => {
-    resumeAnimation();
-    setActiveItem(0);
-    setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
-  };
-
   // Action state
   const focusedNodeId = useRecoilValue(focusedNodeIdState);
   const [graphData, setGraphData] = useRecoilState(graphDataState);
@@ -86,6 +88,15 @@ export default function ContextMenu({
   useEffect(() => {
     setActiveItem(0);
   }, [show]);
+
+  /**
+   * CloseContextMenu
+   */
+  const closeContextMenu = useCallback(() => {
+    resumeAnimation();
+    setActiveItem(0);
+    setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
+  }, [resumeAnimation, setActiveItem, setContextMenuState]);
 
   /**
    * Context Menu actions
@@ -116,7 +127,7 @@ export default function ContextMenu({
               return i;
             }
           })
-          .filter(Boolean);
+          .filter(Boolean) as NodeObject[] | [];
         const otherLinks = graphData.links
           .map((i) => {
             if (i.source === focusedNodeId || i.target === focusedNodeId) {
@@ -125,7 +136,7 @@ export default function ContextMenu({
               return i;
             }
           })
-          .filter(Boolean);
+          .filter(Boolean) as NodeObject[] | [];
         setGraphData((graphData) => {
           return {
             ...graphData,
@@ -151,7 +162,7 @@ export default function ContextMenu({
         activeItem < maxItems && setActiveItem(activeItem + 1);
       }
       if (event.key === "Enter") {
-        console.log("trigger onclick for", activeItem);
+        // Enter is handled through native focus tracking
       }
       if (event.key === "Escape") {
         closeContextMenu();
@@ -163,7 +174,13 @@ export default function ContextMenu({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeItem, setActiveItem, items, setContextMenuState]);
+  }, [
+    activeItem,
+    setActiveItem,
+    setContextMenuState,
+    maxItems,
+    closeContextMenu,
+  ]);
 
   /**
    * Show
