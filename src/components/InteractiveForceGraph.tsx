@@ -81,12 +81,14 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   // current.postProcessingComposer().addPass(dotPass);
 
   // Made links shorter
-  current
-    .d3Force("link")
-    ?.distance(() => {
-      return 50;
-    })
-    .strength(() => 1);
+  // current
+  //   .d3Force("link")
+  //   ?.distance(() => {
+  //     return 50;
+  //   })
+  //   .strength(() => 1);
+
+  // current.d3Force("charge");
 
   // Use last camera position
   const position = graphData.__meta?.camera?.position;
@@ -229,8 +231,8 @@ export default function InteractiveForceGraph() {
         linkColor={"white"}
         linkWidth={0.2}
         linkOpacity={0.3}
-        cooldownTicks={80}
-        d3AlphaDecay={0.2}
+        // cooldownTicks={80}
+        d3AlphaDecay={0.05}
         showNavInfo={true}
       />
       {/* Always show loading spinner beneath, in case graph is initializing */}
