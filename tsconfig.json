@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/utils/pageVisibility.js"
+    "src/utils/pageVisibility.ts"
   ],
   "exclude": ["node_modules", ".next"]
 }

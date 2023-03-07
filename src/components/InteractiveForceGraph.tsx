@@ -3,9 +3,7 @@ import React, {
   forwardRef,
   MouseEvent,
   useCallback,
-  useEffect,
   useRef,
-  useState,
 } from "react";
 import dynamic from "next/dynamic";
 import {
@@ -27,10 +25,7 @@ import {
   __meta,
 } from "@/state";
 import useSearchNode from "@/actions/useSearchNode";
-import {
-  getBrowserVisibilityProp,
-  getIsDocumentHidden,
-} from "@/utils/pageVisibility";
+import { usePageVisibility } from "@/utils/pageVisibility";
 import { LoadingIcon } from "@/components/Icons";
 import GraphDataPanel from "@/components/GraphListPanel";
 import ContextMenu from "@/components/ContextMenu";
@@ -165,29 +160,23 @@ export default function InteractiveForceGraph() {
   );
 
   /**
+   * pauseAnimation
+   */
+  const pauseAnimation = () => {
+    hasDoneInitialDrawRef?.current?.pauseAnimation();
+  };
+
+  /**
+   * resumeAnimation
+   */
+  const resumeAnimation = () => {
+    hasDoneInitialDrawRef?.current?.resumeAnimation();
+  };
+
+  /**
    * Pause rendering when page is not visible
    */
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const visibilityChange = getBrowserVisibilityProp();
-    function handleVisibilityChange() {
-      const isDocHidden = getIsDocumentHidden();
-      if (isDocHidden) {
-        hasDoneInitialDrawRef.current?.resumeAnimation();
-      } else {
-        hasDoneInitialDrawRef.current?.pauseAnimation();
-      }
-    }
-
-    document.addEventListener(visibilityChange, handleVisibilityChange, false);
-
-    return () => {
-      document.removeEventListener(visibilityChange,handleVisibilityChange,false); //prettier-ignore
-    };
-  }, []);
+  usePageVisibility(pauseAnimation, resumeAnimation);
 
   /**
    * handleNodeHover
@@ -197,41 +186,12 @@ export default function InteractiveForceGraph() {
     const prevNode = _data.nodes.filter(
       (i: NodeObject) => i.id === prevNodeId
     )?.[0];
-
     focusNode(node, prevNode);
   }
 
   /**
-   * handleGraphNodeClick
+   * openContextMenu
    */
-  async function handleGraphNodeClick(nodeId?: string | number) {
-    if (nodeId) {
-      /**
-       * Set last camera position
-       */
-      const position = hasDoneInitialDrawRef.current?.camera()?.position;
-      const { x, y, z } = position;
-      const __meta = { camera: { position: { x, y, z } } };
-      /**
-       * Pause animation while fetching
-       */
-      hasDoneInitialDrawRef?.current?.pauseAnimation();
-      await searchNode(nodeId, __meta);
-      /**
-       * Resume animation after
-       */
-      hasDoneInitialDrawRef.current?.resumeAnimation();
-    }
-  }
-
-  const resumeAnimation = () => {
-    hasDoneInitialDrawRef?.current?.resumeAnimation();
-  };
-
-  const pauseAnimation = () => {
-    hasDoneInitialDrawRef?.current?.pauseAnimation();
-  };
-
   const openContextMenu = (
     nodeId: string | number | undefined,
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -242,10 +202,35 @@ export default function InteractiveForceGraph() {
     pauseAnimation();
   };
 
+  /**
+   * focusNode
+   */
   const focusNode = (node: any, prevNode: any) => {
     emphasizeNode(node, prevNode);
     node?.id && setFocusedNodeId(node.id); // Must never set undefined
   };
+
+  /**
+   * getThreeCameraMeta
+   */
+  const getThreeCameraMeta = () => {
+    const position = hasDoneInitialDrawRef.current?.camera()?.position;
+    const { x, y, z } = position || {};
+    const __meta = { camera: { position: { x, y, z } } };
+    return __meta;
+  };
+
+  /**
+   * handleGraphNodeClick
+   */
+  async function handleGraphNodeClick(nodeId?: string | number) {
+    if (nodeId) {
+      const __meta = getThreeCameraMeta();
+      pauseAnimation();
+      await searchNode(nodeId, __meta);
+      resumeAnimation();
+    }
+  }
 
   return (
     <>
