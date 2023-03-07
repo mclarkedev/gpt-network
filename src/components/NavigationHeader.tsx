@@ -22,9 +22,16 @@ export default function NavigationHeader() {
     setLocalGraphStatus(graphStatus);
   }, [graphStatus]);
 
+  const isInitialState = true;
+
   return (
     <Suspense>
-      <div className={`absolute top-0 z-10 p-5 text-black ${graphStatus === "pending" ? "left-1/2" : "right-0"}`}>
+      <div
+        className={`absolute top-0 z-10 p-5 text-black ${
+          isInitialState ? "left-1/2 translate-x-[-50%]" : "right-0"
+        }`}
+        style={{}}
+      >
         <div className="flex justify-between align-middle">
           <div></div>
           <div className="flex items-center">
@@ -51,7 +58,6 @@ export default function NavigationHeader() {
           </div>
           <div></div>
         </div>
-       
       </div>
       {localGraphStatus === "loading" && (
         <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none">
