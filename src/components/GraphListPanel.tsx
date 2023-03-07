@@ -106,7 +106,7 @@ export default function GraphDataPanel({
       style={{ maxHeight: "calc(100vh - 3rem)" }}
       onMouseLeave={handleMouseLeavePanel}
     >
-      <div className="sticky top-0 px-3 py-2 pt-3 bg-neutral-800 text-neutral-500 text-sm">
+      <div className="sticky top-0 px-3 py-1 pt-3 bg-neutral-800 text-neutral-500 text-sm">
         Nodes
       </div>
       {orderedNodeIds.map((dfsNode) => {
