@@ -81,7 +81,7 @@ export default function ContextMenu({
 }: {
   resumeAnimation: () => void;
   handleGraphNodeClick: (nodeId?: string | number) => void;
-  blurNode: (nodeId: string | number | undefined) => void;
+  blurNode: (nodeId: NodeObject["id"]) => void;
 }) {
   // UI state
   const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore

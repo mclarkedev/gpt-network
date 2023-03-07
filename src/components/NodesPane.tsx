@@ -1,5 +1,6 @@
 import { contextMenuState, focusedNodeIdState, graphDataState } from "@/state";
 import { MouseEvent, useEffect, useState } from "react";
+import { NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 type Edge = {
@@ -69,11 +70,8 @@ export default function NodesPane({
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
   onNodeClick: (nodeId: string) => void;
-  onNodeHover: (
-    nodeId: string | number | undefined,
-    prevNodeId: string | number | undefined
-  ) => void;
-  onMouseLeave: (prevNodeId: string | number | undefined) => void;
+  onNodeHover: (nodeId: NodeObject["id"], prevNodeId: NodeObject["id"]) => void;
+  onMouseLeave: (prevNodeId: NodeObject["id"]) => void;
 }) {
   const { nodes, links } = useRecoilValue(graphDataState);
   const [mounted, setMounted] = useState(false);

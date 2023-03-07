@@ -189,8 +189,8 @@ export default function InteractiveForceGraph() {
    * handleNodeHover
    */
   function handleNodeHover(
-    nodeId: string | number | undefined,
-    prevNodeId: string | number | undefined
+    nodeId: NodeObject["id"],
+    prevNodeId: NodeObject["id"]
   ) {
     const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
     const prevNode = _data.nodes.filter(
@@ -199,7 +199,7 @@ export default function InteractiveForceGraph() {
     focusNode(node, prevNode);
   }
 
-  function blurNode(nodeId: string | number | undefined) {
+  function blurNode(nodeId: NodeObject["id"]) {
     handleNodeHover(undefined, nodeId);
   }
 
@@ -207,7 +207,7 @@ export default function InteractiveForceGraph() {
    * openContextMenu
    */
   const openContextMenu = (
-    nodeId: string | number | undefined,
+    nodeId: NodeObject["id"],
     event:
       | MouseEvent<HTMLDivElement, globalThis.MouseEvent>
       | globalThis.MouseEvent

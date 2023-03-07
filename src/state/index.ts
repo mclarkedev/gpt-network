@@ -1,4 +1,4 @@
-import { GraphData } from "react-force-graph-3d";
+import { GraphData, NodeObject } from "react-force-graph-3d";
 import { atom } from "recoil";
 
 const VERSION = "v0";
@@ -74,7 +74,7 @@ export const graphStatusState = atom<GraphStatus>({
   effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
-export const focusedNodeIdState = atom<string | number | undefined>({
+export const focusedNodeIdState = atom<NodeObject["id"]>({
   key: "focusedNodeId",
   default: undefined,
 });

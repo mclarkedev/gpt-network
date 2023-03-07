@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
+import { NodeObject } from "react-force-graph-3d";
 
 import { focusedNodeIdState, summaryViewState } from "@/state";
-import PopUp from "./PopUp";
+import PopUp from "@/components/PopUp";
 
 /**
  * SummaryView
@@ -12,7 +13,7 @@ export default function SummaryView({
   onClose,
 }: {
   resumeAnimation: () => void;
-  onClose: (nodeId: string | number | undefined) => void;
+  onClose: (nodeId: NodeObject["id"]) => void;
 }) {
   const [{ show, position, text }, setContextMenuState] = useRecoilState(summaryViewState); // prettier-ignore
   const [focusedNodeId, setFocusedNodeId] = useRecoilState(focusedNodeIdState);
