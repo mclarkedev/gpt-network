@@ -37,12 +37,9 @@ export default function CommandModal() {
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div
             ref={modalRef}
-            className="relative transform overflow-hidden rounded-xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+            className="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
           >
-            <div className="flex items-center bg-white p-3">
-              <SearchIcon className="text-neutral-400 mr-2" />
-              <SearchInput />
-            </div>
+            <SearchInput />
           </div>
         </div>
       </div>

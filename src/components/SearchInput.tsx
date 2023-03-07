@@ -2,6 +2,7 @@ import useSearchNode from "@/actions/useSearchNode";
 import { commandModalState } from "@/state";
 import { useRef } from "react";
 import { useSetRecoilState } from "recoil";
+import { SearchIcon } from "./Icons";
 
 /**
  * SearchInput
@@ -24,15 +25,18 @@ export default function SearchInput({}: {}) {
   };
 
   return (
-    <div className="w-full">
-      <form ref={formRef} onSubmit={onSubmit} className="w-full">
-        <input
-          type={"text"}
-          placeholder="Search topics ..."
-          autoFocus
-          className="outline-none bg-transparent w-full text-bold text-black"
-        />
-      </form>
+    <div className="flex items-center bg-white p-3">
+      <SearchIcon className="text-neutral-500 mr-2" />
+      <div className="w-full">
+        <form ref={formRef} onSubmit={onSubmit} className="w-full">
+          <input
+            type={"text"}
+            placeholder="Search topics ..."
+            autoFocus
+            className="outline-none bg-transparent w-full font-medium text-black placeholder:text-neutral-500"
+          />
+        </form>
+      </div>
     </div>
   );
 }
