@@ -65,7 +65,7 @@ export const graphStatusState = atom<
   effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
-export const focusedNodeIdState = atom<any>({
+export const focusedNodeIdState = atom<string | number | undefined>({
   key: "focusedNodeId",
   default: undefined,
 });
@@ -75,6 +75,20 @@ export const contextMenuState = atom<{
   position: { x: number; y: number };
 }>({
   key: "contextMenu",
+  default: {
+    show: false,
+    position: {
+      x: 0,
+      y: 0,
+    },
+  },
+});
+
+export const summaryViewState = atom<{
+  show: boolean;
+  position: { x: number; y: number };
+}>({
+  key: "queryView",
   default: {
     show: false,
     position: {

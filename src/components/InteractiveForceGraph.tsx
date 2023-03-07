@@ -29,6 +29,7 @@ import { usePageVisibility } from "@/utils/pageVisibility";
 import { LoadingIcon } from "@/components/Icons";
 import GraphDataPanel from "@/components/GraphListPanel";
 import ContextMenu from "@/components/ContextMenu";
+import SummaryView from "./SummaryView";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
@@ -207,7 +208,7 @@ export default function InteractiveForceGraph() {
    */
   const focusNode = (node: any, prevNode: any) => {
     emphasizeNode(node, prevNode);
-    node?.id && setFocusedNodeId(node.id); // Must never set undefined
+    setFocusedNodeId(node?.id); // Must never set undefined
   };
 
   /**
@@ -240,6 +241,10 @@ export default function InteractiveForceGraph() {
         onNodeHover={handleNodeHover}
       />
       <ContextMenu
+        resumeAnimation={resumeAnimation}
+        handleGraphNodeClick={handleGraphNodeClick}
+      />
+      <SummaryView
         resumeAnimation={resumeAnimation}
         handleGraphNodeClick={handleGraphNodeClick}
       />

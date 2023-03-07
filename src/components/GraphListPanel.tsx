@@ -1,5 +1,5 @@
 import useSearchNode from "@/actions/useSearchNode";
-import { focusedNodeIdState, graphDataState } from "@/state";
+import { contextMenuState, focusedNodeIdState, graphDataState } from "@/state";
 import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
 import { NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -65,6 +65,7 @@ export default function GraphDataPanel({
   const { nodes, links } = useRecoilValue(graphDataState);
   const [mounted, setMounted] = useState(false);
   const [focusedNodeId, setFocusedNodeId] = useRecoilState(focusedNodeIdState);
+  const contextMenu = useRecoilValue(contextMenuState);
 
   const safeLinks = links.map((i) => ({
     source: `${i.source}`,
@@ -87,7 +88,11 @@ export default function GraphDataPanel({
   }
 
   function handleMouseLeavePanel() {
-    onNodeHover(null, prevNodeId);
+    // Always blur active node when context menu is hidden
+    if (!contextMenu.show) {
+      onNodeHover(null, prevNodeId);
+      setFocusedNodeId(undefined);
+    }
   }
 
   const handleContextMenu = (

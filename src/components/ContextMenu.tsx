@@ -6,10 +6,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { contextMenuState, focusedNodeIdState, graphDataState } from "@/state";
+import {
+  contextMenuState,
+  focusedNodeIdState,
+  graphDataState,
+  summaryViewState,
+} from "@/state";
 import { NodeObject } from "react-force-graph-3d";
+import PopOver from "./PopOver";
 
 type ContextMenuItem = {
   name: string;
@@ -75,19 +81,20 @@ export default function ContextMenu({
   handleGraphNodeClick: (nodeId?: string | number) => void;
 }) {
   // UI state
-  const [{ show, position }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
+  const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
   // Action state
   const focusedNodeId = useRecoilValue(focusedNodeIdState);
   const [graphData, setGraphData] = useRecoilState(graphDataState);
+  const setSummaryViewState = useSetRecoilState(summaryViewState);
 
   /**
    * Reset to 0 when shown again
    */
   useEffect(() => {
     setActiveItem(0);
-  }, [show]);
+  }, [showContextMenu]);
 
   /**
    * CloseContextMenu
@@ -102,14 +109,17 @@ export default function ContextMenu({
    * Context Menu actions
    */
   const items = [
-    // {
-    //   name: `Look up ${focusedNodeId?.slice(0, 20)}${
-    //     focusedNodeId?.length > 20 ? "..." : ""
-    //   }`,
-    //   onClick: () => {
-    //     handleGraphNodeClick(focusedNodeId);
-    //   },
-    // },
+    {
+      name: `Look up ${focusedNodeId?.slice(0, 20)}${
+        focusedNodeId?.length > 20 ? "..." : ""
+      }`,
+      onClick: () => {
+        setSummaryViewState({
+          position: { x: contextMenuPosition.x, y: contextMenuPosition.y },
+          show: true,
+        });
+      },
+    },
     {
       name: "Expand Node",
       onClick: () => {
@@ -185,36 +195,25 @@ export default function ContextMenu({
   /**
    * Show
    */
-  return show ? (
-    <div>
-      <div
-        className="absolute bg-neutral-800 rounded-xl"
-        style={{
-          zIndex: 999999,
-          transform: `translate(${position.x}px, ${position.y}px)`,
-        }}
-      >
-        <div className="px-1 py-1 ">
-          {/* <div className="text-sm p-2 text-neutral-500">Save to list</div> */}
-          {items.map((item, index) => (
-            <Item
-              key={item.name}
-              activeItem={activeItem}
-              item={item}
-              index={index}
-              setActiveItem={setActiveItem}
-              closeContextMenu={closeContextMenu}
-            />
-          ))}
-        </div>
+  return showContextMenu ? (
+    <PopOver
+      position={contextMenuPosition}
+      onClickOutside={() => closeContextMenu()}
+      onMouseOverOutside={() => setActiveItem(0)}
+    >
+      <div className="px-1 py-1 ">
+        {/* <div className="text-sm p-2 text-neutral-500">Save to list</div> */}
+        {items.map((item, index) => (
+          <Item
+            key={item.name}
+            activeItem={activeItem}
+            item={item}
+            index={index}
+            setActiveItem={setActiveItem}
+            closeContextMenu={closeContextMenu}
+          />
+        ))}
       </div>
-      <div
-        className="fixed top-0 right-0 left-0 bottom-0 z-50 bg-white bg-opacity-0"
-        onClick={closeContextMenu}
-        onMouseOver={() => {
-          setActiveItem(0);
-        }}
-      ></div>
-    </div>
+    </PopOver>
   ) : null;
 }
