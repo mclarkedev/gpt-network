@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { contextMenuState } from "@/state";
 
@@ -8,6 +8,9 @@ type ContextMenuItem = {
   onClick: () => void;
 };
 
+/**
+ * Context Menu Item
+ */
 const Item = ({
   item,
   index,
@@ -50,8 +53,11 @@ const Item = ({
   );
 };
 
+/**
+ * Context Menu
+ */
 export default function ContextMenu({ onClick }: { onClick: () => void }) {
-  const { show, position } = useRecoilValue(contextMenuState);
+  const [{ show, position }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
   const items = [
@@ -80,7 +86,7 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      console.log(event.key);
+      // console.log(event.key);
       if (event.key === "ArrowUp") {
         activeItem > 1 && setActiveItem(activeItem - 1);
       }
@@ -89,6 +95,10 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
       }
       if (event.key === "Enter") {
         console.log("trigger onclick for", activeItem);
+      }
+      if (event.key === "Escape") {
+        setActiveItem(0);
+        setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
       }
     }
 
