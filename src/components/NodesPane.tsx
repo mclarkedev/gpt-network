@@ -53,7 +53,7 @@ function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
 /**
  * prevNodeId state stores the last hovered node
  */
-let prevNodeId: string | null = null;
+let prevNodeId: string | undefined = undefined;
 
 /**
  * NodesPane
@@ -62,13 +62,18 @@ export default function NodesPane({
   onRightClick,
   onNodeClick,
   onNodeHover,
+  onMouseLeave,
 }: {
   onRightClick: (
     nodeId: string,
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => void;
   onNodeClick: (nodeId: string) => void;
-  onNodeHover: (nodeId: string | null, prevNodeId: string | null) => void;
+  onNodeHover: (
+    nodeId: string | number | undefined,
+    prevNodeId: string | number | undefined
+  ) => void;
+  onMouseLeave: (prevNodeId: string | number | undefined) => void;
 }) {
   const { nodes, links } = useRecoilValue(graphDataState);
   const [mounted, setMounted] = useState(false);
@@ -95,11 +100,10 @@ export default function NodesPane({
     }
   }
 
-  function handleMouseLeavePanel() {
+  function blurActiveNode() {
     // Always blur active node when context menu is hidden
     if (!contextMenu.show) {
-      onNodeHover(null, prevNodeId);
-      setFocusedNodeId(undefined);
+      onMouseLeave(prevNodeId);
     }
   }
 
@@ -117,7 +121,7 @@ export default function NodesPane({
     <div
       className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
-      onMouseLeave={handleMouseLeavePanel}
+      onMouseLeave={blurActiveNode}
     >
       <div className="sticky top-0 px-3 py-1 pt-3 bg-neutral-800 text-neutral-500 text-sm">
         Nodes

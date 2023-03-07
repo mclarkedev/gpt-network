@@ -77,9 +77,11 @@ const Item = ({
 export default function ContextMenu({
   resumeAnimation,
   handleGraphNodeClick,
+  blurNode,
 }: {
   resumeAnimation: () => void;
   handleGraphNodeClick: (nodeId?: string | number) => void;
+  blurNode: (nodeId: string | number | undefined) => void;
 }) {
   // UI state
   const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
@@ -100,11 +102,21 @@ export default function ContextMenu({
   /**
    * CloseContextMenu
    */
-  const closeContextMenu = useCallback(() => {
-    resumeAnimation();
-    setActiveItem(0);
-    setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
-  }, [resumeAnimation, setActiveItem, setContextMenuState]);
+  const closeContextMenu = useCallback(
+    (blurFocusedNode = true) => {
+      resumeAnimation();
+      setActiveItem(0);
+      setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
+      blurFocusedNode && blurNode(focusedNodeId);
+    },
+    [
+      resumeAnimation,
+      setActiveItem,
+      setContextMenuState,
+      focusedNodeId,
+      blurNode,
+    ]
+  );
 
   /**
    * Context Menu actions
@@ -132,6 +144,7 @@ export default function ContextMenu({
           show: true,
         }));
       },
+      blurFocusedNode: false,
     },
     {
       name: "Expand Node",
@@ -223,7 +236,7 @@ export default function ContextMenu({
             item={item}
             index={index}
             setActiveItem={setActiveItem}
-            closeContextMenu={closeContextMenu}
+            closeContextMenu={() => closeContextMenu(item.blurFocusedNode)}
           />
         ))}
       </div>

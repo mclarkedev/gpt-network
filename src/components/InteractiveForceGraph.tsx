@@ -27,7 +27,7 @@ import {
 import useSearchNode from "@/actions/useSearchNode";
 import { usePageVisibility } from "@/utils/pageVisibility";
 import { LoadingIcon } from "@/components/Icons";
-import GraphDataPanel from "@/components/NodesPane";
+import NodesPane from "@/components/NodesPane";
 import ContextMenu from "@/components/ContextMenu";
 import SummaryView from "./SummaryView";
 
@@ -182,12 +182,19 @@ export default function InteractiveForceGraph() {
   /**
    * handleNodeHover
    */
-  function handleNodeHover(nodeId: string | null, prevNodeId: string | null) {
+  function handleNodeHover(
+    nodeId: string | number | undefined,
+    prevNodeId: string | number | undefined
+  ) {
     const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
     const prevNode = _data.nodes.filter(
       (i: NodeObject) => i.id === prevNodeId
     )?.[0];
     focusNode(node, prevNode);
+  }
+
+  function blurNode(nodeId: string | number | undefined) {
+    handleNodeHover(undefined, nodeId);
   }
 
   /**
@@ -237,19 +244,18 @@ export default function InteractiveForceGraph() {
 
   return (
     <>
-      <GraphDataPanel
+      <NodesPane
         onRightClick={openContextMenu}
         onNodeClick={handleGraphNodeClick}
         onNodeHover={handleNodeHover}
+        onMouseLeave={blurNode}
       />
       <ContextMenu
         resumeAnimation={resumeAnimation}
         handleGraphNodeClick={handleGraphNodeClick}
+        blurNode={blurNode}
       />
-      <SummaryView
-        resumeAnimation={resumeAnimation}
-        handleGraphNodeClick={handleGraphNodeClick}
-      />
+      <SummaryView resumeAnimation={resumeAnimation} onClose={blurNode} />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
         graphData={_data.nodes.length ? _data : explainerGraphData}

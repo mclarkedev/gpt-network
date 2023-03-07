@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 import { focusedNodeIdState, summaryViewState } from "@/state";
 import PopUp from "./PopUp";
@@ -9,20 +9,29 @@ import PopUp from "./PopUp";
  */
 export default function SummaryView({
   resumeAnimation,
+  onClose,
 }: {
   resumeAnimation: () => void;
+  onClose: (nodeId: string | number | undefined) => void;
 }) {
   const [{ show, position, text }, setContextMenuState] = useRecoilState(summaryViewState); // prettier-ignore
-  const setFocusedNodeId = useSetRecoilState(focusedNodeIdState);
+  const [focusedNodeId, setFocusedNodeId] = useRecoilState(focusedNodeIdState);
 
   /**
    * closePopUp
    */
   const closePopUp = useCallback(() => {
-    resumeAnimation();
     setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
     setFocusedNodeId(undefined);
-  }, [resumeAnimation, setContextMenuState, setFocusedNodeId]);
+    resumeAnimation();
+    onClose(focusedNodeId);
+  }, [
+    resumeAnimation,
+    setContextMenuState,
+    setFocusedNodeId,
+    onClose,
+    focusedNodeId,
+  ]);
 
   /**
    * Show
