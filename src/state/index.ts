@@ -66,8 +66,22 @@ export const graphStatusState = atom<
 });
 
 export const focusedNodeIdState = atom<any>({
-  key: "focusedNodeIdS",
+  key: "focusedNodeId",
   default: undefined,
+});
+
+export const contextMenuState = atom<{
+  show: boolean;
+  position: { x: number; y: number };
+}>({
+  key: "contextMenu",
+  default: {
+    show: false,
+    position: {
+      x: 0,
+      y: 0,
+    },
+  },
 });
 
 export const commandModalState = atom<any>({

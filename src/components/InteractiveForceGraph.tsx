@@ -18,14 +18,20 @@ import { IBM_Plex_Sans } from "@next/font/google";
 import { Object3D } from "three";
 
 import StyledSpriteText from "@/components/Three/StyledSpriteText";
-import { focusedNodeIdState, graphDataState, __meta } from "@/state";
+import {
+  focusedNodeIdState,
+  graphDataState,
+  contextMenuState,
+  __meta,
+} from "@/state";
 import useSearchNode from "@/actions/useSearchNode";
 import {
   getBrowserVisibilityProp,
   getIsDocumentHidden,
 } from "@/utils/pageVisibility";
-import { LoadingIcon } from "./Icons";
-import GraphDataPanel from "./GraphListPanel";
+import { LoadingIcon } from "@/components/Icons";
+import GraphDataPanel from "@/components/GraphListPanel";
+import ContextMenu from "@/components/ContextMenu";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
@@ -114,11 +120,12 @@ function renderNode(node: NodeObject, color?: string) {
  * InteractiveForceGraph
  */
 export default function InteractiveForceGraph() {
+  const setContextMenu = useSetRecoilState(contextMenuState);
   const graphData = useRecoilValue(graphDataState);
   const setFocusedNodeId = useSetRecoilState(focusedNodeIdState);
   const { searchNode } = useSearchNode();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
-  const hasDoneInitialDrawRef = useRef<any>(null);
+  const hasDoneInitialDrawRef = useRef<ForceGraphMethods | null>(null);
 
   // Pass ref into lazy loaded component
   const graphRefCallback = useCallback(
@@ -195,7 +202,7 @@ export default function InteractiveForceGraph() {
       /**
        * Pause animation while fetching
        */
-      hasDoneInitialDrawRef.current.pauseAnimation();
+      hasDoneInitialDrawRef?.current?.pauseAnimation();
       await searchNode(nodeId, __meta);
       /**
        * Resume animation after
@@ -210,6 +217,15 @@ export default function InteractiveForceGraph() {
         onNodeClick={handleGraphNodeClick}
         onNodeHover={handleNodeHover}
       />
+      <ContextMenu
+        onClick={() => {
+          /**
+           * Resume animation when context menu closes
+           */
+          hasDoneInitialDrawRef?.current?.resumeAnimation();
+          setContextMenu((contextMenu) => ({ ...contextMenu, show: false }));
+        }}
+      />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
         graphData={_data.nodes.length ? _data : explainerGraphData}
@@ -217,6 +233,14 @@ export default function InteractiveForceGraph() {
         enableNodeDrag={false}
         backgroundColor="rgb(0,0,0)"
         onNodeClick={(node) => handleGraphNodeClick(node.id)}
+        onNodeRightClick={(node, e) => {
+          const { offsetX: x, offsetY: y } = e;
+          setContextMenu({ show: true, position: { x, y } });
+          /**
+           * Pause animation while in context menu
+           */
+          hasDoneInitialDrawRef?.current?.pauseAnimation();
+        }}
         onNodeHover={(node: any, prevNode: any) => {
           focusNode(node, prevNode);
           setFocusedNodeId(node?.id);
