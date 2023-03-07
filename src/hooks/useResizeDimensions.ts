@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { debouncedResizeSubscription } from "@/utils";
+import { debouncedResizeSubscription, isServer } from "@/utils";
 
 export default function useResizeDimensions() {
-  const { innerWidth, innerHeight } =
-    typeof window === "undefined"
-      ? { innerWidth: 10, innerHeight: 10 }
-      : window;
+  const { innerWidth, innerHeight } = isServer
+    ? { innerWidth: 10, innerHeight: 10 }
+    : window;
   const [dims, setDims] = useState({
     innerWidth,
     innerHeight,

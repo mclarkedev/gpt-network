@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { isServer } from "@/utils/index";
 
 type DocWithBrowserProps = Document & {
   msHidden?: boolean;
@@ -8,7 +9,7 @@ type DocWithBrowserProps = Document & {
 type SideEffect = () => void;
 
 export const getBrowserVisibilityProp = (document: DocWithBrowserProps) => {
-  if (typeof window === "undefined") {
+  if (isServer) {
     return "visibilitychange";
   }
   if (typeof document.hidden !== "undefined") {
@@ -24,7 +25,7 @@ export const getBrowserVisibilityProp = (document: DocWithBrowserProps) => {
 };
 
 export const getBrowserDocumentHiddenProp = (document: DocWithBrowserProps) => {
-  if (typeof window === "undefined") {
+  if (isServer) {
     return;
   }
   if (typeof document?.hidden !== "undefined") {
@@ -37,7 +38,7 @@ export const getBrowserDocumentHiddenProp = (document: DocWithBrowserProps) => {
 };
 
 export const getIsDocumentHidden = (document: DocWithBrowserProps) => {
-  if (typeof window === "undefined") {
+  if (isServer) {
     return;
   }
   const browseDocHiddenProp = getBrowserDocumentHiddenProp(document);
@@ -46,7 +47,7 @@ export const getIsDocumentHidden = (document: DocWithBrowserProps) => {
 
 export function usePageVisibility(onHide: SideEffect, onVisible: SideEffect) {
   useEffect(() => {
-    if (typeof window === "undefined") {
+    if (isServer) {
       return;
     }
 

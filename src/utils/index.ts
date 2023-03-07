@@ -116,3 +116,6 @@ export const debouncedResizeSubscription = (
     )
     .subscribe();
 };
+
+// SSR helper
+export const isServer = typeof window === "undefined";
