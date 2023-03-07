@@ -195,7 +195,9 @@ export default function InteractiveForceGraph() {
    */
   const openContextMenu = (
     nodeId: string | number | undefined,
-    event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+    event:
+      | MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+      | globalThis.MouseEvent
   ) => {
     const { pageX: pX, pageY: pY } = event;
     setContextMenu({ show: true, position: { x: pX, y: pY } }); // Accept context menu and click event offsets as fall backs
@@ -255,7 +257,7 @@ export default function InteractiveForceGraph() {
         enableNodeDrag={false}
         backgroundColor="rgb(0,0,0)"
         onNodeClick={({ id }) => handleGraphNodeClick(id)}
-        onNodeRightClick={(node, e) => openContextMenu(node.id, e)}
+        onNodeRightClick={(node, event) => openContextMenu(node.id, event)}
         onNodeHover={focusNode}
         d3AlphaDecay={0.05}
         showNavInfo={true}

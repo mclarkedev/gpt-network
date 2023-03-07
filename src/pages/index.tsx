@@ -1,4 +1,4 @@
-import React, from "react";
+import React from "react";
 import InteractiveForceGraph from "@/components/InteractiveForceGraph";
 import NavigationHeader from "@/components/NavigationHeader";
 import CommandModal from "@/components/CommandModal";
