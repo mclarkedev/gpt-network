@@ -1,7 +1,7 @@
 import useSearchNode from "@/actions/useSearchNode";
-import { graphDataState } from "@/state";
+import { focusedNodeIdState, graphDataState } from "@/state";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 type Edge = {
   source: string;
@@ -59,6 +59,7 @@ export default function GraphDataPanel({
   const { nodes, links } = useRecoilValue(graphDataState);
   const [mounted, setMounted] = useState(false);
   const [hovered, setHovered] = useState(null);
+  const [focusedNodeId, setFocusedNodeId] = useRecoilState(focusedNodeIdState);
 
   const safeLinks = links.map((i) => ({
     source: `${i.source}`,
@@ -112,7 +113,9 @@ export default function GraphDataPanel({
               );
             })}
             <div
-              className="py-1 hover:bg-neutral-700 hover:text-white flex-1"
+              className={`py-1 hover:bg-neutral-700 hover:text-white flex-1 ${
+                focusedNodeId === dfsNode.id ? "bg-neutral-700 text-white" : ""
+              }`}
               onClick={() => onNodeClick(dfsNode.id)}
               onMouseOver={() => handleMouseOver(dfsNode.id)}
             >

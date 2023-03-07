@@ -13,12 +13,11 @@ import {
   NodeObject,
 } from "react-force-graph-3d";
 import * as THREE from "three";
-import { DotScreenPass } from "three/examples/jsm/postprocessing/DotScreenPass";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { IBM_Plex_Sans } from "@next/font/google";
 
 import StyledSpriteText from "@/components/Three/StyledSpriteText";
-import { graphDataState, __meta } from "@/state";
+import { focusedNodeIdState, graphDataState, __meta } from "@/state";
 import useSearchNode from "@/actions/useSearchNode";
 import {
   getBrowserVisibilityProp,
@@ -58,6 +57,8 @@ const explainerGraphData = {
   ],
 };
 
+type MutableNodeObject = NodeObject & { __threeObj: Object3D };
+
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
   ssr: false,
@@ -85,14 +86,12 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
     ?.distance(() => {
       return 50;
     })
-    .strength(() => 4);
+    .strength(() => 1);
 
   // Use last camera position
   const position = graphData.__meta?.camera?.position;
   position && current?.cameraPosition(position);
 }
-
-type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
 function renderNode(node: NodeObject, color?: string) {
   // Forked from "three-spritetext"
@@ -114,6 +113,7 @@ function renderNode(node: NodeObject, color?: string) {
 
 export default function InteractiveForceGraph() {
   const graphData = useRecoilValue(graphDataState);
+  const setFocusedNodeId = useSetRecoilState(focusedNodeIdState);
   const { searchNode } = useSearchNode();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
   const hasDoneInitialDrawRef = useRef<any>(null);
@@ -172,8 +172,8 @@ export default function InteractiveForceGraph() {
       const _prevNode = prevNode?.["__threeObj"];
       const _node = node?.["__threeObj"];
       // must set prev node first
-      // _prevNode?.scale?.set(1, 1, 1);
-      // _node?.scale?.set(scale, scale, scale);
+      _prevNode?.scale?.set(1, 1, 1);
+      _node?.scale?.set(scale, scale, scale);
 
       const prevObj = prevNode && renderNode(prevNode);
       const nodeObj = node && renderNode(node, "white");
@@ -224,6 +224,7 @@ export default function InteractiveForceGraph() {
         onNodeClick={(node) => handleGraphNodeClick(node.id)}
         onNodeHover={(node: any, prevNode: any) => {
           focusNode(node, prevNode);
+          setFocusedNodeId(node?.id);
         }}
         linkColor={"white"}
         linkWidth={0.2}

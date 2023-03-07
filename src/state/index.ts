@@ -65,6 +65,11 @@ export const graphStatusState = atom<
   effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
+export const focusedNodeIdState = atom<any>({
+  key: "focusedNodeIdS",
+  default: undefined,
+});
+
 export const commandModalState = atom<any>({
   key: "commandModal",
   default: false,
