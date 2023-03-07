@@ -15,7 +15,7 @@ import {
   summaryViewState,
 } from "@/state";
 import { NodeObject } from "react-force-graph-3d";
-import PopOver from "./PopOver";
+import PopUp from "./PopUp";
 import fetchSummaryData from "@/network/fetchSummaryData";
 
 type ContextMenuItem = {
@@ -209,7 +209,7 @@ export default function ContextMenu({
    * Show
    */
   return showContextMenu ? (
-    <PopOver
+    <PopUp
       position={contextMenuPosition}
       onClickOutside={() => closeContextMenu()}
       onMouseOverOutside={() => setActiveItem(0)}
@@ -227,6 +227,6 @@ export default function ContextMenu({
           />
         ))}
       </div>
-    </PopOver>
+    </PopUp>
   ) : null;
 }

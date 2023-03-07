@@ -1,7 +1,7 @@
 /**
- * PopOver
+ * PopUp
  */
-export default function PopOver({
+export default function PopUp({
   position,
   children,
   onClickOutside,

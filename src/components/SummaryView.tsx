@@ -15,7 +15,7 @@ import {
   summaryViewState,
 } from "@/state";
 import { NodeObject } from "react-force-graph-3d";
-import PopOver from "./PopOver";
+import PopUp from "./PopUp";
 import { LoadingIcon } from "./Icons";
 
 // type ContextMenuItem = {
@@ -99,10 +99,10 @@ export default function SummaryView({
    * Show
    */
   return show ? (
-    <PopOver position={position} onClickOutside={() => closeContextMenu()}>
+    <PopUp position={position} onClickOutside={() => closeContextMenu()}>
       <div className="px-1 py-1 w-[40ch]">
         {text ? <div className="text-sm p-2 text-white">{text}</div> : "..."}
       </div>
-    </PopOver>
+    </PopUp>
   ) : null;
 }
