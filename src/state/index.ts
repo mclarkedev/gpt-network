@@ -57,11 +57,20 @@ export const graphDataState = atom<GraphData & __meta>({
   effects: [localStorageEffect(`${VERSION}:graphData`)],
 });
 
-export const graphStatusState = atom<
-  "pending" | "loading" | "complete" | "error"
->({
+export type GraphStatus =
+  | "initial"
+  | "pending"
+  | "loading"
+  | "complete"
+  | "error";
+
+/**
+ * Graph Status
+ * - Independent atom to allow for easier renders
+ */
+export const graphStatusState = atom<GraphStatus>({
   key: "graphStatus",
-  default: undefined,
+  default: "initial",
   effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 

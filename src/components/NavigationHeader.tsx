@@ -1,18 +1,25 @@
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
 
-import { commandModalState, graphDataState, graphStatusState } from "@/state";
+import {
+  commandModalState,
+  graphDataState,
+  GraphStatus,
+  graphStatusState,
+} from "@/state";
 import { Suspense, useEffect, useState } from "react";
 import { LoadingIcon, SearchIcon, XIcon } from "@/components/Icons";
 
 export default function NavigationHeader() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const [graphStatus, setGraphStatus] = useRecoilState(graphStatusState);
-  const [localGraphStatus, setLocalGraphStatus] = useState<null | string>(null);
+  const graphStatus = useRecoilValue(graphStatusState);
+  const resetGraphStatus = useResetRecoilState(graphStatusState);
+  const [localGraphStatus, setLocalGraphStatus] = useState<GraphStatus>("initial"); //prettier-ignore
   const resetGraph = useResetRecoilState(graphDataState);
+  const isInitialState = localGraphStatus === "initial";
 
   function handleReset() {
-    setGraphStatus("pending");
     resetGraph();
+    resetGraphStatus();
   }
 
   /**
@@ -21,8 +28,6 @@ export default function NavigationHeader() {
   useEffect(() => {
     setLocalGraphStatus(graphStatus);
   }, [graphStatus]);
-
-  const isInitialState = true;
 
   return (
     <Suspense>
@@ -44,7 +49,7 @@ export default function NavigationHeader() {
                 Search
               </div>
             </div>
-            {localGraphStatus !== "pending" && (
+            {!isInitialState && (
               <div
                 onClick={handleReset}
                 className="group bg-neutral-800 text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
