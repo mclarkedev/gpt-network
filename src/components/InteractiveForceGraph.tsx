@@ -146,7 +146,7 @@ export default function InteractiveForceGraph() {
   const setContextMenu = useSetRecoilState(contextMenuState);
   const graphData = useRecoilValue(graphDataState);
   const setFocusedNodeId = useSetRecoilState(focusedNodeIdState);
-  const { searchNode } = useSearchNode();
+  const searchNode = useSearchNode();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
   const hasDoneInitialDrawRef = useRef<ForceGraphMethods | null>(null);
 

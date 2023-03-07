@@ -10,7 +10,7 @@ import { SearchIcon } from "./Icons";
 export default function SearchInput({}: {}) {
   const formRef = useRef<any>(null);
   const setShowCommandModal = useSetRecoilState(commandModalState);
-  const { searchNode } = useSearchNode();
+  const searchNode = useSearchNode();
 
   const onSubmit = (e: any) => {
     const value = e?.target?.[0]?.value;

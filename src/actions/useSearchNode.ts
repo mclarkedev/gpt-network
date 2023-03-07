@@ -9,11 +9,6 @@ import {
 } from "@/state";
 import { fetchCompletionData } from "@/network";
 import { uniqueObjectsById } from "@/utils";
-import { Object3D } from "three";
-
-type NodeObjectWithThree = NodeObject & {
-  __threeObj?: Object3D;
-};
 
 function useSearchNode() {
   const [graphData, setGraphData] = useRecoilState(graphDataState);
@@ -28,7 +23,7 @@ function useSearchNode() {
     });
   }
 
-  async function searchNode(
+  return async function searchNode(
     nodeId: string | number,
     __meta?: any,
     isReset?: Boolean
@@ -49,7 +44,6 @@ function useSearchNode() {
         return node.id;
       })
       .join(", ");
-    console.log(exclude);
 
     // Get data
     let rawRes = "";
@@ -96,10 +90,6 @@ function useSearchNode() {
       console.error("No nodes found");
       setGraphStatus("error");
     }
-  }
-
-  return {
-    searchNode,
   };
 }
 

@@ -29,9 +29,7 @@ const Item = ({
   const ref = useRef<any | null>(null);
 
   useEffect(() => {
-    console.log("render");
     if (active) {
-      console.log("ACTIVE");
       ref?.current?.focus();
     } else {
       ref?.current?.blur();
@@ -128,7 +126,6 @@ export default function ContextMenu({
             }
           })
           .filter(Boolean);
-        console.log(otherNodes, otherLinks);
         setGraphData((graphData) => {
           return {
             ...graphData,
@@ -147,7 +144,6 @@ export default function ContextMenu({
    */
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      // console.log(event.key);
       if (event.key === "ArrowUp") {
         activeItem > 1 && setActiveItem(activeItem - 1);
       }
