@@ -2,7 +2,7 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 
 import { commandModalState, graphDataState, graphStatusState } from "@/state";
 import { Suspense, useEffect, useState } from "react";
-import { LoadingIcon, SearchIcon, XIcon } from "./Icons";
+import { LoadingIcon, SearchIcon, XIcon } from "@/components/Icons";
 
 export default function NavigationHeader() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
@@ -24,9 +24,8 @@ export default function NavigationHeader() {
 
   return (
     <Suspense>
-      <div className="absolute top-0 left-0 right-0 z-10 p-5 text-black">
+      <div className={`absolute top-0 z-10 p-5 text-black ${graphStatus === "pending" ? "left-1/2" : "right-0"}`}>
         <div className="flex justify-between align-middle">
-          <div></div>
           <div></div>
           <div className="flex items-center">
             <div
@@ -50,7 +49,9 @@ export default function NavigationHeader() {
               </div>
             )}
           </div>
+          <div></div>
         </div>
+       
       </div>
       {localGraphStatus === "loading" && (
         <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none">

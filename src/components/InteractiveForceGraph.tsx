@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import dynamic from "next/dynamic";
 import {
@@ -117,6 +118,27 @@ function renderNode(node: NodeObject, color?: string) {
 }
 
 /**
+ * Emphasize Node
+ */
+function emphasizeNode(node: MutableNodeObject, prevNode: MutableNodeObject) {
+  const scale = 1.08;
+  window.requestAnimationFrame(() => {
+    const _prevNode = prevNode?.["__threeObj"];
+    const _node = node?.["__threeObj"];
+    // must set prev node first
+    _prevNode?.scale?.set(1, 1, 1);
+    _node?.scale?.set(scale, scale, scale);
+
+    const prevObj = prevNode && renderNode(prevNode);
+    const nodeObj = node && renderNode(node, "white");
+
+    _node?.add(nodeObj);
+    _prevNode?.clear();
+    _prevNode?.add(prevObj);
+  });
+}
+
+/**
  * InteractiveForceGraph
  */
 export default function InteractiveForceGraph() {
@@ -126,8 +148,11 @@ export default function InteractiveForceGraph() {
   const { searchNode } = useSearchNode();
   var _data = JSON.parse(JSON.stringify(graphData)); // Mutable
   const hasDoneInitialDrawRef = useRef<ForceGraphMethods | null>(null);
+  const [refresh, setRefresh] = useState(0);
 
-  // Pass ref into lazy loaded component
+  /**
+   * Lazy loaded component with ref pass
+   */
   const graphRefCallback = useCallback(
     (current: ForceGraphMethods | null) => {
       if (current === null) {
@@ -164,6 +189,9 @@ export default function InteractiveForceGraph() {
     };
   }, []);
 
+  /**
+   * handleNodeHover
+   */
   function handleNodeHover(nodeId: string | null, prevNodeId: string | null) {
     const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
     const prevNode = _data.nodes.filter(
@@ -173,24 +201,9 @@ export default function InteractiveForceGraph() {
     focusNode(node, prevNode);
   }
 
-  function focusNode(node: MutableNodeObject, prevNode: MutableNodeObject) {
-    const scale = 1.08;
-    window.requestAnimationFrame(() => {
-      const _prevNode = prevNode?.["__threeObj"];
-      const _node = node?.["__threeObj"];
-      // must set prev node first
-      _prevNode?.scale?.set(1, 1, 1);
-      _node?.scale?.set(scale, scale, scale);
-
-      const prevObj = prevNode && renderNode(prevNode);
-      const nodeObj = node && renderNode(node, "white");
-
-      _node?.add(nodeObj);
-      _prevNode?.clear();
-      _prevNode?.add(prevObj);
-    });
-  }
-
+  /**
+   * handleGraphNodeClick
+   */
   async function handleGraphNodeClick(nodeId?: string | number) {
     if (nodeId) {
       /**
@@ -211,6 +224,37 @@ export default function InteractiveForceGraph() {
     }
   }
 
+  const resumeAnimation = () => {
+    /**
+     * Resume animation when context menu closes
+     */
+    hasDoneInitialDrawRef?.current?.resumeAnimation();
+  };
+
+  const pauseAnimation = () => {
+    /**
+     * Pause animation while in context menu
+     */
+    hasDoneInitialDrawRef?.current?.pauseAnimation();
+  };
+
+  const openContextMenu = (node, e) => {
+    const { offsetX: x, offsetY: y } = e;
+    setContextMenu({ show: true, position: { x, y } });
+    pauseAnimation();
+  };
+
+  const focusNode = (node: any, prevNode: any) => {
+    emphasizeNode(node, prevNode);
+    setFocusedNodeId(node?.id);
+  };
+
+  const refreshGraph = () => {
+    setRefresh(refresh + 1);
+  };
+
+  useEffect(() => {}, [refresh]);
+
   return (
     <>
       <GraphDataPanel
@@ -218,13 +262,9 @@ export default function InteractiveForceGraph() {
         onNodeHover={handleNodeHover}
       />
       <ContextMenu
-        onClick={() => {
-          /**
-           * Resume animation when context menu closes
-           */
-          hasDoneInitialDrawRef?.current?.resumeAnimation();
-          setContextMenu((contextMenu) => ({ ...contextMenu, show: false }));
-        }}
+        resumeAnimation={resumeAnimation}
+        handleGraphNodeClick={handleGraphNodeClick}
+        refreshGraph={refreshGraph}
       />
       <ForceGraph3DForwardRef
         ref={graphRefCallback}
@@ -233,18 +273,8 @@ export default function InteractiveForceGraph() {
         enableNodeDrag={false}
         backgroundColor="rgb(0,0,0)"
         onNodeClick={(node) => handleGraphNodeClick(node.id)}
-        onNodeRightClick={(node, e) => {
-          const { offsetX: x, offsetY: y } = e;
-          setContextMenu({ show: true, position: { x, y } });
-          /**
-           * Pause animation while in context menu
-           */
-          hasDoneInitialDrawRef?.current?.pauseAnimation();
-        }}
-        onNodeHover={(node: any, prevNode: any) => {
-          focusNode(node, prevNode);
-          setFocusedNodeId(node?.id);
-        }}
+        onNodeRightClick={openContextMenu}
+        onNodeHover={focusNode}
         d3AlphaDecay={0.05}
         showNavInfo={true}
       />

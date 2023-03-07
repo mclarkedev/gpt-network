@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { contextMenuState } from "@/state";
+import { contextMenuState, focusedNodeIdState, graphDataState } from "@/state";
 
 type ContextMenuItem = {
   name: string;
@@ -16,11 +16,13 @@ const Item = ({
   index,
   activeItem,
   setActiveItem,
+  closeContextMenu,
 }: {
   item: ContextMenuItem;
   index: number;
   activeItem: number;
   setActiveItem: Dispatch<SetStateAction<number>>;
+  closeContextMenu: () => void;
 }) => {
   const oneBasedIndex = index + 1;
   const active = oneBasedIndex === activeItem;
@@ -43,7 +45,10 @@ const Item = ({
       className={`${
         active ? "bg-blue-700 text-white" : "text-white"
       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-      onClick={() => item.onClick()}
+      onClick={() => {
+        closeContextMenu();
+        item.onClick();
+      }}
       onMouseOver={() => {
         setActiveItem(oneBasedIndex);
       }}
@@ -54,36 +59,82 @@ const Item = ({
 };
 
 /**
- * Context Menu actions
- */
-const items = [
-  {
-    name: "Action 1",
-    onClick: () => {
-      console.log("click 1");
-    },
-  },
-  {
-    name: "Action 2",
-    onClick: () => {
-      console.log("click 2");
-    },
-  },
-];
-
-/**
  * Context Menu
  */
-export default function ContextMenu({ onClick }: { onClick: () => void }) {
+export default function ContextMenu({
+  resumeAnimation,
+  handleGraphNodeClick,
+}: // refreshGraph,
+{
+  resumeAnimation: () => void;
+  handleGraphNodeClick: (nodeId?: string | number) => void;
+  refreshGraph: () => void;
+}) {
+  // UI state
   const [{ show, position }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
+  const closeContextMenu = () => {
+    resumeAnimation();
+    setActiveItem(0);
+    setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
+  };
+
+  // Action state
+  const focusedNodeId = useRecoilValue(focusedNodeIdState);
+  const [graphData, setGraphData] = useRecoilState(graphDataState);
+
   /**
-   * Reset state when shown again
+   * Reset to 0 when shown again
    */
   useEffect(() => {
     setActiveItem(0);
   }, [show]);
+
+  /**
+   * Context Menu actions
+   */
+  const items = [
+    {
+      name: "Expand Node",
+      onClick: () => {
+        handleGraphNodeClick(focusedNodeId);
+      },
+    },
+    {
+      name: "Remove Node",
+      onClick: () => {
+        const otherNodes = graphData.nodes
+          .map((i) => {
+            if (i.id === focusedNodeId) {
+              return false;
+            } else {
+              return i;
+            }
+          })
+          .filter(Boolean);
+        const otherLinks = graphData.links
+          .map((i) => {
+            if (i.source === focusedNodeId || i.target === focusedNodeId) {
+              return false;
+            } else {
+              return i;
+            }
+          })
+          .filter(Boolean);
+        console.log(otherNodes, otherLinks);
+        setGraphData((graphData) => {
+          return {
+            ...graphData,
+            nodes: otherNodes,
+            links: otherLinks,
+          };
+        });
+      },
+    },
+  ];
+
+  const maxItems = items.length;
 
   /**
    * Handle key roving
@@ -95,14 +146,13 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
         activeItem > 1 && setActiveItem(activeItem - 1);
       }
       if (event.key === "ArrowDown") {
-        activeItem < items.length && setActiveItem(activeItem + 1);
+        activeItem < maxItems && setActiveItem(activeItem + 1);
       }
       if (event.key === "Enter") {
         console.log("trigger onclick for", activeItem);
       }
       if (event.key === "Escape") {
-        setActiveItem(0);
-        setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
+        closeContextMenu();
       }
     }
 
@@ -133,13 +183,14 @@ export default function ContextMenu({ onClick }: { onClick: () => void }) {
               item={item}
               index={index}
               setActiveItem={setActiveItem}
+              closeContextMenu={closeContextMenu}
             />
           ))}
         </div>
       </div>
       <div
         className="fixed top-0 right-0 left-0 bottom-0 z-40 bg-white bg-opacity-0"
-        onClick={onClick}
+        onClick={closeContextMenu}
         onMouseOver={() => {
           setActiveItem(0);
         }}
