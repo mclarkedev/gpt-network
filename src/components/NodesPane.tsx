@@ -142,6 +142,7 @@ export default function NodesPane({
           </div>
         );
       })}
+      <div className="py-2 bg-neutral-800" />
     </div>
   ) : null;
 }
