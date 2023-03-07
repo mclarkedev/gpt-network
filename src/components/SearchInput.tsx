@@ -15,7 +15,7 @@ export default function SearchInput({}: {}) {
     const value = e?.target?.[0]?.value;
     e.preventDefault();
     if (value) {
-      searchNode({ id: value }, undefined, true);
+      searchNode(value, undefined, true);
       setShowCommandModal(false);
     } else {
       console.log("Missing search value");

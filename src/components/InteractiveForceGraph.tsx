@@ -83,7 +83,7 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
   current
     .d3Force("link")
     ?.distance(() => {
-      return 200;
+      return 50;
     })
     .strength(() => 4);
 
@@ -99,7 +99,7 @@ function renderNode(node: NodeObject, color?: string) {
   const sprite = new StyledSpriteText(`${node.id}`);
   sprite.color = color ? color : "rgba(255,255,255,0.7)";
   sprite.backgroundColor = false;
-  sprite.textHeight = 18;
+  sprite.textHeight = 6;
   // Reduce resolution for performance
   sprite.fontSize = 200;
   sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
@@ -157,29 +157,6 @@ export default function InteractiveForceGraph() {
     };
   }, []);
 
-  function handleNodeClick(nodeId: string) {
-    const current = hasDoneInitialDrawRef.current as ForceGraphMethods;
-
-    if (current && nodeId) {
-      // console.log(nodeId);
-      const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
-      if (node) {
-        // Aim at node from outside it
-        const distance = 40;
-        const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
-        current?.cameraPosition(
-          {
-            x: node.x * distRatio,
-            y: node.y * distRatio,
-            z: node.z * distRatio,
-          }, // new position
-          node, // lookAt ({ x, y, z })
-          1000 // ms transition duration
-        );
-      }
-    }
-  }
-
   function handleNodeHover(nodeId: string | null, prevNodeId: string | null) {
     const node = _data.nodes.filter((i: NodeObject) => i.id === nodeId)?.[0];
     const prevNode = _data.nodes.filter(
@@ -207,10 +184,30 @@ export default function InteractiveForceGraph() {
     });
   }
 
+  async function handleGraphNodeClick(nodeId?: string | number) {
+    if (nodeId) {
+      /**
+       * Set last camera position
+       */
+      const position = hasDoneInitialDrawRef.current?.camera()?.position;
+      const { x, y, z } = position;
+      const __meta = { camera: { position: { x, y, z } } };
+      /**
+       * Pause animation while fetching
+       */
+      hasDoneInitialDrawRef.current.pauseAnimation();
+      await searchNode(nodeId, __meta);
+      /**
+       * Resume animation after
+       */
+      hasDoneInitialDrawRef.current?.resumeAnimation();
+    }
+  }
+
   return (
     <>
       <GraphDataPanel
-        onNodeClick={handleNodeClick}
+        onNodeClick={handleGraphNodeClick}
         onNodeHover={handleNodeHover}
       />
       <ForceGraph3DForwardRef
@@ -219,27 +216,12 @@ export default function InteractiveForceGraph() {
         //   powerPreference: "high-performance",
         //   antialias: false,
         // }}
+        // forceEngine={"ngraph"}
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={renderNode}
         enableNodeDrag={false}
         backgroundColor="rgb(0,0,0)"
-        onNodeClick={async (node) => {
-          /**
-           * Set last camera position
-           */
-          const position = hasDoneInitialDrawRef.current?.camera()?.position;
-          const { x, y, z } = position;
-          const __meta = { camera: { position: { x, y, z } } };
-          /**
-           * Pause animation while fetching
-           */
-          hasDoneInitialDrawRef.current.pauseAnimation();
-          await searchNode(node, __meta);
-          /**
-           * Resume animation after
-           */
-          hasDoneInitialDrawRef.current?.resumeAnimation();
-        }}
+        onNodeClick={(node) => handleGraphNodeClick(node.id)}
         onNodeHover={(node: any, prevNode: any) => {
           focusNode(node, prevNode);
         }}

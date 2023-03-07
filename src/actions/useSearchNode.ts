@@ -29,15 +29,11 @@ function useSearchNode() {
   }
 
   async function searchNode(
-    node: NodeObjectWithThree,
+    nodeId: string | number,
     __meta?: any,
     isReset?: Boolean
   ) {
-    // Set active state scale
-    const scale = 1.07;
-    node?.["__threeObj"]?.scale?.set(scale, scale, scale);
-    // Stateful input
-    const sourceId = node.id;
+    const sourceId = nodeId;
     if (!sourceId) {
       return;
     }
@@ -63,7 +59,7 @@ function useSearchNode() {
       onUpdate: (res: string) => {
         setGraphStatus("loading");
         setGraphStream(res);
-        node?.["__threeObj"]?.scale?.set(scale, scale, scale);
+        // node?.["__threeObj"]?.scale?.set(scale, scale, scale);
         rawRes = res;
       },
       onFinish: console.log,
