@@ -191,7 +191,7 @@ export default function InteractiveForceGraph() {
         graphData={_data.nodes.length ? _data : explainerGraphData}
         nodeThreeObject={renderNode}
         enableNodeDrag={false}
-        backgroundColor="rgb(0,0,0)"
+        backgroundColor="rgb(16, 15, 14)"
         onNodeClick={({ id }) => handleGraphNodeClick(id)}
         onNodeRightClick={(node, event) => openContextMenu(node.id, event)}
         onNodeHover={focusNode}
@@ -257,7 +257,7 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
 function renderNode(node: NodeObject, color?: string) {
   // Forked from "three-spritetext"
   const sprite = new ForkedSpriteText(`${node.id}`);
-  sprite.color = color ? color : "rgba(255,255,255,0.7)";
+  sprite.color = color ? color : "#b5b9c8";
   sprite.backgroundColor = false;
   sprite.textHeight = 6;
   sprite.fontSize = 200;
