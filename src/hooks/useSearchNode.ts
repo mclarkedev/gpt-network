@@ -7,7 +7,7 @@ import {
   graphStreamState,
   graphPromptState,
 } from "@/state";
-import { fetchCompletionData } from "@/network";
+import fetchCompletionData from "@/network/fetchCompletionData";
 import { uniqueObjectsById } from "@/utils";
 
 function useSearchNode() {

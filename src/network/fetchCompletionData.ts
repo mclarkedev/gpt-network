@@ -28,7 +28,7 @@ subject: ${subject}
 /**
  * Fetch OpenAI Completion Data from "/api/openai/completion"
  */
-export async function fetchCompletionData({
+export default async function fetchCompletionData({
   exclude,
   subject,
   onUpdate,
