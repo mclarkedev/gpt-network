@@ -118,3 +118,62 @@ export const debouncedResizeSubscription = (
 
 // SSR helper
 export const isServer = typeof window === "undefined";
+
+type Edge = {
+  source: string;
+  target: string;
+};
+
+export type NodeWithDepth = {
+  id: string;
+  depth: number;
+};
+
+/**
+ * Depth-First Tree Traversal returns ordered nodes with depth from links
+ */
+export function dfsTraversal(
+  nodes: { id: string }[],
+  edges: Edge[],
+  startingNodeId: string
+): NodeWithDepth[] {
+  const graph = new Map<string, string[]>();
+  for (const edge of edges) {
+    if (!graph.has(edge.source)) {
+      graph.set(edge.source, []);
+    }
+    if (!graph.has(edge.target)) {
+      graph.set(edge.target, []);
+    }
+    graph.get(edge.source)?.push(edge.target);
+    graph.get(edge.target)?.push(edge.source);
+  }
+
+  const visited = new Set<string>();
+  const nodesWithDepth: NodeWithDepth[] = [];
+
+  function dfs(nodeId: string, depth: number) {
+    visited.add(nodeId);
+    nodesWithDepth.push({ id: nodeId, depth });
+    const neighbors = graph.get(nodeId);
+    if (neighbors) {
+      for (const neighbor of neighbors) {
+        if (!visited.has(neighbor)) {
+          dfs(neighbor, depth + 1);
+        }
+      }
+    }
+  }
+
+  // Perform DFS on startingNodeId
+  dfs(startingNodeId, 0);
+
+  // Iterate over all nodes in the nodes array and perform DFS on any that haven't been visited
+  for (const node of nodes) {
+    if (!visited.has(node.id)) {
+      dfs(node.id, 0);
+    }
+  }
+
+  return nodesWithDepth;
+}

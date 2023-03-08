@@ -1,67 +1,8 @@
 import { contextMenuState, focusedNodeIdState, graphDataState } from "@/state";
+import { dfsTraversal, NodeWithDepth } from "@/utils";
 import { MouseEvent, useEffect, useState } from "react";
 import { NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useRecoilValue } from "recoil";
-
-type Edge = {
-  source: string;
-  target: string;
-};
-
-type NodeWithDepth = {
-  id: string;
-  depth: number;
-};
-
-/**
- * Depth-First Tree Traversal returns ordered nodes with depth from links
- * - FIX: Return unconnected subtrees
- */
-function dfsTraversal(
-  nodes: { id: string }[],
-  edges: Edge[],
-  startingNodeId: string
-): NodeWithDepth[] {
-  const graph = new Map<string, string[]>();
-  for (const edge of edges) {
-    if (!graph.has(edge.source)) {
-      graph.set(edge.source, []);
-    }
-    if (!graph.has(edge.target)) {
-      graph.set(edge.target, []);
-    }
-    graph.get(edge.source)?.push(edge.target);
-    graph.get(edge.target)?.push(edge.source);
-  }
-
-  const visited = new Set<string>();
-  const nodesWithDepth: NodeWithDepth[] = [];
-
-  function dfs(nodeId: string, depth: number) {
-    visited.add(nodeId);
-    nodesWithDepth.push({ id: nodeId, depth });
-    const neighbors = graph.get(nodeId);
-    if (neighbors) {
-      for (const neighbor of neighbors) {
-        if (!visited.has(neighbor)) {
-          dfs(neighbor, depth + 1);
-        }
-      }
-    }
-  }
-
-  // Perform DFS on startingNodeId
-  dfs(startingNodeId, 0);
-
-  // Iterate over all nodes in the nodes array and perform DFS on any that haven't been visited
-  for (const node of nodes) {
-    if (!visited.has(node.id)) {
-      dfs(node.id, 0);
-    }
-  }
-
-  return nodesWithDepth;
-}
 
 /**
  * prevNodeId state stores the last hovered node
@@ -100,26 +41,35 @@ export default function NodesPane({
   const safeStartNode = `${nodes?.[0]?.id}`;
   const orderedNodeIds = dfsTraversal(safeNodes, safeLinks, safeStartNode);
 
+  /**
+   * Avoid ssr hydration
+   */
   useEffect(() => {
     setMounted(true);
   }, [setMounted]);
 
+  /**
+   * handleMouseOver to store prevNodeId so we can blur it
+   */
   function handleMouseOver(nodeId: string) {
-    // Keep track of previous node id so that we can blur the last active node
-    // if node id is new, then set it to node id and set previous hover state node to prev node
     if (nodeId !== prevNodeId) {
       onNodeHover(nodeId, prevNodeId);
       prevNodeId = nodeId;
     }
   }
 
-  function blurActiveNode() {
-    // Always blur active node when context menu is hidden
+  /**
+   * handleMouseLeave to always blur active node when context menu is hidden
+   */
+  function handleMouseLeave() {
     if (!contextMenu.show) {
       onMouseLeave(prevNodeId);
     }
   }
 
+  /**
+   * handleContextMenu native event callback
+   */
   const handleContextMenu = (
     dfsNode: NodeWithDepth,
     event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
@@ -134,7 +84,7 @@ export default function NodesPane({
     <div
       className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
-      onMouseLeave={blurActiveNode}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="sticky top-0 px-3 py-1 pt-3 bg-neutral-800 text-neutral-500 text-sm">
         Nodes
