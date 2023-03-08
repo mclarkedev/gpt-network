@@ -101,11 +101,11 @@ export default function NodesPane({
                 ? "bg-neutral-700 text-white"
                 : "bg-neutral-800 text-neutral-400"
             }`}
-            onMouseUp={() => onNodeClick(dfsNode.id)}
             onMouseOver={() => handleMouseOver(dfsNode.id)}
           >
             <div
               className="flex pl-2 text-sm w-[230px] cursor-pointer"
+              onClick={() => onNodeClick(dfsNode.id)}
               onContextMenu={(event) => handleContextMenu(dfsNode, event)}
             >
               {depthMarkers.map((depth, index) => {

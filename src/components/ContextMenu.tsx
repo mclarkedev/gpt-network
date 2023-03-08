@@ -45,11 +45,12 @@ export default function ContextMenu({
     blurContextMenuItem();
   }, [showContextMenu, blurContextMenuItem]);
 
-  return showContextMenu ? (
+  return (
     <PopUp
       position={contextMenuPosition}
       onClickOutside={() => escapeContextMenu()}
       onMouseOverOutside={blurContextMenuItem}
+      show={showContextMenu}
     >
       <div className="px-1 py-1">
         {actions.map((action, index) => (
@@ -65,5 +66,5 @@ export default function ContextMenu({
         ))}
       </div>
     </PopUp>
-  ) : null;
+  );
 }

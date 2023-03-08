@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { NodeObject } from "react-force-graph-3d";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { focusedNodeIdState, summaryViewState } from "@/state";
 import PopUp from "@/components/PopUp";
@@ -35,24 +36,32 @@ export default function SummaryView({
     focusedNodeId,
   ]);
 
-  /**
-   * Show
-   */
-  return show ? (
+  return (
     <PopUp
       position={position}
       onClickOutside={() => closePopUp()}
       animate={revealStreamingText}
+      show={show}
     >
       <div className="px-1 py-1 w-[40ch] min-h-[10ch]">
-        {revealStreamingText ? (
-          <div className="text-sm p-2 text-white">{text}</div>
-        ) : (
-          <TextSkeleton />
-        )}
+        <AnimatePresence>
+          {revealStreamingText ? (
+            <motion.div
+              className="text-sm p-2 text-white"
+              // motion
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {text}
+            </motion.div>
+          ) : (
+            <TextSkeleton />
+          )}
+        </AnimatePresence>
       </div>
     </PopUp>
-  ) : null;
+  );
 }
 
 /**
@@ -60,11 +69,18 @@ export default function SummaryView({
  */
 const TextSkeleton = () => {
   return (
-    <div role="status" className="max-w-sm animate-pulse p-3">
-      <div className="h-[0.5rem] rounded-full bg-gray-700 max-w-[33ch] mb-3"></div>
-      <div className="h-[0.5rem] rounded-full bg-gray-700 mb-3"></div>
-      <div className="h-[0.5rem] rounded-full bg-gray-700 max-w-[10ch] mb-3"></div>
+    <motion.div
+      role="status"
+      className="max-w-sm animate-pulse p-3"
+      // motioin
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="h-[0.5rem] rounded-full bg-stone-700 max-w-[33ch] mb-3"></div>
+      <div className="h-[0.5rem] rounded-full bg-stone-700 mb-3"></div>
+      <div className="h-[0.5rem] rounded-full bg-stone-700 max-w-[10ch] mb-3"></div>
       <span className="sr-only">Loading...</span>
-    </div>
+    </motion.div>
   );
 };
