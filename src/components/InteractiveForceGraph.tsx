@@ -13,11 +13,10 @@ import {
   NodeObject,
 } from "react-force-graph-3d";
 import * as THREE from "three";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { IBM_Plex_Sans } from "@next/font/google";
 import { Object3D } from "three";
 
-import StyledSpriteText from "@/components/Three/StyledSpriteText";
 import {
   focusedNodeIdState,
   graphDataState,
@@ -31,6 +30,7 @@ import NodesPane from "@/components/NodesPane";
 import ContextMenu from "@/components/ContextMenu";
 import SummaryView from "@/components/SummaryView";
 import useResizeDimensions from "@/hooks/useResizeDimensions";
+import ForkedSpriteText from "@/components/Three/ForkedSpriteText";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
@@ -99,11 +99,10 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
  */
 function renderNode(node: NodeObject, color?: string) {
   // Forked from "three-spritetext"
-  const sprite = new StyledSpriteText(`${node.id}`);
+  const sprite = new ForkedSpriteText(`${node.id}`);
   sprite.color = color ? color : "rgba(255,255,255,0.7)";
   sprite.backgroundColor = false;
   sprite.textHeight = 6;
-  // Reduce resolution for performance
   sprite.fontSize = 200;
   sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
   sprite.fontWeight = plexFontWeight;
