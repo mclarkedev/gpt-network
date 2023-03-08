@@ -66,5 +66,5 @@ export function usePageVisibility(onHide: SideEffect, onVisible: SideEffect) {
     return () => {
       document.removeEventListener(visibilityChange,handleVisibilityChange,false); //prettier-ignore
     };
-  }, []);
+  }, [onHide, onVisible]);
 }
