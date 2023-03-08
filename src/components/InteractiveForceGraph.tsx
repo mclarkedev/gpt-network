@@ -31,6 +31,7 @@ import ContextMenu from "@/components/ContextMenu";
 import SummaryView from "@/components/SummaryView";
 import useResizeDimensions from "@/hooks/useResizeDimensions";
 import ForkedSpriteText from "@/components/Three/ForkedSpriteText";
+import AnimateOnStateChange from "@/components/AnimateOnStateChange";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
@@ -171,6 +172,9 @@ export default function InteractiveForceGraph() {
     }
   }
 
+  const backgroundColor = "rgb(16, 15, 14)";
+  const stubbedData = _data.nodes.length ? _data : explainerGraphData;
+
   return (
     <>
       <NodesPane
@@ -184,24 +188,29 @@ export default function InteractiveForceGraph() {
         blurNode={blurNode}
       />
       <SummaryView resumeAnimation={resumeAnimation} onClose={blurNode} />
-      <ForceGraph3DForwardRef
-        ref={graphRefCallback}
-        height={dims.innerHeight}
-        width={dims.innerWidth}
-        graphData={_data.nodes.length ? _data : explainerGraphData}
-        nodeThreeObject={renderNode}
-        enableNodeDrag={false}
-        backgroundColor="rgb(16, 15, 14)"
-        onNodeClick={({ id }) => handleGraphNodeClick(id)}
-        onNodeRightClick={(node, event) => openContextMenu(node.id, event)}
-        onNodeHover={focusNode}
-        d3AlphaDecay={0.05}
-        showNavInfo={true}
-      />
+      <AnimateOnStateChange state={_data.nodes}>
+        <ForceGraph3DForwardRef
+          ref={graphRefCallback}
+          height={dims.innerHeight}
+          width={dims.innerWidth}
+          graphData={stubbedData}
+          nodeThreeObject={renderNode}
+          enableNodeDrag={false}
+          backgroundColor={backgroundColor}
+          onNodeClick={({ id }) => handleGraphNodeClick(id)}
+          onNodeRightClick={(node, event) => openContextMenu(node.id, event)}
+          onNodeHover={focusNode}
+          d3AlphaDecay={0.05}
+          showNavInfo={false}
+        />
+      </AnimateOnStateChange>
       {/* Always show loading spinner beneath, in case graph is initializing */}
       <div className="fixed top-0 left-1/2 flex h-[100vh] z-[-5]">
         <div className="m-auto">
-          <div className="bg-neutral-800 p-2 rounded-full text-md cursor-pointer w-[39] h-[39]">
+          <div
+            className="bg-neutral-800 p-2 rounded-full text-md cursor-pointer w-[39] h-[39]"
+            style={{ backgroundColor }}
+          >
             <LoadingIcon />
           </div>
         </div>

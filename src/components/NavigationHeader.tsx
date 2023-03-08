@@ -1,4 +1,5 @@
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from "recoil";
+import { AnimatePresence, motion } from "framer-motion";
 
 import {
   commandModalState,
@@ -80,16 +81,23 @@ export default function NavigationHeader() {
           <div></div>
         </div>
       </div>
-      {localGraphStatus === "loading" && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none">
-          <div
-            className="relative top-1/2 bg-neutral-800 p-2 rounded-full text-md cursor-pointer h-fit w-fit m-auto text-center"
-            onClick={handleReset}
+      <AnimatePresence>
+        {localGraphStatus === "loading" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none"
           >
-            <LoadingIcon />
-          </div>
-        </div>
-      )}
+            <div
+              className="relative top-1/2 bg-neutral-800 p-2 rounded-full text-md cursor-pointer h-fit w-fit m-auto text-center"
+              onClick={handleReset}
+            >
+              <LoadingIcon />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Suspense>
   );
 }
