@@ -1,8 +1,8 @@
 import { NodeObject } from "react-force-graph-3d";
 import { useCallback, useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
-import { contextMenuState, focusedNodeIdState } from "@/state";
+import { contextMenuState } from "@/state";
 
 /**
  * useContextMenuRoving for ContextMenu focus
@@ -10,14 +10,18 @@ import { contextMenuState, focusedNodeIdState } from "@/state";
 export const useContextMenuRoving = ({
   maxItems,
   blurNode,
+  focusedNodeId,
 }: {
   maxItems: number;
   blurNode: (focusedNodeId: NodeObject["id"]) => void;
+  focusedNodeId: NodeObject["id"];
 }) => {
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
   const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
-  const focusedNodeId = useRecoilValue(focusedNodeIdState);
 
+  /**
+   * escapeContextMenu retains stateful hover continuity interactions
+   */
   const escapeContextMenu = useCallback(
     (blurFocusedNode = true) => {
       setActiveItem(0);

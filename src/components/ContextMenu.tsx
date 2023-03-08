@@ -5,6 +5,8 @@ import ContextMenuItem from "@/components/ContextMenuItem";
 import PopUp from "@/components/PopUp";
 import { useContextMenuRoving } from "@/hooks/useContextMenuRoving";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
+import { useRecoilValue } from "recoil";
+import { focusedNodeIdState } from "@/state";
 
 /**
  * Context Menu
@@ -17,6 +19,7 @@ export default function ContextMenu({
   blurNode: (nodeId: NodeObject["id"]) => void;
 }) {
   const { maxItems, actions } = useContextMenuActions({ handleGraphNodeClick });
+  const focusedNodeId = useRecoilValue(focusedNodeIdState); // Focused Node must be here to avoid unwanted blurs
 
   const {
     activeItem,
@@ -27,6 +30,7 @@ export default function ContextMenu({
   } = useContextMenuRoving({
     maxItems,
     blurNode,
+    focusedNodeId,
   });
 
   const blurContextMenuItem = useCallback(
