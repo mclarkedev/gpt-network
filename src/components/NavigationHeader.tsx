@@ -9,6 +9,9 @@ import {
 import { Suspense, useEffect, useState } from "react";
 import { LoadingIcon, SearchIcon, XIcon } from "@/components/Icons";
 
+/**
+ * NavigationHeader
+ */
 export default function NavigationHeader() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
   const graphStatus = useRecoilValue(graphStatusState);
@@ -17,6 +20,9 @@ export default function NavigationHeader() {
   const resetGraph = useResetRecoilState(graphDataState);
   const isInitialState = localGraphStatus === "initial";
 
+  /**
+   * handleReset
+   */
   function handleReset() {
     resetGraph();
     resetGraphStatus();

@@ -34,35 +34,12 @@ import ForkedSpriteText from "@/components/Three/ForkedSpriteText";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
+// Node Font
 const plexFontWeight = "700";
 const IBMPlexSans = IBM_Plex_Sans({
   weight: "700",
   subsets: ["latin"],
 });
-
-const explainerGraphData = {
-  nodes: [
-    { id: "Explore" },
-    { id: "Art" },
-    { id: "Cinema" },
-    { id: "Books" },
-    { id: "Music" },
-    { id: "Museums" },
-    { id: "Visual Artists" },
-    { id: "Visual Art" },
-    { id: "Emerging Visual Artists" },
-  ],
-  links: [
-    { source: "Explore", target: "Art" },
-    { source: "Art", target: "Cinema" },
-    { source: "Art", target: "Music" },
-    { source: "Art", target: "Visual Art" },
-    { source: "Art", target: "Books" },
-    { source: "Visual Art", target: "Visual Artists" },
-    { source: "Visual Artists", target: "Emerging Visual Artists" },
-    { source: "Visual Art", target: "Museums" },
-  ],
-};
 
 // Lazy load pre-wrapped component with ref
 const ForceGraph3D = dynamic(() => import("@/components/WrappedForceGraph3D"), {
@@ -74,66 +51,9 @@ const ForceGraph3DHandleRef = (
   props: ForceGraphProps,
   ref: ForwardedRef<ForceGraphMethods>
 ) => <ForceGraph3D {...props} forwardRef={ref} />;
+
 // Forward our ref into lazy loaded component
 const ForceGraph3DForwardRef = forwardRef(ForceGraph3DHandleRef);
-
-/**
- * onLoad inits our ThreeJS scene
- */
-function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
-  // Improve link spacing
-  current
-    .d3Force("link")
-    ?.distance(() => {
-      return 50;
-    })
-    .strength(() => 1);
-
-  // Use last camera position
-  const position = graphData.__meta?.camera?.position;
-  position && current?.cameraPosition(position);
-}
-
-/**
- * Render Node
- */
-function renderNode(node: NodeObject, color?: string) {
-  // Forked from "three-spritetext"
-  const sprite = new ForkedSpriteText(`${node.id}`);
-  sprite.color = color ? color : "rgba(255,255,255,0.7)";
-  sprite.backgroundColor = false;
-  sprite.textHeight = 6;
-  sprite.fontSize = 200;
-  sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
-  sprite.fontWeight = plexFontWeight;
-
-  const group = new THREE.Group();
-  group.add(sprite);
-  // Fix link z-index artifact
-  group.renderOrder = 2;
-  return group;
-}
-
-/**
- * Emphasize Node
- */
-function emphasizeNode(node: MutableNodeObject, prevNode: MutableNodeObject) {
-  const scale = 1.08;
-  window.requestAnimationFrame(() => {
-    const _prevNode = prevNode?.["__threeObj"];
-    const _node = node?.["__threeObj"];
-    // must set prev node first
-    _prevNode?.scale?.set(1, 1, 1);
-    _node?.scale?.set(scale, scale, scale);
-
-    const prevObj = prevNode && renderNode(prevNode);
-    const nodeObj = node && renderNode(node, "white");
-
-    _node?.add(nodeObj);
-    _prevNode?.clear();
-    _prevNode?.add(prevObj);
-  });
-}
 
 /**
  * InteractiveForceGraph
@@ -198,6 +118,9 @@ export default function InteractiveForceGraph() {
     focusNode(node, prevNode);
   }
 
+  /**
+   * blurNode
+   */
   function blurNode(nodeId: NodeObject["id"]) {
     handleNodeHover(undefined, nodeId);
     resumeAnimation();
@@ -285,4 +208,86 @@ export default function InteractiveForceGraph() {
       </div>
     </>
   );
+}
+
+const explainerGraphData = {
+  nodes: [
+    { id: "Explore" },
+    { id: "Art" },
+    { id: "Cinema" },
+    { id: "Books" },
+    { id: "Music" },
+    { id: "Museums" },
+    { id: "Visual Artists" },
+    { id: "Visual Art" },
+    { id: "Emerging Visual Artists" },
+  ],
+  links: [
+    { source: "Explore", target: "Art" },
+    { source: "Art", target: "Cinema" },
+    { source: "Art", target: "Music" },
+    { source: "Art", target: "Visual Art" },
+    { source: "Art", target: "Books" },
+    { source: "Visual Art", target: "Visual Artists" },
+    { source: "Visual Artists", target: "Emerging Visual Artists" },
+    { source: "Visual Art", target: "Museums" },
+  ],
+};
+
+/**
+ * onLoad inits our ThreeJS scene
+ */
+function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
+  // Improve link spacing
+  current
+    .d3Force("link")
+    ?.distance(() => {
+      return 50;
+    })
+    .strength(() => 1);
+
+  // Use last camera position
+  const position = graphData.__meta?.camera?.position;
+  position && current?.cameraPosition(position);
+}
+
+/**
+ * Render Node
+ */
+function renderNode(node: NodeObject, color?: string) {
+  // Forked from "three-spritetext"
+  const sprite = new ForkedSpriteText(`${node.id}`);
+  sprite.color = color ? color : "rgba(255,255,255,0.7)";
+  sprite.backgroundColor = false;
+  sprite.textHeight = 6;
+  sprite.fontSize = 200;
+  sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
+  sprite.fontWeight = plexFontWeight;
+
+  const group = new THREE.Group();
+  group.add(sprite);
+  // Fix link z-index artifact
+  group.renderOrder = 2;
+  return group;
+}
+
+/**
+ * Emphasize Node
+ */
+function emphasizeNode(node: MutableNodeObject, prevNode: MutableNodeObject) {
+  const scale = 1.08;
+  window.requestAnimationFrame(() => {
+    const _prevNode = prevNode?.["__threeObj"];
+    const _node = node?.["__threeObj"];
+    // must set prev node first
+    _prevNode?.scale?.set(1, 1, 1);
+    _node?.scale?.set(scale, scale, scale);
+
+    const prevObj = prevNode && renderNode(prevNode);
+    const nodeObj = node && renderNode(node, "white");
+
+    _node?.add(nodeObj);
+    _prevNode?.clear();
+    _prevNode?.add(prevObj);
+  });
 }

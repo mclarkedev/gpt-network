@@ -1,3 +1,6 @@
+/**
+ * LoadingIcon
+ */
 export const LoadingIcon = () => {
   return (
     <div role="status">
@@ -22,6 +25,9 @@ export const LoadingIcon = () => {
   );
 };
 
+/**
+ * SearchIcon
+ */
 export const SearchIcon = ({ className }: { className?: string }) => (
   <svg
     width="25"
@@ -48,6 +54,9 @@ export const SearchIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+/**
+ * XIcon
+ */
 export const XIcon = ({ className }: { className?: string }) => {
   return (
     <svg
