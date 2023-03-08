@@ -67,7 +67,7 @@ export default function NavigationHeader() {
       {localGraphStatus === "loading" && (
         <div className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-50 touch-none">
           <div
-            className="relative top-1/2 bg-white p-2 rounded-full text-md cursor-pointer h-fit w-fit m-auto text-center"
+            className="relative top-1/2 bg-neutral-800 p-2 rounded-full text-md cursor-pointer h-fit w-fit m-auto text-center"
             onClick={handleReset}
           >
             <LoadingIcon />

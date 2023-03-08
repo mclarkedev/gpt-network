@@ -3,8 +3,8 @@ export const LoadingIcon = () => {
     <div role="status">
       <svg
         aria-hidden="true"
-        className="w-7 h-7 text-gray-200 animate-spin fill-black"
-        viewBox="0 0 100 101"
+        className="w-7 h-7 text-gray-200 animate-spin fill-neutral-700"
+        viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >

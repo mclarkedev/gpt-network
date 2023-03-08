@@ -278,7 +278,7 @@ export default function InteractiveForceGraph() {
       {/* Always show loading spinner beneath, in case graph is initializing */}
       <div className="fixed top-0 left-1/2 flex h-[100vh] z-[-5]">
         <div className="m-auto">
-          <div className="bg-white p-2 rounded-full text-md cursor-pointer w-[39] h-[39]">
+          <div className="bg-neutral-800 p-2 rounded-full text-md cursor-pointer w-[39] h-[39]">
             <LoadingIcon />
           </div>
         </div>
