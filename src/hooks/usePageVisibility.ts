@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { isServer } from "@/utils/index";
+import { isServer } from "@/utils";
 
 type DocWithBrowserProps = Document & {
   msHidden?: boolean;

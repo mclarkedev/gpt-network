@@ -1,4 +1,4 @@
-import "@/styles/globals.css";
+import "@/globals.css";
 import type { AppProps } from "next/app";
 import { Inter, IBM_Plex_Sans } from "@next/font/google";
 import { RecoilRoot } from "recoil";

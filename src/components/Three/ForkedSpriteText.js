@@ -1,5 +1,6 @@
 // Forked from "three-spritetext" 0542556074ff65daa8125bf318d0e0306c969b40,
 // https://github.com/vasturiano/three-spritetext/commits/master/src/index.js
+// See local git 715bba15129e16fee59fd31135ef83db5b50afa0
 import { LinearFilter, Sprite, SpriteMaterial, Texture } from "three";
 
 const three =

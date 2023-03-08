@@ -1,4 +1,4 @@
-import { graphHistoryState } from "../state/index";
+import { graphHistoryState } from "../state";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {

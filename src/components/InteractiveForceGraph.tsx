@@ -23,8 +23,8 @@ import {
   contextMenuState,
   __meta,
 } from "@/state";
-import useSearchNode from "@/actions/useSearchNode";
-import { usePageVisibility } from "@/utils/pageVisibility";
+import useSearchNode from "@/hooks/useSearchNode";
+import { usePageVisibility } from "@/hooks/usePageVisibility";
 import { LoadingIcon } from "@/components/Icons";
 import NodesPane from "@/components/NodesPane";
 import ContextMenu from "@/components/ContextMenu";

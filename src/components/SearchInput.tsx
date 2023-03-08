@@ -1,4 +1,4 @@
-import useSearchNode from "@/actions/useSearchNode";
+import useSearchNode from "@/hooks/useSearchNode";
 import { commandModalState } from "@/state";
 import { useRef } from "react";
 import { useSetRecoilState } from "recoil";
