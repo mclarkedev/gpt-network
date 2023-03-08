@@ -17,7 +17,11 @@ type NodeWithDepth = {
  * Depth-First Tree Traversal returns ordered nodes with depth from links
  * - FIX: Return unconnected subtrees
  */
-function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
+function dfsTraversal(
+  nodes: { id: string }[],
+  edges: Edge[],
+  startingNodeId: string
+): NodeWithDepth[] {
   const graph = new Map<string, string[]>();
   for (const edge of edges) {
     if (!graph.has(edge.source)) {
@@ -46,7 +50,15 @@ function dfsTraversal(edges: Edge[], startingNodeId: string): NodeWithDepth[] {
     }
   }
 
+  // Perform DFS on startingNodeId
   dfs(startingNodeId, 0);
+
+  // Iterate over all nodes in the nodes array and perform DFS on any that haven't been visited
+  for (const node of nodes) {
+    if (!visited.has(node.id)) {
+      dfs(node.id, 0);
+    }
+  }
 
   return nodesWithDepth;
 }
@@ -78,12 +90,15 @@ export default function NodesPane({
   const [focusedNodeId, setFocusedNodeId] = useRecoilState(focusedNodeIdState);
   const contextMenu = useRecoilValue(contextMenuState);
 
+  const safeNodes = nodes.map((i) => ({
+    id: `${i.id}`,
+  }));
   const safeLinks = links.map((i) => ({
     source: `${i.source}`,
     target: `${i.target}`,
   }));
   const safeStartNode = `${nodes?.[0]?.id}`;
-  const orderedNodeIds = dfsTraversal(safeLinks, safeStartNode);
+  const orderedNodeIds = dfsTraversal(safeNodes, safeLinks, safeStartNode);
 
   useEffect(() => {
     setMounted(true);
