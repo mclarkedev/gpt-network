@@ -96,7 +96,7 @@ export default function NodesPane({
           <div
             data-test-id={`NodesPane-item-${index}`}
             key={dfsNode.id}
-            className={`hover:bg-neutral-700 hover:text-white flex-1 ${
+            className={`hover:bg-neutral-700 hover:text-white transition-colors flex-1 ${
               focusedNodeId === dfsNode.id
                 ? "bg-neutral-700 text-white"
                 : "bg-neutral-800 text-neutral-400"
