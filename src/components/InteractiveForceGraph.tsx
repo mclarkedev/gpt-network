@@ -257,16 +257,16 @@ function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
 function renderNode(node: NodeObject, color?: string) {
   // Forked from "three-spritetext"
   const sprite = new ForkedSpriteText(`${node.id}`);
-  sprite.color = color ? color : "#b5b9c8";
+  sprite.color = color ? color : "#bdbdbd";
   sprite.backgroundColor = false;
   sprite.textHeight = 6;
   sprite.fontSize = 200;
   sprite.fontFace = `${IBMPlexSans.style.fontFamily}, Arial`;
   sprite.fontWeight = plexFontWeight;
 
+  // Fix link z-index artifact
   const group = new THREE.Group();
   group.add(sprite);
-  // Fix link z-index artifact
   group.renderOrder = 2;
   return group;
 }
