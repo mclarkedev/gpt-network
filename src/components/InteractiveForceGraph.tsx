@@ -247,6 +247,10 @@ const explainerGraphData = {
  * onLoad inits our ThreeJS scene
  */
 function onLoad(current: ForceGraphMethods, graphData: GraphData & __meta) {
+  // Fog can be added, however, near and far need to be relative to graph size
+  // const scene = current.scene();
+  // scene.fog = new THREE.Fog(0xffffff, 90, 0);
+
   // Improve link spacing
   current
     .d3Force("link")

@@ -14,11 +14,11 @@ export default function AnimateOnStateChange({
           y: 0,
           transition: {
             // ease: "easeOut",
-            duration: 0.4,
+            duration: 0.45,
           },
         },
         hide: {
-          y: 50,
+          y: 80,
           opacity: 0,
         },
       }}
