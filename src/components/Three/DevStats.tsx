@@ -2,6 +2,9 @@ import Script from "next/script";
 
 declare var Stats: any;
 
+/**
+ * DevStats
+ */
 export default function DevStats() {
   if (process.env.NODE_ENV === "development") {
     return (

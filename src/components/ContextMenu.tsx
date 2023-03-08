@@ -1,13 +1,5 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-
 import {
   contextMenuState,
   focusedNodeIdState,
@@ -15,61 +7,11 @@ import {
   summaryViewState,
 } from "@/state";
 import { NodeObject } from "react-force-graph-3d";
-import PopUp from "./PopUp";
+
 import fetchSummaryData from "@/network/fetchSummaryData";
-
-type ContextMenuItem = {
-  name: string;
-  onClick: () => void;
-};
-
-/**
- * Context Menu Item
- */
-const Item = ({
-  item,
-  index,
-  activeItem,
-  setActiveItem,
-  closeContextMenu,
-}: {
-  item: ContextMenuItem;
-  index: number;
-  activeItem: number;
-  setActiveItem: Dispatch<SetStateAction<number>>;
-  closeContextMenu: () => void;
-}) => {
-  const oneBasedIndex = index + 1;
-  const active = oneBasedIndex === activeItem;
-  const ref = useRef<any | null>(null);
-
-  useEffect(() => {
-    if (active) {
-      ref?.current?.focus();
-    } else {
-      ref?.current?.blur();
-    }
-  }, [active, activeItem]);
-
-  return (
-    <button
-      ref={ref}
-      key={index}
-      className={`${
-        active ? "bg-blue-700 text-white" : "text-white"
-      } group flex w-full items-center rounded-md px-3 py-2 text-sm focus:outline-none focus:outline-blue-900 focus:outline-1 overflow-hidden text-ellipsis whitespace-nowrap`}
-      onClick={() => {
-        closeContextMenu();
-        item.onClick();
-      }}
-      onMouseOver={() => {
-        setActiveItem(oneBasedIndex);
-      }}
-    >
-      {item.name}
-    </button>
-  );
-};
+import ContextMenuItem from "@/components/ContextMenuItem";
+import PopUp from "@/components/PopUp";
+import { useKeyRoving } from "@/hooks/useKeyRoving";
 
 /**
  * Context Menu
@@ -84,39 +26,13 @@ export default function ContextMenu({
   blurNode: (nodeId: NodeObject["id"]) => void;
 }) {
   // UI state
-  const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
-  const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
+  // const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
+  // const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
 
   // Action state
   const focusedNodeId = useRecoilValue(focusedNodeIdState);
   const [graphData, setGraphData] = useRecoilState(graphDataState);
   const setSummaryViewState = useSetRecoilState(summaryViewState);
-
-  /**
-   * Reset to 0 when shown again
-   */
-  useEffect(() => {
-    setActiveItem(0);
-  }, [showContextMenu]);
-
-  /**
-   * CloseContextMenu
-   */
-  const closeContextMenu = useCallback(
-    (blurFocusedNode = true) => {
-      resumeAnimation();
-      setActiveItem(0);
-      setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
-      blurFocusedNode && blurNode(focusedNodeId);
-    },
-    [
-      resumeAnimation,
-      setActiveItem,
-      setContextMenuState,
-      focusedNodeId,
-      blurNode,
-    ]
-  );
 
   /**
    * Context Menu actions
@@ -186,37 +102,30 @@ export default function ContextMenu({
 
   const maxItems = items.length;
 
-  /**
-   * Handle key roving
-   */
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "ArrowUp") {
-        activeItem > 1 && setActiveItem(activeItem - 1);
-      }
-      if (event.key === "ArrowDown") {
-        activeItem < maxItems && setActiveItem(activeItem + 1);
-      }
-      if (event.key === "Enter") {
-        // Enter is handled through native focus tracking
-      }
-      if (event.key === "Escape") {
-        closeContextMenu();
-      }
-    }
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [
+  const {
     activeItem,
+    contextMenuPosition,
     setActiveItem,
     setContextMenuState,
+    showContextMenu,
+    escapeContextMenu, // Pass through
+  } = useKeyRoving({
     maxItems,
-    closeContextMenu,
-  ]);
+    escapeContextMenu: (blurFocusedNode = true) => {
+      resumeAnimation();
+      setActiveItem(0);
+      setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
+      blurNode(focusedNodeId);
+      blurFocusedNode && blurNode(focusedNodeId);
+    },
+  });
+
+  /**
+   * Reset to 0 when shown again
+   */
+  useEffect(() => {
+    setActiveItem(0);
+  }, [showContextMenu, setActiveItem]);
 
   /**
    * Show
@@ -224,19 +133,19 @@ export default function ContextMenu({
   return showContextMenu ? (
     <PopUp
       position={contextMenuPosition}
-      onClickOutside={() => closeContextMenu()}
+      onClickOutside={() => escapeContextMenu()}
       onMouseOverOutside={() => setActiveItem(0)}
     >
       <div className="px-1 py-1 ">
         {/* <div className="text-sm p-2 text-neutral-500">Save to list</div> */}
         {items.map((item, index) => (
-          <Item
+          <ContextMenuItem
             key={item.name}
             activeItem={activeItem}
             item={item}
             index={index}
             setActiveItem={setActiveItem}
-            closeContextMenu={() => closeContextMenu(item.blurFocusedNode)}
+            closeContextMenu={() => escapeContextMenu(item.blurFocusedNode)}
           />
         ))}
       </div>

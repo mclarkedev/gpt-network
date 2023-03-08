@@ -4,6 +4,9 @@ import { useRecoilState } from "recoil";
 import { commandModalState } from "@/state";
 import SearchInput from "@/components/SearchInput";
 
+/**
+ * CommandModal renders our main search commands
+ */
 export default function CommandModal() {
   const modalRef = useRef<any>();
   const [showCommandModal, setShowCommandModal] =
