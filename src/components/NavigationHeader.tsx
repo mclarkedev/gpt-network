@@ -35,37 +35,47 @@ export default function NavigationHeader() {
     setLocalGraphStatus(graphStatus);
   }, [graphStatus]);
 
+  function SearchButton() {
+    return (
+      <div
+        data-test-id="SearchButton"
+        className="group bg-neutral-800 text-neutral-200black rounded-full px-4 py-2 mr-2 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
+        onClick={() => setShowCommandModal(true)}
+      >
+        <div className="flex items-center text-neutral-200 pr-2 group-hover:text-white">
+          <SearchIcon className="text-neutral-200 mr-2 group-hover:text-white" />
+          Search
+        </div>
+      </div>
+    );
+  }
+
+  function CloseButton() {
+    return (
+      <div
+        onClick={handleReset}
+        className="group bg-neutral-800 text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
+        style={{
+          visibility: "visible",
+        }}
+      >
+        <XIcon className="text-neutral-200 group-hover:text-white" />
+      </div>
+    );
+  }
+
   return (
     <Suspense>
       <div
         className={`absolute top-0 z-10 p-5 text-black ${
           isInitialState ? "left-1/2 translate-x-[-50%]" : "right-0"
         }`}
-        style={{}}
       >
         <div className="flex justify-between align-middle">
           <div></div>
           <div className="flex items-center">
-            <div
-              className="group bg-neutral-800 text-neutral-200black rounded-full px-4 py-2 mr-2 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
-              onClick={() => setShowCommandModal(true)}
-            >
-              <div className="flex items-center text-neutral-200 pr-2 group-hover:text-white">
-                <SearchIcon className="text-neutral-200 mr-2 group-hover:text-white" />
-                Search
-              </div>
-            </div>
-            {!isInitialState && (
-              <div
-                onClick={handleReset}
-                className="group bg-neutral-800 text-neutral-200 h-fit rounded-full px-3 py-3 text-md w-full cursor-pointer hover:bg-neutral-700 hover:text-white transition-colors"
-                style={{
-                  visibility: "visible",
-                }}
-              >
-                <XIcon className="text-neutral-200 group-hover:text-white" />
-              </div>
-            )}
+            <SearchButton />
+            {!isInitialState && <CloseButton />}
           </div>
           <div></div>
         </div>

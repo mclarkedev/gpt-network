@@ -84,15 +84,17 @@ export default function NodesPane({
   const render = mounted && nodes.length && nodes?.[0]?.id;
   return render ? (
     <div
+      data-test-id="NodesPane"
       className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
       onMouseLeave={handleMouseLeave}
     >
       <Spacer />
-      {orderedNodeIds.map((dfsNode) => {
+      {orderedNodeIds.map((dfsNode, index) => {
         const depthMarkers = [...new Array(dfsNode.depth)];
         return (
           <div
+            data-test-id={`NodesPane-item-${index}`}
             key={dfsNode.id}
             className={`hover:bg-neutral-700 hover:text-white flex-1 ${
               focusedNodeId === dfsNode.id

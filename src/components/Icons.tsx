@@ -3,7 +3,7 @@
  */
 export const LoadingIcon = () => {
   return (
-    <div role="status">
+    <div data-test-id="LoadingIcon" role="status">
       <svg
         aria-hidden="true"
         className="w-7 h-7 text-gray-200 animate-spin fill-neutral-700"

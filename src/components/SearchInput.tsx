@@ -30,6 +30,7 @@ export default function SearchInput({}: {}) {
       <div className="w-full">
         <form ref={formRef} onSubmit={onSubmit} className="w-full">
           <input
+            data-test-id="SearchInput-input"
             type={"text"}
             placeholder="Search topics ..."
             autoFocus

@@ -29,6 +29,7 @@ export default function CommandModal() {
 
   return showCommandModal ? (
     <div
+      data-test-id="CommandModal"
       className="relative z-50"
       aria-labelledby="modal-title"
       role="dialog"
