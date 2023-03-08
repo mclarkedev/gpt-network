@@ -1,4 +1,4 @@
-import { fetchWithTimeout, parseJsonSSE } from "@/utils";
+import { ChatCompletionRes, fetchWithTimeout, parseJsonSSE } from "@/utils";
 
 // https://platform.openai.com/playground/p/cmlu65BgvtmbxknKfg0nXmAU
 const basePrompt = (
@@ -66,26 +66,22 @@ export async function fetchCompletionData({
       return;
     }
 
-    await parseJsonSSE<{
-      id: string;
-      object: string;
-      created: number;
-      choices?: {
-        text: string;
-        index: number;
-        logprobs: null;
-        finish_reason: null | string;
-      }[];
-      model: string;
-    }>({
+    await parseJsonSSE<ChatCompletionRes>({
       data,
       onParse: (json) => {
         if (!json.choices?.length) {
           throw new Error("Something went wrong.");
         }
 
-        const { text: _text } = json.choices[0];
-        state = state + _text;
+        const {
+          delta: { content },
+        } = json.choices[0];
+        if (!content) {
+          // Handle {role: "assistant"} if needed here
+          return;
+        }
+
+        state = state + content;
         onUpdate(state);
       },
       onFinish,

@@ -22,25 +22,26 @@ const handler = async (req: NextRequest): Promise<Response> => {
     return new Response("Bad Request", { status: 400 });
   }
 
-  const payload = {
-    model: "text-davinci-003",
-    prompt,
-    temperature: 0.7,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    max_tokens: 2048,
-    stream: true,
-    n: 1,
-  };
-
-  const res = await fetch("https://api.openai.com/v1/completions", {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ""}`,
     },
     method: "POST",
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        // { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.7,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      max_tokens: 2048,
+      stream: true,
+      n: 1,
+    }),
   });
 
   const data = res.body;
