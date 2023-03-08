@@ -163,7 +163,15 @@ export default function InteractiveForceGraph() {
   /**
    * handleGraphNodeClick
    */
-  async function handleGraphNodeClick(nodeId?: string | number) {
+  async function handleGraphNodeClick(
+    nodeId?: string | number,
+    event?: globalThis.MouseEvent
+  ) {
+    // Handle macbook track pad using ctrl click when not recognized as contextmenu click
+    if (event?.ctrlKey === true) {
+      openContextMenu(nodeId, event);
+      return;
+    }
     if (nodeId) {
       const __meta = getThreeCameraMeta();
       pauseAnimation();
@@ -197,7 +205,7 @@ export default function InteractiveForceGraph() {
           nodeThreeObject={renderNode}
           enableNodeDrag={false}
           backgroundColor={backgroundColor}
-          onNodeClick={({ id }) => handleGraphNodeClick(id)}
+          onNodeClick={({ id }, event) => handleGraphNodeClick(id, event)}
           onNodeRightClick={(node, event) => openContextMenu(node.id, event)}
           onNodeHover={focusNode}
           d3AlphaDecay={0.05}
