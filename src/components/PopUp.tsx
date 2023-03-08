@@ -10,7 +10,7 @@ export default function PopUp({
   return (
     <div>
       <div
-        className="absolute bg-neutral-800 rounded-xl"
+        className={`absolute bg-neutral-800 rounded-xl`}
         style={{
           zIndex: 999999,
           transform: `translate(${position.x}px, ${position.y}px)`,

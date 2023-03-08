@@ -31,22 +31,34 @@ export const useContextMenuActions = ({
         `${focusedNodeId}`.length > 20 ? "..." : ""
       }`,
       onClick: () => {
+        setSummaryViewState((summaryView) => ({
+          ...summaryView,
+          state: "fetching",
+          position: { x: contextMenuPosition.x, y: contextMenuPosition.y },
+          show: true,
+        }));
         fetchSummaryData({
           subject: `${focusedNodeId}`,
           onUpdate: (text) => {
             setSummaryViewState((summaryView) => ({
               ...summaryView,
               text: text,
+              state: "streaming",
             }));
           },
-          onError: console.log,
-          onFinish: console.log,
+          onError: () => {
+            setSummaryViewState((summaryView) => ({
+              ...summaryView,
+              state: "error",
+            }));
+          },
+          onFinish: () => {
+            setSummaryViewState((summaryView) => ({
+              ...summaryView,
+              state: "complete",
+            }));
+          },
         });
-        setSummaryViewState((summaryView) => ({
-          ...summaryView,
-          position: { x: contextMenuPosition.x, y: contextMenuPosition.y },
-          show: true,
-        }));
       },
       blurFocusedNode: false,
     },

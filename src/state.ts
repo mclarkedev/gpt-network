@@ -97,6 +97,7 @@ export const summaryViewState = atom<{
   text: string;
   show: boolean;
   position: { x: number; y: number };
+  state: "fetching" | "streaming" | "error" | "complete";
 }>({
   key: "queryView",
   default: {
@@ -106,6 +107,7 @@ export const summaryViewState = atom<{
       x: 0,
       y: 0,
     },
+    state: "loading",
   },
 });
 
