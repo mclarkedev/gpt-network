@@ -56,6 +56,7 @@ export default function ContextMenu({
             index={index}
             setActiveItem={setActiveItem}
             closeContextMenu={() => escapeContextMenu(action.blurFocusedNode)}
+            color={action.color}
           />
         ))}
       </div>
