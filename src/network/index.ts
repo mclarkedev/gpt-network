@@ -1,6 +1,5 @@
 import { ChatCompletionRes, fetchWithTimeout, parseJsonSSE } from "@/utils";
 
-// https://platform.openai.com/playground/p/cmlu65BgvtmbxknKfg0nXmAU
 const basePrompt = (
   exclude: string,
   subject: string
@@ -25,9 +24,6 @@ csv: Jannis Kounellis, Guiseppe Penone, Mario Merz
 
 subject: ${subject}
 `;
-
-// Before I respond, I look at the "exclude" list, which is a list of previously researched entities, and repond with similar, but never the same, entities in my "csv" response. I NEVER SAY ANYTHING if it is in the exclude list. If exclude: thisName, and thisName, my CSV RESPONSE WILL NEVER BE csv: thisName.
-// exclude: ${exclude || "film"}
 
 /**
  * Fetch OpenAI Completion Data from "/api/openai/completion"

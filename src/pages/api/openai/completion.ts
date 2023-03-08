@@ -9,6 +9,9 @@ export const config = {
   runtime: "edge",
 };
 
+/**
+ * Completion Handler
+ */
 const handler = async (req: NextRequest): Promise<Response> => {
   if (req.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
