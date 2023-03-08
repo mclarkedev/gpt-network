@@ -201,6 +201,9 @@ export default function InteractiveForceGraph() {
           ref={graphRefCallback}
           height={dims.innerHeight}
           width={dims.innerWidth}
+          rendererConfig={{
+            antialias: false,
+          }}
           graphData={stubbedData}
           nodeThreeObject={renderNode}
           enableNodeDrag={false}
