@@ -9,6 +9,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
  */
 let prevNodeId: string | undefined = undefined;
 
+const Spacer = () => <div className="py-2 bg-neutral-800" />;
+
 /**
  * NodesPane
  */
@@ -86,9 +88,7 @@ export default function NodesPane({
       style={{ maxHeight: "calc(100vh - 3rem)" }}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="sticky top-0 px-3 py-1 pt-3 bg-neutral-800 text-neutral-500 text-sm">
-        Nodes
-      </div>
+      <Spacer />
       {orderedNodeIds.map((dfsNode) => {
         const depthMarkers = [...new Array(dfsNode.depth)];
         return (
@@ -97,34 +97,34 @@ export default function NodesPane({
             className={`hover:bg-neutral-700 hover:text-white flex-1 ${
               focusedNodeId === dfsNode.id
                 ? "bg-neutral-700 text-white"
-                : "bg-neutral-800"
+                : "bg-neutral-800 text-neutral-400"
             }`}
             onMouseUp={() => onNodeClick(dfsNode.id)}
             onMouseOver={() => handleMouseOver(dfsNode.id)}
           >
             <div
-              className="flex pl-2 text-neutral-400 text-sm w-[200px] cursor-pointer"
+              className="flex pl-2 text-sm w-[230px] cursor-pointer"
               onContextMenu={(event) => handleContextMenu(dfsNode, event)}
             >
               {depthMarkers.map((depth, index) => {
                 return (
                   <div
                     key={index}
-                    className="border-neutral-700 border-l-[1px] ml-[1px]"
-                    style={{ opacity: 0.5 }}
+                    className="border-neutral-700 border-l-[1px] mr-[3px]"
+                    style={{ opacity: 1 }}
                   >
                     {depth}
                   </div>
                 );
               })}
-              <div className="py-1">
-                <span className="ml-2">{dfsNode.id}</span>
+              <div className="my-[4px] ml-[6px]">
+                <span>{dfsNode.id}</span>
               </div>
             </div>
           </div>
         );
       })}
-      <div className="py-2 bg-neutral-800" />
+      <Spacer />
     </div>
   ) : null;
 }
