@@ -9,6 +9,13 @@ import {
 } from "@/state";
 import fetchSummaryData from "@/network/fetchSummaryData";
 
+type ContextMenuAction = {
+  name: string;
+  onClick: () => void;
+  blurFocusedNode?: boolean;
+  color?: "blue" | "red";
+};
+
 /**
  * useContextMenuActions
  */
@@ -25,7 +32,7 @@ export const useContextMenuActions = ({
   /**
    * Context Menu actions
    */
-  const actions = [
+  const actions: ContextMenuAction[] = [
     {
       name: `Look up ${`${focusedNodeId}`.slice(0, 20)}${
         `${focusedNodeId}`.length > 20 ? "..." : ""
