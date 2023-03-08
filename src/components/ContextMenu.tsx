@@ -3,7 +3,7 @@ import { NodeObject } from "react-force-graph-3d";
 
 import ContextMenuItem from "@/components/ContextMenuItem";
 import PopUp from "@/components/PopUp";
-import { useKeyRoving } from "@/hooks/useKeyRoving";
+import { useContextMenuRoving } from "@/hooks/useContextMenuRoving";
 import { useContextMenuActions } from "@/hooks/useContextMenuActions";
 
 /**
@@ -24,7 +24,7 @@ export default function ContextMenu({
     setActiveItem,
     showContextMenu,
     escapeContextMenu,
-  } = useKeyRoving({
+  } = useContextMenuRoving({
     maxItems,
     blurNode,
   });
@@ -41,17 +41,13 @@ export default function ContextMenu({
     blurContextMenuItem();
   }, [showContextMenu, blurContextMenuItem]);
 
-  /**
-   * Show
-   */
   return showContextMenu ? (
     <PopUp
       position={contextMenuPosition}
       onClickOutside={() => escapeContextMenu()}
       onMouseOverOutside={blurContextMenuItem}
     >
-      <div className="px-1 py-1 ">
-        {/* <div className="text-sm p-2 text-neutral-500">Save to list</div> */}
+      <div className="px-1 py-1">
         {actions.map((action, index) => (
           <ContextMenuItem
             key={action.name}

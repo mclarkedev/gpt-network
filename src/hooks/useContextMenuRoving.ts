@@ -5,9 +5,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { contextMenuState, focusedNodeIdState } from "@/state";
 
 /**
- * useKeyRoving for ContextMenu focus
+ * useContextMenuRoving for ContextMenu focus
  */
-export const useKeyRoving = ({
+export const useContextMenuRoving = ({
   maxItems,
   blurNode,
 }: {
