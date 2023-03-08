@@ -107,7 +107,7 @@ export const summaryViewState = atom<{
       x: 0,
       y: 0,
     },
-    state: "loading",
+    state: "fetching",
   },
 });
 
