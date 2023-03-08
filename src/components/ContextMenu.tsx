@@ -17,18 +17,12 @@ import { useKeyRoving } from "@/hooks/useKeyRoving";
  * Context Menu
  */
 export default function ContextMenu({
-  resumeAnimation,
   handleGraphNodeClick,
   blurNode,
 }: {
-  resumeAnimation: () => void;
   handleGraphNodeClick: (nodeId?: string | number) => void;
   blurNode: (nodeId: NodeObject["id"]) => void;
 }) {
-  // UI state
-  // const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
-  // const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
-
   // Action state
   const focusedNodeId = useRecoilValue(focusedNodeIdState);
   const [graphData, setGraphData] = useRecoilState(graphDataState);
@@ -106,18 +100,11 @@ export default function ContextMenu({
     activeItem,
     contextMenuPosition,
     setActiveItem,
-    setContextMenuState,
     showContextMenu,
-    escapeContextMenu, // Pass through
+    escapeContextMenu,
   } = useKeyRoving({
     maxItems,
-    escapeContextMenu: (blurFocusedNode = true) => {
-      resumeAnimation();
-      setActiveItem(0);
-      setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
-      blurNode(focusedNodeId);
-      blurFocusedNode && blurNode(focusedNodeId);
-    },
+    blurNode,
   });
 
   /**

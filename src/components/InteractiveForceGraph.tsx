@@ -200,6 +200,7 @@ export default function InteractiveForceGraph() {
 
   function blurNode(nodeId: NodeObject["id"]) {
     handleNodeHover(undefined, nodeId);
+    resumeAnimation();
   }
 
   /**
@@ -256,7 +257,6 @@ export default function InteractiveForceGraph() {
         onMouseLeave={blurNode}
       />
       <ContextMenu
-        resumeAnimation={resumeAnimation}
         handleGraphNodeClick={handleGraphNodeClick}
         blurNode={blurNode}
       />

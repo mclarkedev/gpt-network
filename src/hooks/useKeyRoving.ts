@@ -1,20 +1,32 @@
-import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { NodeObject } from "react-force-graph-3d";
+import { useCallback, useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { contextMenuState } from "@/state";
+import { contextMenuState, focusedNodeIdState } from "@/state";
 
 /**
  * useKeyRoving for ContextMenu focus
  */
 export const useKeyRoving = ({
   maxItems,
-  escapeContextMenu,
+  blurNode,
 }: {
   maxItems: number;
-  escapeContextMenu: (blurFocusedNode?: boolean) => void;
+  blurNode: (focusedNodeId: NodeObject["id"]) => void;
 }) => {
   const [activeItem, setActiveItem] = useState<number>(0); // where 0 is null
   const [{ show: showContextMenu, position: contextMenuPosition }, setContextMenuState] = useRecoilState(contextMenuState); // prettier-ignore
+  const focusedNodeId = useRecoilValue(focusedNodeIdState);
+
+  const escapeContextMenu = useCallback(
+    (blurFocusedNode = true) => {
+      setActiveItem(0);
+      setContextMenuState((contextMenu) => ({ ...contextMenu, show: false }));
+      blurNode(focusedNodeId);
+      blurFocusedNode && blurNode(focusedNodeId);
+    },
+    [setActiveItem, setContextMenuState, blurNode, focusedNodeId]
+  );
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
