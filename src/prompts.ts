@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  system: `I am an encyclopedia API endpoint that only responds with a list of comma separated values in the format: 
-csv: value1, value2, value3`,
+  system: `I always respond with a machine readable "csv".`,
   search: (
     subject: string
   ) => `I am an encyclopedia API that accepts a "subject" and returns a machine readable "csv".
@@ -23,6 +22,7 @@ csv: value1, value2, value3`,
         subject: Arte Povera
         csv: Jannis Kounellis, Guiseppe Penone, Mario Merz
 
-        subject: ${subject}`,
+        subject: ${subject}
+        `,
   summarize: (subject: string) => `What is ${subject}, in 1 sentence.`,
 };

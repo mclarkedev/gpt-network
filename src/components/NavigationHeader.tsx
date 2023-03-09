@@ -16,11 +16,12 @@ import { LoadingIcon, SearchIcon, XIcon } from "@/components/Icons";
  */
 export default function NavigationHeader() {
   const setShowCommandModal = useSetRecoilState(commandModalState);
+  const graphData = useRecoilValue(graphDataState);
   const graphStatus = useRecoilValue(graphStatusState);
   const resetGraphStatus = useResetRecoilState(graphStatusState);
   const [localGraphStatus, setLocalGraphStatus] = useState<GraphStatus>("initial"); //prettier-ignore
   const resetGraph = useResetRecoilState(graphDataState);
-  const isInitialState = localGraphStatus === "initial";
+  const isInitialState = (localGraphStatus === "initial" || localGraphStatus === "error") && graphData.nodes.length === 0; //prettier-ignore
   const resetSearchCache = useResetRecoilState(searchCacheState);
 
   /**

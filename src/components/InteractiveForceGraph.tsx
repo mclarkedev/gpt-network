@@ -32,6 +32,7 @@ import SummaryView from "@/components/SummaryView";
 import useResizeDimensions from "@/hooks/useResizeDimensions";
 import ForkedSpriteText from "@/components/Three/ForkedSpriteText";
 import AnimateOnStateChange from "@/components/AnimateOnStateChange";
+import ErrorMessageView from "./ErrorMessageView";
 
 type MutableNodeObject = NodeObject & { __threeObj: Object3D };
 
@@ -196,6 +197,7 @@ export default function InteractiveForceGraph() {
         blurNode={blurNode}
       />
       <SummaryView resumeAnimation={resumeAnimation} onClose={blurNode} />
+      <ErrorMessageView />
       <AnimateOnStateChange state={_data.nodes}>
         <ForceGraph3DForwardRef
           ref={graphRefCallback}
