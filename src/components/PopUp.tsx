@@ -19,13 +19,13 @@ export default function PopUp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`absolute bg-neutral-800 rounded-xl shadow-lg shadow-neutral-900`}
+            className={`absolute bg-neutral-800 rounded-xl shadow-lg shadow-neutral-900 backdrop-blur-md bg-opacity-50`}
             style={{
               zIndex: 999999,
               transform: `translate(${position.x}px, ${position.y}px)`,
             }}
           >
-            {children}
+            <div className="z-50">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

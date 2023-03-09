@@ -6,6 +6,7 @@ import { ChatCompletionRes, fetchWithTimeout, parseJsonSSE } from "@/utils";
  */
 export default async function fetchCompletionData({
   exclude,
+  searchCache,
   subject,
   onUpdate,
   onFinish,
@@ -16,7 +17,12 @@ export default async function fetchCompletionData({
     console.log("No subject, handle error");
     return;
   }
-  const prompt = prompts.search(subject);
+  const messages = [
+    { role: "system", content: prompts.system },
+    // Spreading messages back into the request doesn't work as intended
+    // ...searchCache.map((i) => ({ role: "user", content: i.split("csv: ")[1] })),
+    { role: "user", content: prompts.search(subject) },
+  ];
   try {
     const response = await fetchWithTimeout("/api/openai/completion", {
       method: "POST",
@@ -24,7 +30,7 @@ export default async function fetchCompletionData({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt, // Add base prompt into all prompt
+        messages,
       }),
     });
 

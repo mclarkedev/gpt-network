@@ -1,4 +1,3 @@
-import prompts from "@/prompts";
 import type { NextRequest } from "next/server";
 
 if (!process.env.OPENAI_API_KEY) {
@@ -18,11 +17,11 @@ const handler = async (req: NextRequest): Promise<Response> => {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
-  const { prompt } = (await req.json()) as {
-    prompt?: string;
+  const { messages } = (await req.json()) as {
+    messages?: { role: string; content: string }[];
   };
 
-  if (!prompt) {
+  if (!messages) {
     return new Response("Bad Request", { status: 400 });
   }
 
@@ -34,10 +33,7 @@ const handler = async (req: NextRequest): Promise<Response> => {
     method: "POST",
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: prompts.system },
-        { role: "user", content: prompt },
-      ],
+      messages,
       temperature: 0.7,
       top_p: 1,
       frequency_penalty: 0,

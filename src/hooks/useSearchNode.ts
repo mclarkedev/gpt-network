@@ -1,4 +1,3 @@
-import { graphHistoryState } from "../state";
 import { GraphData, LinkObject, NodeObject } from "react-force-graph-3d";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
@@ -6,12 +5,15 @@ import {
   graphStatusState,
   graphStreamState,
   graphPromptState,
+  searchCacheState,
+  graphHistoryState,
 } from "@/state";
 import fetchCompletionData from "@/network/fetchCompletionData";
 import { uniqueObjectsById } from "@/utils";
 
 function useSearchNode() {
   const [graphData, setGraphData] = useRecoilState(graphDataState);
+  const [searchCache, setSearchCache] = useRecoilState(searchCacheState);
   const setGraphHistoryState = useSetRecoilState(graphHistoryState);
   const setGraphStatus = useSetRecoilState(graphStatusState);
   const setGraphStream = useSetRecoilState(graphStreamState);
@@ -49,6 +51,7 @@ function useSearchNode() {
     await fetchCompletionData({
       exclude,
       subject,
+      searchCache: searchCache,
       onUpdate: (res: string) => {
         setGraphStatus("loading");
         setGraphStream(res);
@@ -70,6 +73,11 @@ function useSearchNode() {
     // If we have nodes, merge and stich graph based on reset
     const { nodes } = response;
     if (nodes) {
+      /**
+       * Store raw res string in search cache state
+       */
+      setSearchCache((searchCache) => [...searchCache, rawRes]);
+
       // Make graph data from csv
       const _newData = makeGraphDataFromList(`${subject}`, nodes);
       // Merge graph into active state

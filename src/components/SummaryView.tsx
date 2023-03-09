@@ -47,7 +47,7 @@ export default function SummaryView({
         <AnimatePresence>
           {revealStreamingText ? (
             <motion.div
-              className="text-sm p-2 text-white"
+              className="text-sm p-2 text-white z-50"
               // motion
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

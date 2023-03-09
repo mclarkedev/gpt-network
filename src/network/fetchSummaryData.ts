@@ -20,7 +20,7 @@ export default async function fetchSummaryData({
     console.log("No subject, handle error");
     return;
   }
-  const prompt = prompts.summarize(subject);
+  const messages = [{ role: "user", content: prompts.summarize(subject) }];
   try {
     const response = await fetchWithTimeout("/api/openai/completion", {
       method: "POST",
@@ -28,7 +28,7 @@ export default async function fetchSummaryData({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt,
+        messages,
       }),
     });
 

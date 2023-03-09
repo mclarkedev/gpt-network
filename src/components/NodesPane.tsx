@@ -9,7 +9,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
  */
 let prevNodeId: string | undefined = undefined;
 
-const Spacer = () => <div className="py-2 bg-neutral-800" />;
+const Spacer = () => <div className="py-2" />;
 
 /**
  * NodesPane
@@ -85,7 +85,7 @@ export default function NodesPane({
   return render ? (
     <div
       data-test-id="NodesPane"
-      className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl"
+      className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl bg-neutral-800 backdrop-blur-lg bg-opacity-60"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
       onMouseLeave={handleMouseLeave}
     >
@@ -96,10 +96,8 @@ export default function NodesPane({
           <div
             data-test-id={`NodesPane-item-${index}`}
             key={dfsNode.id}
-            className={`hover:bg-neutral-700 hover:text-white transition-colors flex-1 ${
-              focusedNodeId === dfsNode.id
-                ? "bg-neutral-700 text-white"
-                : "bg-neutral-800 text-neutral-400"
+            className={`hover:bg-neutral-700 hover:bg-opacity-50 hover:text-white transition-colors flex-1 ${
+              focusedNodeId === dfsNode.id ? " text-white" : " text-neutral-400"
             }`}
             onMouseOver={() => handleMouseOver(dfsNode.id)}
           >

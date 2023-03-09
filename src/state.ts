@@ -74,6 +74,16 @@ export const graphStatusState = atom<GraphStatus>({
   effects: [localStorageEffect(`${VERSION}:graphStatus`)],
 });
 
+/**
+ * Search Cache
+ * - Stores messages to send back to for chat completion
+ */
+export const searchCacheState = atom<any[]>({
+  key: "searchCache",
+  default: [],
+  effects: [localStorageEffect(`${VERSION}:searchCache`)],
+});
+
 export const focusedNodeIdState = atom<NodeObject["id"]>({
   key: "focusedNodeId",
   default: undefined,
