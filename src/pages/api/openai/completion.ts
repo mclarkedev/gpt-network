@@ -1,3 +1,4 @@
+import prompts from "@/prompts";
 import type { NextRequest } from "next/server";
 
 if (!process.env.OPENAI_API_KEY) {
@@ -34,7 +35,7 @@ const handler = async (req: NextRequest): Promise<Response> => {
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
       messages: [
-        // { role: "system", content: "You are a helpful assistant." },
+        { role: "system", content: prompts.system },
         { role: "user", content: prompt },
       ],
       temperature: 0.7,

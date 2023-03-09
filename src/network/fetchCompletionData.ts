@@ -1,29 +1,5 @@
+import prompts from "@/prompts";
 import { ChatCompletionRes, fetchWithTimeout, parseJsonSSE } from "@/utils";
-
-const basePrompt = (
-  exclude: string,
-  subject: string
-) => `I am an encyclopedia API that accepts a "subject" and returns a machine readable "csv".
-
-Let's try it.
-
-subject: Wade Guyton
-csv: Donald Judd, Whitney Museum of American Art, Postminimalism
-
-subject: Tauba Auerbach
-csv: John Baldessari, Ellsworth Kelly, Neo-Dada
-
-subject: Neo-Dada
-csv: Joseph Beuys, Fluxus, Happenings
-
-subject: Joseph Beuys
-csv: Yves Klein, Nam June Paik, Arte Povera
-
-subject: Arte Povera
-csv: Jannis Kounellis, Guiseppe Penone, Mario Merz
-
-subject: ${subject}
-`;
 
 /**
  * Fetch OpenAI Completion Data from "/api/openai/completion"
@@ -40,7 +16,7 @@ export default async function fetchCompletionData({
     console.log("No subject, handle error");
     return;
   }
-  const prompt = `${basePrompt(exclude, subject)}`;
+  const prompt = prompts.search(subject);
   try {
     const response = await fetchWithTimeout("/api/openai/completion", {
       method: "POST",

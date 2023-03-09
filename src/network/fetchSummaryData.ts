@@ -1,3 +1,4 @@
+import prompts from "@/prompts";
 import { ChatCompletionRes, fetchWithTimeout, parseJsonSSE } from "@/utils";
 
 /**
@@ -19,7 +20,7 @@ export default async function fetchSummaryData({
     console.log("No subject, handle error");
     return;
   }
-  const prompt = `What is ${subject}, in 1 sentence.`;
+  const prompt = prompts.summarize(subject);
   try {
     const response = await fetchWithTimeout("/api/openai/completion", {
       method: "POST",
