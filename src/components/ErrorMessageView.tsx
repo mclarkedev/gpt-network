@@ -21,24 +21,22 @@ export default function ErrorMessageView() {
   var x = isServer ? 0 : window.innerWidth / 2 - 392 / 2;
   var y = isServer ? 0 : window.innerHeight / 2 - 92 / 2;
 
-  if (isServer) {
+  if (isServer || !show) {
     return null;
   }
   return (
-    show && (
-      <PopUp
-        position={{ x, y }}
-        onClickOutside={() => {
-          setShow(false);
-        }}
-        animate={show}
-        show={show}
-      >
-        <div className="px-1 py-1 w-[40ch] min-h-[10ch] text-white m-3">
-          I'm sorry. I can't processes this request at this time. Try again or
-          search a different subject.
-        </div>
-      </PopUp>
-    )
+    <PopUp
+      position={{ x, y }}
+      onClickOutside={() => {
+        setShow(false);
+      }}
+      animate={show}
+      show={show}
+    >
+      <div className="px-1 py-1 w-[40ch] min-h-[10ch] text-white m-3">
+        {`I'm sorry. I can't processes this request at this time. Try again or
+          search a different subject.`}
+      </div>
+    </PopUp>
   );
 }
