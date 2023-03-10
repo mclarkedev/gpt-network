@@ -8,6 +8,7 @@ import { SearchIcon } from "./Icons";
  * SearchInput
  */
 export default function SearchInput() {
+  const inputRef = useRef<any>(null);
   const formRef = useRef<any>(null);
   const setShowCommandModal = useSetRecoilState(commandModalState);
   const searchNode = useSearchNode();
@@ -28,9 +29,9 @@ export default function SearchInput() {
   };
 
   useEffect(() => {
-    formRef?.current?.focus();
-    formRef?.current?.scrollIntoView();
-  }, [formRef]);
+    inputRef?.current?.focus();
+    inputRef?.current?.scrollIntoView();
+  }, [inputRef]);
 
   return (
     <div className="flex items-center bg-white p-3">
@@ -38,6 +39,7 @@ export default function SearchInput() {
       <div className="w-full">
         <form ref={formRef} onSubmit={onSubmit} className="w-full">
           <input
+            ref={inputRef}
             data-test-id="SearchInput-input"
             type={"text"}
             placeholder="Search topics ..."
