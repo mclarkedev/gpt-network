@@ -28,8 +28,8 @@ export default function SearchInput() {
   };
 
   useEffect(() => {
-    formRef.current.focus();
-  }, []);
+    formRef?.current?.focus();
+  }, [formRef]);
 
   return (
     <div className="flex items-center bg-white p-3">
