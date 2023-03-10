@@ -29,6 +29,7 @@ export default function SearchInput() {
 
   useEffect(() => {
     formRef?.current?.focus();
+    formRef?.current?.scrollIntoView();
   }, [formRef]);
 
   return (
