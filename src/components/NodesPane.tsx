@@ -85,7 +85,7 @@ export default function NodesPane({
   return render ? (
     <div
       data-test-id="NodesPane"
-      className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl bg-neutral-800 backdrop-blur-lg bg-opacity-60"
+      className="fixed left-6 top-6 z-50 overflow-scroll rounded-xl bg-neutral-800 backdrop-blur-lg bg-opacity-60 invisible md:visible"
       style={{ maxHeight: "calc(100vh - 3rem)" }}
       onMouseLeave={handleMouseLeave}
     >

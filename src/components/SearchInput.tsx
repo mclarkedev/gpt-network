@@ -1,6 +1,6 @@
 import useSearchNode from "@/hooks/useSearchNode";
 import { commandModalState } from "@/state";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSetRecoilState } from "recoil";
 import { SearchIcon } from "./Icons";
 
@@ -27,6 +27,10 @@ export default function SearchInput() {
     formRef?.current?.reset();
   };
 
+  useEffect(() => {
+    formRef.current.focus();
+  }, []);
+
   return (
     <div className="flex items-center bg-white p-3">
       <SearchIcon className="text-neutral-500 mr-2" />
@@ -37,7 +41,7 @@ export default function SearchInput() {
             type={"text"}
             placeholder="Search topics ..."
             autoFocus
-            className="outline-none bg-transparent w-full font-medium text-lg text-black placeholder:text-neutral-500"
+            className="outline-none bg-transparent w-full font-medium text-lg text-black placeholder:text-neutral-500 Z-50"
           />
         </form>
       </div>
