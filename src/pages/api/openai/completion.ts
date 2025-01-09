@@ -32,7 +32,7 @@ const handler = async (req: NextRequest): Promise<Response> => {
     },
     method: "POST",
     body: JSON.stringify({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       messages,
       temperature: 0.7,
       top_p: 1,
@@ -44,11 +44,17 @@ const handler = async (req: NextRequest): Promise<Response> => {
     }),
   });
 
-  const data = res.body;
+  if (!res.ok) {
+    const data = await res.json();
+    console.log(data);
+    return new Response("API error", { status: 400 });
+  } else {
+    const data = res.body;
 
-  return new Response(data, {
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-  });
+    return new Response(data, {
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    });
+  }
 };
 
 export default handler;

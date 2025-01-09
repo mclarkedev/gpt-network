@@ -66,6 +66,10 @@ function useSearchNode() {
     // Handle response types, parse csv
     const response = parseResponseType(rawRes);
     const { type, text } = response;
+
+    // Check that your agent is returning csv: prefix
+    // console.log({ type, text });
+
     if (type !== "csv") {
       setGraphStatus("error");
       return;

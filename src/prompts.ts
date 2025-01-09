@@ -1,26 +1,12 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  system: `I always respond with a machine readable "csv".`,
+  system: `I always respond with a machine readable csv body prefixed with the key "csv:". Such as "csv: person 1, person 2, person 3" with all persons names in lowercase.`,
   search: (
     subject: string
-  ) => `I am an encyclopedia API that accepts a "subject" and returns a machine readable "csv".
+  ) => `Given a "subject" return comma separated values of related people in lower case.
 
-        Let's try it.
-
-        subject: Wade Guyton
-        csv: Donald Judd, Whitney Museum of American Art, Postminimalism
-
-        subject: Tauba Auerbach
-        csv: John Baldessari, Ellsworth Kelly, Neo-Dada
-
-        subject: Neo-Dada
-        csv: Joseph Beuys, Fluxus, Happenings
-
-        subject: Joseph Beuys
-        csv: Yves Klein, Nam June Paik, Arte Povera
-
-        subject: Arte Povera
-        csv: Jannis Kounellis, Guiseppe Penone, Mario Merz
+        EXPECTED RETURN TYPE:
+        "csv: person 1, person 2, person 3"
 
         subject: ${subject}
         `,
